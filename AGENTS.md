@@ -159,6 +159,9 @@ When asked to add a feature or fix a bug, follow these steps in order:
 5. **Export** new public symbols from `__init__.py` and `__all__`
 6. **Write tests** - Add test cases for new functionality
 7. **Update `README.rst`** if the API changed
+8. **Suggest running:** Either single environement
+   test `make test-env ENV=py312` or test all envionments `make docker-test`.
+9. **Suggest running:** `make pre-commit`.
 
 ### Acceptable new features
 
