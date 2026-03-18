@@ -17,7 +17,7 @@ and **developing/extending** the package itself.
 
 - Maps any license representation to canonical three-level hierarchy
 - Supports SPDX tokens, URLs, and prose descriptions
-- Minimal dependencies (only pydantic)
+- No dependencies (only optional dependencies for testing, development, documentation and building)
 - LRU caching for performance
 
 ---
@@ -152,7 +152,7 @@ Target the `dev` branch only. Never open a PR directly to `main`.
 
 When asked to add a feature or fix a bug, follow these steps in order:
 
-1. **Check the mission** — Does the change preserve minimal dependencies and the three-level hierarchy?
+1. **Check the mission** — Does the change preserve no-dependencies policy and the three-level hierarchy?
 2. **Identify the correct location** — Core logic in `_core.py`, CLI in `cli/_main.py`
 3. **For bug fixes: write the regression test first** — Add a test that reproduces the bug
 4. **Implement the change** in the correct module
@@ -173,7 +173,7 @@ When asked to add a feature or fix a bug, follow these steps in order:
 
 ### Forbidden
 
-- Adding heavy external dependencies
+- Adding external dependencies
 - Removing existing normalisation coverage
 - Changing the three-level hierarchy structure
 
@@ -221,5 +221,5 @@ src/license_normaliser/tests/
 
 **Reviewing a change:**
 > Review this license-normaliser change against AGENTS.md: Does it preserve
-> minimal dependencies? Does it follow the three-level hierarchy? Are new
+> no-dependencies policy? Does it follow the three-level hierarchy? Are new
 > features tested?
