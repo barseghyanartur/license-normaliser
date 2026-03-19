@@ -21,11 +21,10 @@ list-envs: build
 test: build
 	docker compose run --rm tox
 
-# Usage: make test-env ENV=py312
+# Usage: make test-env ENV=py312  (defaults to py312)
 test-env: build
 	@if [ -z "$(ENV)" ]; then \
-		echo "Usage: make test-env ENV=py312"; \
-		exit 1; \
+		ENV=py312; \
 	fi
 	docker compose run --rm tox -e $(ENV)
 
