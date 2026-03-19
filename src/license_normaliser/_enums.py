@@ -1,5 +1,6 @@
 """License name enums for type-safe license checking."""
 
+import re
 from enum import Enum
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
@@ -148,100 +149,136 @@ class LicenseNameEnum(Enum):
     @property
     def family(self) -> LicenseFamilyEnum:
         """Return the family enum for this license name."""
-        family_map = {
-            # CC
-            "cc0": LicenseFamilyEnum.CC0,
-            "cc-pdm": LicenseFamilyEnum.PUBLIC_DOMAIN,
-            "cc-by": LicenseFamilyEnum.CC,
-            "cc-by-sa": LicenseFamilyEnum.CC,
-            "cc-by-nd": LicenseFamilyEnum.CC,
-            "cc-by-nc": LicenseFamilyEnum.CC,
-            "cc-by-nc-sa": LicenseFamilyEnum.CC,
-            "cc-by-nc-nd": LicenseFamilyEnum.CC,
-            "cc-by-igo": LicenseFamilyEnum.CC,
-            "cc-by-sa-igo": LicenseFamilyEnum.CC,
-            "cc-by-nd-igo": LicenseFamilyEnum.CC,
-            "cc-by-nc-igo": LicenseFamilyEnum.CC,
-            "cc-by-nc-sa-igo": LicenseFamilyEnum.CC,
-            "cc-by-nc-nd-igo": LicenseFamilyEnum.CC,
-            # OSI
-            "mit": LicenseFamilyEnum.OSI,
-            "apache": LicenseFamilyEnum.OSI,
-            "bsd-2-clause": LicenseFamilyEnum.OSI,
-            "bsd-3-clause": LicenseFamilyEnum.OSI,
-            "isc": LicenseFamilyEnum.OSI,
-            "mpl": LicenseFamilyEnum.OSI,
-            # Copyleft
-            "gpl-2": LicenseFamilyEnum.COPYLEFT,
-            "gpl-3": LicenseFamilyEnum.COPYLEFT,
-            "agpl-3": LicenseFamilyEnum.COPYLEFT,
-            "lgpl-2.1": LicenseFamilyEnum.COPYLEFT,
-            "lgpl-3": LicenseFamilyEnum.COPYLEFT,
-            # Open Data
-            "odbl": LicenseFamilyEnum.OPEN_DATA,
-            "odc-by": LicenseFamilyEnum.OPEN_DATA,
-            "pddl": LicenseFamilyEnum.OPEN_DATA,
-            "fal": LicenseFamilyEnum.OTHER_OA,
-            # Publisher - Elsevier
-            "elsevier-oa": LicenseFamilyEnum.PUBLISHER_OA,
-            "elsevier-tdm": LicenseFamilyEnum.PUBLISHER_TDM,
-            # Publisher - Wiley
-            "wiley-tdm": LicenseFamilyEnum.PUBLISHER_TDM,
-            "wiley-vor": LicenseFamilyEnum.PUBLISHER_PROPRIETARY,
-            "wiley-am": LicenseFamilyEnum.PUBLISHER_PROPRIETARY,
-            "wiley-terms": LicenseFamilyEnum.PUBLISHER_PROPRIETARY,
-            # Publisher - Springer
-            "springer-tdm": LicenseFamilyEnum.PUBLISHER_TDM,
-            "springernature-tdm": LicenseFamilyEnum.PUBLISHER_TDM,
-            # Publisher - Taylor & Francis
-            "tandf-terms": LicenseFamilyEnum.PUBLISHER_PROPRIETARY,
-            # Publisher - OUP
-            "oup-chorus": LicenseFamilyEnum.PUBLISHER_OA,
-            "oup-terms": LicenseFamilyEnum.PUBLISHER_PROPRIETARY,
-            # Publisher - SAGE
-            "sage-permissions": LicenseFamilyEnum.PUBLISHER_PROPRIETARY,
-            # Publisher - ACS
-            "acs-authorchoice": LicenseFamilyEnum.PUBLISHER_OA,
-            "acs-authorchoice-ccby": LicenseFamilyEnum.PUBLISHER_OA,
-            "acs-authorchoice-ccbyncnd": LicenseFamilyEnum.PUBLISHER_OA,
-            "acs-authorchoice-nih": LicenseFamilyEnum.PUBLISHER_OA,
-            # Publisher - RSC
-            "rsc-terms": LicenseFamilyEnum.PUBLISHER_PROPRIETARY,
-            # Publisher - IOP
-            "iop-tdm": LicenseFamilyEnum.PUBLISHER_TDM,
-            "iop-copyright": LicenseFamilyEnum.PUBLISHER_PROPRIETARY,
-            # Publisher - BMJ
-            "bmj-copyright": LicenseFamilyEnum.PUBLISHER_PROPRIETARY,
-            # Publisher - AAAS
-            "aaas-author-reuse": LicenseFamilyEnum.PUBLISHER_PROPRIETARY,
-            # Publisher - PNAS
-            "pnas-licenses": LicenseFamilyEnum.PUBLISHER_PROPRIETARY,
-            # Publisher - APS
-            "aps-default": LicenseFamilyEnum.PUBLISHER_PROPRIETARY,
-            "aps-tdm": LicenseFamilyEnum.PUBLISHER_TDM,
-            # Publisher - Cambridge
-            "cup-terms": LicenseFamilyEnum.PUBLISHER_PROPRIETARY,
-            # Publisher - AIP
-            "aip-rights": LicenseFamilyEnum.PUBLISHER_PROPRIETARY,
-            # Publisher - JAMA
-            "jama-cc-by": LicenseFamilyEnum.PUBLISHER_OA,
-            # Publisher - De Gruyter
-            "degruyter-terms": LicenseFamilyEnum.PUBLISHER_PROPRIETARY,
-            # Publisher - Thieme
-            "thieme-nlm": LicenseFamilyEnum.PUBLISHER_OA,
-            # Catch-all
-            "public-domain": LicenseFamilyEnum.PUBLIC_DOMAIN,
-            "other-oa": LicenseFamilyEnum.OTHER_OA,
-            "publisher-specific-oa": LicenseFamilyEnum.PUBLISHER_OA,
-            "unspecified-oa": LicenseFamilyEnum.OTHER_OA,
-            "open-access": LicenseFamilyEnum.OTHER_OA,
-            "implied-oa": LicenseFamilyEnum.PUBLISHER_OA,
-            "author-manuscript": LicenseFamilyEnum.PUBLISHER_OA,
-            "all-rights-reserved": LicenseFamilyEnum.PUBLISHER_PROPRIETARY,
-            "no-reuse": LicenseFamilyEnum.PUBLISHER_PROPRIETARY,
-            "unknown": LicenseFamilyEnum.UNKNOWN,
-        }
-        return family_map.get(self.value, LicenseFamilyEnum.UNKNOWN)
+        return _NAME_TO_FAMILY.get(self.value, LicenseFamilyEnum.UNKNOWN)
+
+
+# ===========================================================================
+# Derived lookups (built after enums so they can reference each other)
+# ===========================================================================
+
+_VERSION_TO_NAME: dict[str, str] = {}
+_NAME_TO_FAMILY: dict[str, LicenseFamilyEnum] = {}
+_VERSION_REGISTRY_KEYS: set[str] = set()
+
+
+def _strip_version(value: str) -> str:
+    """Strip the version suffix from a version key to get the name key.
+
+    IGO names (e.g. cc-by-3.0-igo) have no version in their name enum (e.g.
+    cc-by-igo), so for IGO keys we strip the full -X.Y-igo suffix.
+    """
+    if value == "cc-zero":
+        return "cc0"
+    if value == "fldl":
+        return "fal"
+    if value.endswith("-igo"):
+        stripped = re.sub(r"-\d+\.\d+-igo$", "", value)
+        return stripped
+    stripped = re.sub(r"-(?:4\.0|3\.0|2\.5|2\.0|1\.0|1\.1)(?:-igo)?$", "", value)
+    if stripped != value:
+        return stripped
+    stripped = re.sub(r"-(?:only|v2|v3)$", "", value)
+    return stripped
+
+
+def _derive_enums() -> None:
+    global _VERSION_TO_NAME, _NAME_TO_FAMILY, _VERSION_REGISTRY_KEYS
+
+    # Build _NAME_TO_FAMILY: name_key -> family.
+    # Explicit entries cover all non-trivial/cross-prefix names;
+    # everything else falls through to prefix-based assignment.
+    explicit_map: dict[str, LicenseFamilyEnum] = {
+        # CC family (also covered by prefix below, but explicit for clarity)
+        "cc0": LicenseFamilyEnum.CC0,
+        "cc-zero": LicenseFamilyEnum.CC0,
+        "cc-pdm": LicenseFamilyEnum.PUBLIC_DOMAIN,
+        "public-domain": LicenseFamilyEnum.PUBLIC_DOMAIN,
+        # OSI
+        "mit": LicenseFamilyEnum.OSI,
+        "apache": LicenseFamilyEnum.OSI,
+        "bsd-2-clause": LicenseFamilyEnum.OSI,
+        "bsd-3-clause": LicenseFamilyEnum.OSI,
+        "isc": LicenseFamilyEnum.OSI,
+        "mpl": LicenseFamilyEnum.OSI,
+        # Copyleft
+        "gpl-2": LicenseFamilyEnum.COPYLEFT,
+        "gpl-3": LicenseFamilyEnum.COPYLEFT,
+        "agpl-3": LicenseFamilyEnum.COPYLEFT,
+        "lgpl-2.1": LicenseFamilyEnum.COPYLEFT,
+        "lgpl-3": LicenseFamilyEnum.COPYLEFT,
+        # Open Data
+        "odbl": LicenseFamilyEnum.OPEN_DATA,
+        "odc-by": LicenseFamilyEnum.OPEN_DATA,
+        "pddl": LicenseFamilyEnum.OPEN_DATA,
+        "fal": LicenseFamilyEnum.OTHER_OA,
+        # Elsevier
+        "elsevier-oa": LicenseFamilyEnum.PUBLISHER_OA,
+        "elsevier-tdm": LicenseFamilyEnum.PUBLISHER_TDM,
+        # ACS
+        "acs-authorchoice": LicenseFamilyEnum.PUBLISHER_OA,
+        "acs-authorchoice-ccby": LicenseFamilyEnum.PUBLISHER_OA,
+        "acs-authorchoice-ccbyncnd": LicenseFamilyEnum.PUBLISHER_OA,
+        "acs-authorchoice-nih": LicenseFamilyEnum.PUBLISHER_OA,
+        # JAMA
+        "jama-cc-by": LicenseFamilyEnum.PUBLISHER_OA,
+        # OUP
+        "oup-chorus": LicenseFamilyEnum.PUBLISHER_OA,
+        "oup-terms": LicenseFamilyEnum.PUBLISHER_PROPRIETARY,
+        # Thieme
+        "thieme-nlm": LicenseFamilyEnum.PUBLISHER_OA,
+        # Catch-all
+        "other-oa": LicenseFamilyEnum.OTHER_OA,
+        "unspecified-oa": LicenseFamilyEnum.OTHER_OA,
+        "open-access": LicenseFamilyEnum.OTHER_OA,
+        "publisher-specific-oa": LicenseFamilyEnum.PUBLISHER_OA,
+        "implied-oa": LicenseFamilyEnum.PUBLISHER_OA,
+        "author-manuscript": LicenseFamilyEnum.PUBLISHER_OA,
+        "all-rights-reserved": LicenseFamilyEnum.PUBLISHER_PROPRIETARY,
+        "no-reuse": LicenseFamilyEnum.PUBLISHER_PROPRIETARY,
+    }
+
+    for name_enum in LicenseNameEnum:
+        name_val = name_enum.value
+        if name_val in explicit_map:
+            family = explicit_map[name_val]
+        elif name_val.startswith("cc-"):
+            family = LicenseFamilyEnum.CC
+        elif name_val.startswith(
+            (
+                "wiley-",
+                "springer",
+                "tandf",
+                "sage",
+                "rsc",
+                "iop",
+                "bmj",
+                "aaas",
+                "pnas",
+                "aps",
+                "cup",
+                "aip",
+                "degruyter",
+            )
+        ):
+            family = (
+                LicenseFamilyEnum.PUBLISHER_TDM
+                if name_val
+                in (
+                    "wiley-tdm",
+                    "springer-tdm",
+                    "springernature-tdm",
+                    "iop-tdm",
+                    "aps-tdm",
+                )
+                else LicenseFamilyEnum.PUBLISHER_PROPRIETARY
+            )
+        else:
+            family = LicenseFamilyEnum.UNKNOWN
+        _NAME_TO_FAMILY[name_val] = family
+
+    # Build _VERSION_TO_NAME: version key -> name key by stripping version suffix.
+    for ve in LicenseVersionEnum:
+        _VERSION_TO_NAME[ve.value] = _strip_version(ve.value)
 
 
 class LicenseVersionEnum(Enum):
@@ -297,10 +334,8 @@ class LicenseVersionEnum(Enum):
 
     # CC IGO
     CC_BY_3_0_IGO = "cc-by-3.0-igo"
-    CC_BY_4_0_IGO = "cc-by-4.0-igo"
     CC_BY_NC_SA_3_0_IGO = "cc-by-nc-sa-3.0-igo"
     CC_BY_NC_ND_3_0_IGO = "cc-by-nc-nd-3.0-igo"
-    CC_BY_NC_ND_4_0_IGO = "cc-by-nc-nd-4.0-igo"
 
     # OSI
     MIT = "mit"
@@ -410,143 +445,16 @@ class LicenseVersionEnum(Enum):
     @property
     def name_enum(self) -> LicenseNameEnum:
         """Return the name enum for this version (without version suffix)."""
-        # Map version keys to their name keys
-        version_to_name = {
-            # CC Zero
-            "cc0": "cc0",
-            "cc0-1.0": "cc0",
-            "cc-zero": "cc0",
-            "cc-pdm": "cc-pdm",
-            # CC BY
-            "cc-by": "cc-by",
-            "cc-by-4.0": "cc-by",
-            "cc-by-3.0": "cc-by",
-            "cc-by-2.5": "cc-by",
-            "cc-by-2.0": "cc-by",
-            "cc-by-1.0": "cc-by",
-            # CC BY-SA
-            "cc-by-sa": "cc-by-sa",
-            "cc-by-sa-4.0": "cc-by-sa",
-            "cc-by-sa-3.0": "cc-by-sa",
-            "cc-by-sa-2.5": "cc-by-sa",
-            "cc-by-sa-2.0": "cc-by-sa",
-            # CC BY-ND
-            "cc-by-nd": "cc-by-nd",
-            "cc-by-nd-4.0": "cc-by-nd",
-            "cc-by-nd-3.0": "cc-by-nd",
-            "cc-by-nd-2.0": "cc-by-nd",
-            # CC BY-NC
-            "cc-by-nc": "cc-by-nc",
-            "cc-by-nc-4.0": "cc-by-nc",
-            "cc-by-nc-3.0": "cc-by-nc",
-            "cc-by-nc-2.5": "cc-by-nc",
-            "cc-by-nc-2.0": "cc-by-nc",
-            # CC BY-NC-SA
-            "cc-by-nc-sa": "cc-by-nc-sa",
-            "cc-by-nc-sa-4.0": "cc-by-nc-sa",
-            "cc-by-nc-sa-3.0": "cc-by-nc-sa",
-            "cc-by-nc-sa-2.5": "cc-by-nc-sa",
-            "cc-by-nc-sa-2.0": "cc-by-nc-sa",
-            # CC BY-NC-ND
-            "cc-by-nc-nd": "cc-by-nc-nd",
-            "cc-by-nc-nd-4.0": "cc-by-nc-nd",
-            "cc-by-nc-nd-3.0": "cc-by-nc-nd",
-            "cc-by-nc-nd-2.5": "cc-by-nc-nd",
-            "cc-by-nc-nd-2.0": "cc-by-nc-nd",
-            # CC IGO
-            "cc-by-3.0-igo": "cc-by-igo",
-            "cc-by-4.0-igo": "cc-by-igo",
-            "cc-by-nc-sa-3.0-igo": "cc-by-nc-sa-igo",
-            "cc-by-nc-nd-3.0-igo": "cc-by-nc-nd-igo",
-            "cc-by-nc-nd-4.0-igo": "cc-by-nc-nd-igo",
-            # OSI
-            "mit": "mit",
-            "apache-2.0": "apache",
-            "bsd-2-clause": "bsd-2-clause",
-            "bsd-3-clause": "bsd-3-clause",
-            "isc": "isc",
-            "mpl-2.0": "mpl",
-            # Copyleft
-            "gpl-2.0": "gpl-2",
-            "gpl-2.0-only": "gpl-2",
-            "gpl-3.0": "gpl-3",
-            "gpl-3.0-only": "gpl-3",
-            "agpl-3.0": "agpl-3",
-            "agpl-3.0-only": "agpl-3",
-            "lgpl-2.1": "lgpl-2.1",
-            "lgpl-2.1-only": "lgpl-2.1",
-            "lgpl-3.0": "lgpl-3",
-            "lgpl-3.0-only": "lgpl-3",
-            # Open Data
-            "odbl": "odbl",
-            "odc-by": "odc-by",
-            "pddl": "pddl",
-            "fal": "fal",
-            "fldl": "fal",
-            # Publisher - Elsevier
-            "elsevier-oa": "elsevier-oa",
-            "elsevier-tdm": "elsevier-tdm",
-            # Publisher - Wiley
-            "wiley-tdm": "wiley-tdm",
-            "wiley-tdm-1.1": "wiley-tdm",
-            "wiley-vor": "wiley-vor",
-            "wiley-am": "wiley-am",
-            "wiley-terms": "wiley-terms",
-            # Publisher - Springer
-            "springer-tdm": "springer-tdm",
-            "springernature-tdm": "springernature-tdm",
-            # Publisher - Taylor & Francis
-            "tandf-terms": "tandf-terms",
-            # Publisher - OUP
-            "oup-chorus": "oup-chorus",
-            "oup-terms": "oup-terms",
-            # Publisher - SAGE
-            "sage-permissions": "sage-permissions",
-            # Publisher - ACS
-            "acs-authorchoice-ccby": "acs-authorchoice-ccby",
-            "acs-authorchoice-ccbyncnd": "acs-authorchoice-ccbyncnd",
-            "acs-authorchoice": "acs-authorchoice",
-            "acs-authorchoice-nih": "acs-authorchoice-nih",
-            # Publisher - RSC
-            "rsc-terms": "rsc-terms",
-            # Publisher - IOP
-            "iop-tdm": "iop-tdm",
-            "iop-copyright": "iop-copyright",
-            # Publisher - BMJ
-            "bmj-copyright": "bmj-copyright",
-            # Publisher - AAAS
-            "aaas-author-reuse": "aaas-author-reuse",
-            # Publisher - PNAS
-            "pnas-licenses": "pnas-licenses",
-            # Publisher - APS
-            "aps-default": "aps-default",
-            "aps-tdm": "aps-tdm",
-            # Publisher - Cambridge
-            "cup-terms": "cup-terms",
-            # Publisher - AIP
-            "aip-rights": "aip-rights",
-            # Publisher - JAMA
-            "jama-cc-by": "jama-cc-by",
-            # Publisher - De Gruyter
-            "degruyter-terms": "degruyter-terms",
-            # Publisher - Thieme
-            "thieme-nlm": "thieme-nlm",
-            # Catch-all
-            "public-domain": "public-domain",
-            "other-oa": "other-oa",
-            "publisher-specific-oa": "publisher-specific-oa",
-            "unspecified-oa": "unspecified-oa",
-            "open-access": "open-access",
-            "implied-oa": "implied-oa",
-            "author-manuscript": "author-manuscript",
-            "all-rights-reserved": "all-rights-reserved",
-            "no-reuse": "no-reuse",
-            "unknown": "unknown",
-        }
-        name_key = version_to_name.get(self.value, "unknown")
-        return LicenseNameEnum(name_key)
+        name_key = _VERSION_TO_NAME.get(self.value, self.value)
+        try:
+            return LicenseNameEnum(name_key)
+        except ValueError:
+            return LicenseNameEnum.UNKNOWN
 
     @property
     def family(self) -> LicenseFamilyEnum:
         """Return the family enum for this version."""
         return self.name_enum.family
+
+
+_derive_enums()
