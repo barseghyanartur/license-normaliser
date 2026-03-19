@@ -7,12 +7,9 @@ No resolution logic lives here - only structure and convenience properties.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import TYPE_CHECKING, Optional
+from typing import Optional
 
 from ._enums import LicenseFamilyEnum, LicenseNameEnum, LicenseVersionEnum
-
-if TYPE_CHECKING:
-    pass
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"

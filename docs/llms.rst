@@ -8,6 +8,10 @@ the contents of each key file.
    :caption: Project directory layout
 
    license-normaliser/
+   ├── data
+   │   ├── normalize_licenses.py
+   │   ├── opendefinition_licenses_all.json
+   │   └── spdx-licenses.json
    ├── src
    │   └── license_normaliser
    │       ├── cli
@@ -67,6 +71,27 @@ conftest.py
 .. literalinclude:: ../conftest.py
    :language: python
    :caption: conftest.py
+
+data/normalize_licenses.py
+--------------------------
+
+.. literalinclude:: ../data/normalize_licenses.py
+   :language: python
+   :caption: data/normalize_licenses.py
+
+data/opendefinition_licenses_all.json
+-------------------------------------
+
+.. literalinclude:: ../data/opendefinition_licenses_all.json
+   :language: json
+   :caption: data/opendefinition_licenses_all.json
+
+data/spdx-licenses.json
+-----------------------
+
+.. literalinclude:: ../data/spdx-licenses.json
+   :language: json
+   :caption: data/spdx-licenses.json
 
 docker-compose.yml
 ------------------
