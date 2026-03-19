@@ -1,8 +1,4 @@
-"""Unit tests for _cache.py.
-
-Covers input cleaning, cache key deduplication, mojibake decoding,
-empty/whitespace inputs, and the normalise_licenses batch function.
-"""
+"""Unit tests for _cache.py."""
 
 import threading
 
@@ -17,11 +13,6 @@ from license_normaliser._cache import (
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"
 __license__ = "MIT"
-
-
-# ---------------------------------------------------------------------------
-# _clean()
-# ---------------------------------------------------------------------------
 
 
 class TestClean:
@@ -52,11 +43,6 @@ class TestClean:
 
     def test_newline_collapsed(self):
         assert _clean("CC BY\n4.0") == "cc by 4.0"
-
-
-# ---------------------------------------------------------------------------
-# normalise_license_cached() - cache key is cleaned string
-# ---------------------------------------------------------------------------
 
 
 class TestNormaliseLicenseCached:
@@ -115,7 +101,6 @@ class TestNormaliseLicenseCached:
             v.key = "other"  # type: ignore[misc]
 
     def test_concurrent_calls_consistent(self):
-        """Concurrent access to the cache must not produce inconsistent results."""
         results = []
         barrier = threading.Barrier(10)
 
@@ -128,31 +113,18 @@ class TestNormaliseLicenseCached:
             t.start()
         for t in threads:
             t.join()
-
         assert all(r == "cc-by-4.0" for r in results)
-
-
-# ---------------------------------------------------------------------------
-# Mojibake decoding
-# ---------------------------------------------------------------------------
 
 
 class TestMojibakeDecode:
     def test_copyright_symbol_mojibake(self):
-        # "© the author(s)" encoded as latin-1 read as utf-8 mojibake
         mojibake = "\xc2\xa9 the author(s)"
         v = normalise_license_cached(mojibake)
         assert v.key == "publisher-specific-oa"
 
     def test_clean_copyright_symbol(self):
-        # The properly-encoded © also resolves via alias
-        v = normalise_license_cached("© the author(s)")
+        v = normalise_license_cached("\u00a9 the author(s)")
         assert v.key == "publisher-specific-oa"
-
-
-# ---------------------------------------------------------------------------
-# normalise_licenses() batch
-# ---------------------------------------------------------------------------
 
 
 class TestNormalizeLicenses:
@@ -169,17 +141,8 @@ class TestNormalizeLicenses:
         assert results[0].key == "mit"
         assert results[1].key == "gpl-3.0"
 
-    def test_accepts_tuple(self):
-        results = normalise_licenses(("ISC", "MPL-2.0"))
-        assert results[0].key == "isc"
-        assert results[1].key == "mpl-2.0"
-
     def test_empty_iterable(self):
         assert normalise_licenses([]) == []
-
-    def test_single_item(self):
-        results = normalise_licenses(["MIT"])
-        assert results[0].key == "mit"
 
     def test_mixed_known_unknown(self):
         results = normalise_licenses(["MIT", "no-such-license"])

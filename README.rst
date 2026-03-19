@@ -2,39 +2,15 @@
 license-normaliser
 ==================
 
-.. image:: https://raw.githubusercontent.com/barseghyanartur/license-normaliser/main/docs/_static/license_normaliser_logo.webp
-   :alt: license-normaliser logo
-   :align: center
-
 Comprehensive license normalisation with a three-level hierarchy.
 
 .. image:: https://img.shields.io/pypi/v/license-normaliser.svg
    :target: https://pypi.python.org/pypi/license-normaliser
    :alt: PyPI Version
 
-.. image:: https://img.shields.io/pypi/pyversions/license-normaliser.svg
-   :target: https://pypi.python.org/pypi/license-normaliser/
-   :alt: Supported Python versions
-
-.. image:: https://github.com/barseghyanartur/license-normaliser/actions/workflows/test.yml/badge.svg?branch=main
-   :target: https://github.com/barseghyanartur/license-normaliser/actions
-   :alt: Build Status
-
-.. image:: https://readthedocs.org/projects/license-normaliser/badge/?version=latest
-    :target: http://license-normaliser.readthedocs.io
-    :alt: Documentation Status
-
-.. image:: https://img.shields.io/badge/docs-llms.txt-blue
-    :target: https://license-normaliser.readthedocs.io/en/latest/llms.txt
-    :alt: llms.txt - documentation for LLMs
-
 .. image:: https://img.shields.io/badge/license-MIT-blue.svg
    :target: https://github.com/barseghyanartur/license-normaliser/#License
    :alt: MIT
-
-.. image:: https://coveralls.io/repos/github/barseghyanartur/license-normaliser/badge.svg?branch=main&service=github
-    :target: https://coveralls.io/github/barseghyanartur/license-normaliser?branch=main
-    :alt: Coverage
 
 ``license-normaliser`` is a comprehensive license normalisation library that
 maps any license representation (SPDX tokens, URLs, prose descriptions) to a
@@ -48,8 +24,14 @@ Features
 - **Creative Commons support** - Full CC family with versions and IGO variants.
 - **Publisher-specific licenses** - Springer, Nature, Elsevier, Wiley, ACS,
   and more.
+- **File-driven data** - Add aliases, URLs, and patterns by editing JSON files.
+  No Python code changes required for new synonyms.
+- **Pluggable data sources** - Drop in a new ``DataSource`` class to ingest
+  any external license registry automatically.
+- **Strict mode** - Raise ``LicenseNotFoundError`` instead of silently
+  returning ``"unknown"``.
 - **Caching** - LRU caching for performance.
-- **CLI** - Command-line interface for quick normalisation.
+- **CLI** - Command-line interface with ``--strict`` support.
 
 Hierarchy
 =========
@@ -81,7 +63,6 @@ Quick start
 ===========
 
 .. code-block:: python
-    :name: test_quick_start
 
     from license_normaliser import normalise_license
 
@@ -90,15 +71,51 @@ Quick start
     str(v.license)          # "cc-by-nc-nd"       ← LicenseName
     str(v.license.family)   # "cc"                ← LicenseFamily
 
+Strict mode
+===========
+
+By default, unresolvable inputs return an ``"unknown"`` result.  Pass
+``strict=True`` to raise ``LicenseNotFoundError`` instead:
+
+.. code-block:: python
+
+    from license_normaliser import normalise_license
+    from license_normaliser.exceptions import LicenseNotFoundError
+
+    # Silent fallback (default)
+    v = normalise_license("some-unknown-string")
+    v.family.key  # "unknown"
+
+    # Strict: raises on unresolvable input
+    try:
+        v = normalise_license("some-unknown-string", strict=True)
+    except LicenseNotFoundError as exc:
+        print(exc.raw)      # original input
+        print(exc.cleaned)  # cleaned form that failed lookup
+
+Batch normalisation
+===================
+
+.. code-block:: python
+
+    from license_normaliser import normalise_licenses
+
+    results = normalise_licenses(["MIT", "Apache-2.0", "CC BY 4.0"])
+    for r in results:
+        print(r.key)
+
+    # Strict batch - raises on first unresolvable
+    results = normalise_licenses(["MIT", "Apache-2.0"], strict=True)
+
 Resolution pipeline (first match wins)
 ======================================
 
 1. Direct registry lookup (cleaned lowercase key)
-2. Alias table (prose variants, SPDX tokens, mixed-case short-forms)
-3. Exact URL map (http/https, trailing-slash normalised, fragment-aware)
+2. Alias table (loaded from ``data/aliases/aliases.json``)
+3. Exact URL map (loaded from ``data/urls/url_map.json``)
 4. Structural CC URL regex (any creativecommons.org URL not in the map)
-5. Prose keyword scan (full sentences from license documents)
-6. Fallback (key = cleaned string, everything else unknown/None)
+5. Prose keyword scan (loaded from ``data/prose/prose_patterns.json``)
+6. Fallback (key = cleaned string, family = unknown)
 
 CLI usage
 =========
@@ -117,15 +134,48 @@ Normalise a single license:
     # License: cc-by
     # Family: cc
 
-Batch normalise multiple licenses:
+    license-normaliser normalise --strict "totally-unknown"
+    # Exits with code 1 and prints an error
+
+Batch normalise:
 
 .. code-block:: sh
 
     license-normaliser batch MIT "Apache-2.0" "CC BY 4.0"
-    # Output:
-    # MIT: mit
-    # Apache-2.0: apache-2.0
-    # CC BY 4.0: cc-by-4.0
+    license-normaliser batch --strict MIT "Apache-2.0"
+
+Extending the data
+==================
+
+To add a new alias, URL mapping, or prose pattern **without touching Python**:
+
+1. Edit the relevant JSON file in ``data/``.
+2. Restart the Python process (the registry is built at import time).
+
+See ``data/README.md`` for the full format specification and examples.
+
+To add a brand-new license (with a new key):
+
+1. Add enum entries to ``src/license_normaliser/_enums.py``.
+2. Add aliases/URLs/patterns to the JSON data files.
+
+To add an entirely new external data source:
+
+1. Create ``src/license_normaliser/data_sources/my_source.py`` implementing
+   the ``DataSource`` protocol.
+2. Add it to ``REGISTERED_SOURCES`` in
+   ``src/license_normaliser/data_sources/__init__.py``.
+
+Exceptions
+==========
+
+.. code-block:: python
+
+    from license_normaliser.exceptions import (
+        LicenseNormaliserError,   # base class
+        LicenseNotFoundError,     # raised by strict mode
+        DataSourceError,          # raised when a data file cannot be loaded
+    )
 
 Testing
 =======
@@ -146,11 +196,6 @@ License
 =======
 
 MIT
-
-Support
-=======
-
-For issues, go to `GitHub <https://github.com/barseghyanartur/license-normaliser/issues>`_.
 
 Author
 ======

@@ -1,4 +1,4 @@
-"""license_normaliser.cli — command-line interface for license-normaliser."""
+"""license_normaliser.cli - command-line interface for license-normaliser."""
 
 from ._main import main
 

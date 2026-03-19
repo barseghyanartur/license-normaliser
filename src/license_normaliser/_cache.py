@@ -1,13 +1,19 @@
 """Caching layer for the normalisation pipeline.
 
-The public entry point is :func:`normalise_license_cached`.  It wraps the
-pipeline so that the cache key is the *cleaned* string, not the raw input.
-This means whitespace variants such as ``"MIT"``, ``"MIT "`` and ``"  MIT  "``
-all share a single cache slot.
+This module wraps the six-step pipeline with LRU caching and exposes the
+public ``normalise_license`` / ``normalise_licenses`` entry points.
 
-The cleaning and dispatch logic is split across two functions so that
-``lru_cache`` only decorates the inner one - keeping the cache keyed on
-the normalised form.
+Strict mode
+-----------
+Pass ``strict=True`` to raise :class:`~.exceptions.LicenseNotFoundError`
+instead of returning an ``"unknown"`` result when the license string cannot
+be resolved to any known version.
+
+    >>> from license_normaliser import normalise_license
+    >>> normalise_license("totally-unknown", strict=True)
+    LicenseNotFoundError: License not found: 'totally-unknown' ...
+
+The default (``strict=False``) preserves backwards-compatible behaviour.
 """
 
 from __future__ import annotations
@@ -26,6 +32,7 @@ from ._pipeline import (
     step_url,
 )
 from ._registry import make
+from .exceptions import LicenseNotFoundError
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"
@@ -40,7 +47,7 @@ __all__ = (
 # ---------------------------------------------------------------------------
 
 _WHITESPACE_RE = re.compile(r"\s+")
-_MAX_INPUT = 4096  # guard against pathological inputs
+_MAX_INPUT = 4096
 
 
 def _clean(raw: str) -> str:
@@ -50,12 +57,7 @@ def _clean(raw: str) -> str:
 
 
 def _try_decode_mojibake(s: str) -> str:
-    """Attempt to fix common latin-1/utf-8 mojibake (e.g. Â© -> ©).
-
-    Returns the decoded string on success, or the original string on failure.
-    This is a no-op for any string that cannot be round-tripped through
-    latin-1 encoding (i.e. normal ASCII and properly-encoded UTF-8).
-    """
+    """Attempt to fix common latin-1/utf-8 mojibake."""
     try:
         return s.encode("latin-1").decode("utf-8")
     except (UnicodeEncodeError, UnicodeDecodeError):
@@ -69,32 +71,17 @@ def _try_decode_mojibake(s: str) -> str:
 
 @lru_cache(maxsize=8192)
 def _resolve(cleaned: str) -> LicenseVersion:
-    """Run the six-step pipeline on an already-cleaned string.
-
-    This is the function that is actually cached.  All callers must pass a
-    cleaned string (output of :func:`_clean`).
-    """
-    # Step 1 - direct registry hit
+    """Run the six-step pipeline on an already-cleaned string."""
     if key := step_direct(cleaned):
         return make(key)
-
-    # Step 2 - alias table
     if key := step_alias(cleaned):
         return make(key)
-
-    # Step 3 - exact URL map (scheme-normalised, trailing-slash stripped)
     if key := step_url(cleaned):
         return make(key)
-
-    # Step 4 - structural CC URL regex
     if result := step_cc_regex(cleaned):
         return result
-
-    # Step 5 - prose keyword scan (long strings only)
     if key := step_prose(cleaned):
         return make(key)
-
-    # Step 6 - fallback
     return step_fallback(cleaned)
 
 
@@ -103,26 +90,62 @@ def _resolve(cleaned: str) -> LicenseVersion:
 # ---------------------------------------------------------------------------
 
 
-def normalise_license_cached(raw: str) -> LicenseVersion:
+def normalise_license_cached(raw: str, *, strict: bool = False) -> LicenseVersion:
     """Normalise *raw* to a :class:`~._models.LicenseVersion`, with caching.
 
-    Empty / whitespace-only inputs immediately return the ``"unknown"``
-    version without entering the cache.
+    Parameters
+    ----------
+    raw: str
+        The license string to normalise.  May be an SPDX token, URL,
+        prose description, or any other representation.
+    strict: bool
+        If ``True``, raise :class:`~.exceptions.LicenseNotFoundError` when
+        the license cannot be resolved to a known version.
+        If ``False`` (default), return an ``"unknown"`` version instead.
 
-    Mojibake decoding is attempted on the *raw* string before cleaning,
-    because ``_clean`` calls ``.lower()`` which changes the code-point values
-    of high Latin-1 characters and makes post-clean detection unreliable.
+    Returns
+    -------
+    LicenseVersion
+        The resolved license version.
+
+    Raises
+    ------
+    LicenseNotFoundError
+        When ``strict=True`` and the license cannot be resolved.
     """
     if not raw or not raw.strip():
+        if strict:
+            raise LicenseNotFoundError(raw, "")
         return make("unknown")
 
-    # Attempt mojibake fix on the raw string BEFORE cleaning.
-    # _try_decode_mojibake is a no-op for normal ASCII/UTF-8 input.
     raw = _try_decode_mojibake(raw)
+    cleaned = _clean(raw)
+    result = _resolve(cleaned)
 
-    return _resolve(_clean(raw))
+    if strict and result.family.key == "unknown":
+        raise LicenseNotFoundError(raw, cleaned)
+
+    return result
 
 
-def normalise_licenses(raws: Iterable[str]) -> list[LicenseVersion]:
-    """Normalise an iterable of license strings."""
-    return [normalise_license_cached(r) for r in raws]
+def normalise_licenses(
+    raws: Iterable[str],
+    *,
+    strict: bool = False,
+) -> list[LicenseVersion]:
+    """Normalise an iterable of license strings.
+
+    Parameters
+    ----------
+    raws: Iterable[str]
+        Iterable of raw license strings.
+    strict: bool
+        Forwarded to :func:`normalise_license_cached` for each entry.
+        If ``True``, the first unresolvable license raises immediately.
+
+    Returns
+    -------
+    list[LicenseVersion]
+        Results in the same order as the input.
+    """
+    return [normalise_license_cached(r, strict=strict) for r in raws]

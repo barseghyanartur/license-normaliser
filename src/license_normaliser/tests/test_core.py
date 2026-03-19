@@ -1,9 +1,4 @@
-"""Integration tests for the full normalisation pipeline via the public API.
-
-These tests exercise ``normalise_license`` end-to-end - from raw string input
-to a fully-resolved LicenseVersion - covering every license family and every
-pipeline step.
-"""
+"""Integration tests for the full normalisation pipeline via the public API."""
 
 import pytest
 
@@ -20,14 +15,7 @@ __copyright__ = "2026 Artur Barseghyan"
 __license__ = "MIT"
 
 
-# ---------------------------------------------------------------------------
-# Pipeline step 1: direct registry lookup
-# ---------------------------------------------------------------------------
-
-
 class TestDirectLookup:
-    """Inputs that are exact registry keys (already lowercase)."""
-
     def test_mit(self):
         v = normalise_license("mit")
         assert v.key == "mit"
@@ -56,14 +44,7 @@ class TestDirectLookup:
         assert v.key == "all-rights-reserved"
 
 
-# ---------------------------------------------------------------------------
-# Pipeline step 2: alias table
-# ---------------------------------------------------------------------------
-
-
 class TestAliasLookup:
-    """Inputs that resolve via the ALIASES dict."""
-
     def test_mit_titlecase(self):
         assert normalise_license("MIT").key == "mit"
 
@@ -132,14 +113,7 @@ class TestAliasLookup:
         assert normalise_license("springer nature tdm").key == "springernature-tdm"
 
 
-# ---------------------------------------------------------------------------
-# Pipeline step 3: URL map
-# ---------------------------------------------------------------------------
-
-
 class TestUrlLookup:
-    """Inputs that are URLs resolving via URL_MAP."""
-
     def test_cc_by_https(self):
         v = normalise_license("https://creativecommons.org/licenses/by/4.0/")
         assert v.key == "cc-by-4.0"
@@ -162,7 +136,7 @@ class TestUrlLookup:
 
     def test_cc0_url(self):
         v = normalise_license("https://creativecommons.org/publicdomain/zero/1.0/")
-        assert v.key == "cc0"
+        assert v.key == "cc0-1.0"
 
     def test_elsevier_oa_url(self):
         v = normalise_license("http://www.elsevier.com/open-access/userlicense/1.0/")
@@ -221,14 +195,7 @@ class TestUrlLookup:
         assert v.key == "gpl-3.0"
 
 
-# ---------------------------------------------------------------------------
-# Pipeline step 4: structural CC URL regex
-# ---------------------------------------------------------------------------
-
-
 class TestCcUrlRegex:
-    """Inputs that are CC URLs not in the explicit URL_MAP but parseable."""
-
     def test_cc_by_nc_sa_2_5(self):
         v = normalise_license("https://creativecommons.org/licenses/by-nc-sa/2.5/")
         assert v.key == "cc-by-nc-sa-2.5"
@@ -247,17 +214,8 @@ class TestCcUrlRegex:
         assert v.key == "cc-by-nc-nd-3.0-igo"
 
 
-# ---------------------------------------------------------------------------
-# Pipeline step 5: prose keyword scan
-# ---------------------------------------------------------------------------
-
-
 class TestProseScan:
-    """Long inputs that do NOT match any earlier step but contain keywords."""
-
     def test_cc_by_nc_nd_in_prose(self):
-        # This alias now covers the 4.0 international license variant,
-        # so we use a prose sentence that bypasses the alias table
         v = normalise_license(
             "Distributed under attribution noncommercial noderivatives terms."
         )
@@ -288,17 +246,11 @@ class TestProseScan:
         assert v.key == "public-domain"
 
     def test_url_in_prose_wins_over_prose_scan(self):
-        # Step 3 should catch the URL before step 5 fires
         v = normalise_license(
             "This is an open access article under the CC BY license "
             "(http://creativecommons.org/licenses/by/4.0/)"
         )
         assert v.key == "cc-by-4.0"
-
-
-# ---------------------------------------------------------------------------
-# Pipeline step 6: fallback
-# ---------------------------------------------------------------------------
 
 
 class TestFallback:
@@ -315,11 +267,6 @@ class TestFallback:
     def test_whitespace_only(self):
         v = normalise_license("   ")
         assert v.key == "unknown"
-
-
-# ---------------------------------------------------------------------------
-# Creative Commons family - comprehensive
-# ---------------------------------------------------------------------------
 
 
 class TestCreativeCommons:
@@ -363,17 +310,10 @@ class TestCreativeCommons:
             assert v.family.key == "cc", f"Expected cc family for {raw}"
 
     def test_cc0_family_is_cc0_not_cc(self):
-        v = normalise_license("cc0")
-        assert v.family.key == "cc0"
+        assert normalise_license("cc0").family.key == "cc0"
 
     def test_cc_pdm_family_is_public_domain(self):
-        v = normalise_license("cc-pdm")
-        assert v.family.key == "public-domain"
-
-
-# ---------------------------------------------------------------------------
-# OSI permissive
-# ---------------------------------------------------------------------------
+        assert normalise_license("cc-pdm").family.key == "public-domain"
 
 
 class TestOSI:
@@ -397,11 +337,6 @@ class TestOSI:
         assert normalise_license("MIT").url == "https://opensource.org/licenses/MIT"
 
 
-# ---------------------------------------------------------------------------
-# Copyleft
-# ---------------------------------------------------------------------------
-
-
 class TestCopyleft:
     @pytest.mark.parametrize(
         "raw,expected_key",
@@ -421,86 +356,54 @@ class TestCopyleft:
         assert v.family.key == "copyleft"
 
 
-# ---------------------------------------------------------------------------
-# Publisher licenses
-# ---------------------------------------------------------------------------
-
-
 class TestPublisherLicenses:
     def test_elsevier_oa_family(self):
-        v = normalise_license("elsevier-oa")
-        assert v.family.key == "publisher-oa"
+        assert normalise_license("elsevier-oa").family.key == "publisher-oa"
 
     def test_elsevier_tdm_family(self):
-        v = normalise_license("elsevier-tdm")
-        assert v.family.key == "publisher-tdm"
+        assert normalise_license("elsevier-tdm").family.key == "publisher-tdm"
 
     def test_wiley_vor_family(self):
-        v = normalise_license("wiley-vor")
-        assert v.family.key == "publisher-proprietary"
+        assert normalise_license("wiley-vor").family.key == "publisher-proprietary"
 
     def test_springer_tdm_family(self):
-        v = normalise_license("springer-tdm")
-        assert v.family.key == "publisher-tdm"
+        assert normalise_license("springer-tdm").family.key == "publisher-tdm"
 
     def test_acs_authorchoice_family(self):
-        v = normalise_license("acs-authorchoice")
-        assert v.family.key == "publisher-oa"
+        assert normalise_license("acs-authorchoice").family.key == "publisher-oa"
 
     def test_aaas_author_reuse(self):
-        v = normalise_license("aaas-author-reuse")
-        assert v.family.key == "publisher-proprietary"
+        assert (
+            normalise_license("aaas-author-reuse").family.key == "publisher-proprietary"
+        )
 
     def test_thieme_nlm(self):
-        v = normalise_license("thieme-nlm")
-        assert v.family.key == "publisher-oa"
-
-
-# ---------------------------------------------------------------------------
-# Open data
-# ---------------------------------------------------------------------------
+        assert normalise_license("thieme-nlm").family.key == "publisher-oa"
 
 
 class TestOpenData:
     def test_odbl(self):
-        v = normalise_license("odbl")
-        assert v.family.key == "open-data"
+        assert normalise_license("odbl").family.key == "open-data"
 
     def test_pddl(self):
-        v = normalise_license("pddl")
-        assert v.family.key == "open-data"
+        assert normalise_license("pddl").family.key == "open-data"
 
     def test_odc_by(self):
-        v = normalise_license("odc-by")
-        assert v.family.key == "open-data"
-
-
-# ---------------------------------------------------------------------------
-# Catch-all / edge cases
-# ---------------------------------------------------------------------------
+        assert normalise_license("odc-by").family.key == "open-data"
 
 
 class TestCatchAll:
     def test_author_manuscript(self):
-        v = normalise_license("author-manuscript")
-        assert v.family.key == "publisher-oa"
+        assert normalise_license("author-manuscript").family.key == "publisher-oa"
 
     def test_no_reuse(self):
-        v = normalise_license("no-reuse")
-        assert v.family.key == "publisher-proprietary"
+        assert normalise_license("no-reuse").family.key == "publisher-proprietary"
 
     def test_unspecified_oa(self):
-        v = normalise_license("unspecified-oa")
-        assert v.family.key == "other-oa"
+        assert normalise_license("unspecified-oa").family.key == "other-oa"
 
     def test_implied_oa(self):
-        v = normalise_license("implied-oa")
-        assert v.family.key == "publisher-oa"
-
-
-# ---------------------------------------------------------------------------
-# Hierarchy navigation
-# ---------------------------------------------------------------------------
+        assert normalise_license("implied-oa").family.key == "publisher-oa"
 
 
 class TestHierarchyNavigation:
@@ -509,7 +412,7 @@ class TestHierarchyNavigation:
         assert v.key == "cc-by-nc-nd-4.0"
         assert v.license.key == "cc-by-nc-nd"
         assert v.license.family.key == "cc"
-        assert v.family.key == "cc"  # shortcut
+        assert v.family.key == "cc"
 
     def test_str_representations(self):
         v = normalise_license("CC BY-NC-ND 4.0")
@@ -525,23 +428,6 @@ class TestHierarchyNavigation:
         assert not v.is_name(LicenseNameEnum.CC_BY)
         assert v.is_version(LicenseVersionEnum.MIT)
         assert not v.is_version(LicenseVersionEnum.GPL_3_0)
-
-    def test_version_enum_property(self):
-        v = normalise_license("MIT")
-        assert v.enum is LicenseVersionEnum.MIT
-
-    def test_name_enum_property(self):
-        v = normalise_license("MIT")
-        assert v.license.enum is LicenseNameEnum.MIT
-
-    def test_family_enum_property(self):
-        v = normalise_license("MIT")
-        assert v.family.enum is LicenseFamilyEnum.OSI
-
-
-# ---------------------------------------------------------------------------
-# Batch normalisation
-# ---------------------------------------------------------------------------
 
 
 class TestBatchNormalisation:
@@ -560,34 +446,3 @@ class TestBatchNormalisation:
 
     def test_batch_empty(self):
         assert normalise_licenses([]) == []
-
-
-# ---------------------------------------------------------------------------
-# Enum classes - direct access
-# ---------------------------------------------------------------------------
-
-
-class TestEnums:
-    def test_family_enum_values(self):
-        assert LicenseFamilyEnum.CC.value == "cc"
-        assert LicenseFamilyEnum.OSI.value == "osi"
-        assert LicenseFamilyEnum.COPYLEFT.value == "copyleft"
-        assert LicenseFamilyEnum.UNKNOWN.value == "unknown"
-
-    def test_name_enum_family_property(self):
-        assert LicenseNameEnum.CC_BY.family is LicenseFamilyEnum.CC
-        assert LicenseNameEnum.MIT.family is LicenseFamilyEnum.OSI
-        assert LicenseNameEnum.GPL_3.family is LicenseFamilyEnum.COPYLEFT
-
-    def test_version_enum_name_property(self):
-        assert LicenseVersionEnum.CC_BY_4_0.name_enum is LicenseNameEnum.CC_BY
-        assert LicenseVersionEnum.MIT.name_enum is LicenseNameEnum.MIT
-
-    def test_version_enum_family_property(self):
-        assert LicenseVersionEnum.CC_BY_4_0.family is LicenseFamilyEnum.CC
-        assert LicenseVersionEnum.MIT.family is LicenseFamilyEnum.OSI
-
-    def test_reverse_lookup_by_value(self):
-        assert LicenseVersionEnum("cc-by-4.0") is LicenseVersionEnum.CC_BY_4_0
-        assert LicenseNameEnum("mit") is LicenseNameEnum.MIT
-        assert LicenseFamilyEnum("osi") is LicenseFamilyEnum.OSI

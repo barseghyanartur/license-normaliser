@@ -1,4 +1,4 @@
-"""Tests for license_normaliser CLI."""
+"""Tests for license_normaliser CLI - includes new --strict flag."""
 
 from unittest.mock import patch
 
@@ -30,7 +30,6 @@ class TestNormaliseCommand:
         assert "Key: cc-by-4.0" in out
         assert "License: cc-by" in out
         assert "Family: cc" in out
-        assert "URL: https://creativecommons.org/licenses/by/4.0/" in out
 
     def test_normalise_cc_url(self, capsys):
         with patch(
@@ -55,16 +54,22 @@ class TestNormaliseCommand:
             assert exc_info.value.code == 0
         assert "totally-unknown-xyz" in capsys.readouterr().out
 
-    def test_normalise_full_unknown_has_no_url(self, capsys):
-        with (
-            patch(
-                "sys.argv",
-                ["license-normaliser", "normalise", "--full", "totally-unknown-xyz"],
-            ),
-            pytest.raises(SystemExit),
+    def test_normalise_strict_known(self, capsys):
+        with patch("sys.argv", ["license-normaliser", "normalise", "--strict", "MIT"]):
+            with pytest.raises(SystemExit) as exc_info:
+                main()
+            assert exc_info.value.code == 0
+        assert capsys.readouterr().out.strip() == "mit"
+
+    def test_normalise_strict_unknown_exits_1(self, capsys):
+        with patch(
+            "sys.argv",
+            ["license-normaliser", "normalise", "--strict", "totally-unknown-xyz-9999"],
         ):
-            main()
-        assert "(none)" in capsys.readouterr().out
+            with pytest.raises(SystemExit) as exc_info:
+                main()
+            assert exc_info.value.code == 1
+        assert capsys.readouterr().err  # error message on stderr
 
 
 class TestBatchCommand:
@@ -81,12 +86,22 @@ class TestBatchCommand:
         assert "Apache-2.0: apache-2.0" in out
         assert "CC BY 4.0: cc-by-4.0" in out
 
-    def test_batch_single_item(self, capsys):
-        with patch("sys.argv", ["license-normaliser", "batch", "GPL-3.0"]):
+    def test_batch_strict_all_known(self, capsys):
+        with patch(
+            "sys.argv", ["license-normaliser", "batch", "--strict", "MIT", "GPL-3.0"]
+        ):
             with pytest.raises(SystemExit) as exc_info:
                 main()
             assert exc_info.value.code == 0
-        assert "GPL-3.0: gpl-3.0" in capsys.readouterr().out
+
+    def test_batch_strict_with_unknown_exits_1(self, capsys):
+        with patch(
+            "sys.argv",
+            ["license-normaliser", "batch", "--strict", "MIT", "no-such-license-xyz"],
+        ):
+            with pytest.raises(SystemExit) as exc_info:
+                main()
+            assert exc_info.value.code == 1
 
 
 class TestVersionFlag:

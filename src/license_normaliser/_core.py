@@ -1,15 +1,4 @@
-"""License Normaliser - public orchestration shim.
-
-This module re-exports the full public API so that external code importing
-from ``license_normaliser._core`` continues to work unchanged.  The actual
-implementation is split across the focused sub-modules:
-
-* :mod:`._models`   - dataclasses (LicenseFamily, LicenseName, LicenseVersion)
-* :mod:`._enums`    - enum definitions
-* :mod:`._registry` - all data and object factories
-* :mod:`._pipeline` - six resolution steps
-* :mod:`._cache`    - caching wrapper and public normalise_* functions
-"""
+"""License Normaliser - public orchestration shim."""
 
 from __future__ import annotations
 

@@ -4,6 +4,7 @@ import argparse
 import sys
 
 from license_normaliser import __version__, normalise_license
+from license_normaliser.exceptions import LicenseNotFoundError
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"
@@ -35,6 +36,11 @@ def _build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Show full details (key, URL, license name, family).",
     )
+    norm.add_argument(
+        "--strict",
+        action="store_true",
+        help="Exit with error if the license cannot be resolved.",
+    )
 
     # batch command
     batch = sub.add_parser("batch", help="Normalise multiple license strings.")
@@ -43,13 +49,18 @@ def _build_parser() -> argparse.ArgumentParser:
         nargs="+",
         help="License strings to normalise.",
     )
+    batch.add_argument(
+        "--strict",
+        action="store_true",
+        help="Exit with error if any license cannot be resolved.",
+    )
 
     return parser
 
 
 def _cmd_normalise(args: argparse.Namespace) -> int:
     try:
-        result = normalise_license(args.license)
+        result = normalise_license(args.license, strict=args.strict)
         if args.full:
             print(f"Key: {result.key}")
             print(f"URL: {result.url or '(none)'}")
@@ -57,6 +68,9 @@ def _cmd_normalise(args: argparse.Namespace) -> int:
             print(f"Family: {result.family}")
         else:
             print(result.key)
+    except LicenseNotFoundError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
     except Exception as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
@@ -64,14 +78,20 @@ def _cmd_normalise(args: argparse.Namespace) -> int:
 
 
 def _cmd_batch(args: argparse.Namespace) -> int:
-    try:
-        for license_str in args.licenses:
-            result = normalise_license(license_str)
+    exit_code = 0
+    for license_str in args.licenses:
+        try:
+            result = normalise_license(license_str, strict=args.strict)
             print(f"{license_str}: {result.key}")
-    except Exception as exc:
-        print(f"error: {exc}", file=sys.stderr)
-        return 1
-    return 0
+        except LicenseNotFoundError as exc:  # noqa: PERF203
+            print(f"error: {exc}", file=sys.stderr)
+            exit_code = 1
+            if args.strict:
+                return exit_code
+        except Exception as exc:
+            print(f"error: {exc}", file=sys.stderr)
+            return 1
+    return exit_code
 
 
 def main() -> None:

@@ -13,6 +13,11 @@ from ._enums import (
     LicenseNameEnum,
     LicenseVersionEnum,
 )
+from .exceptions import (
+    DataSourceError,
+    LicenseNormaliserError,
+    LicenseNotFoundError,
+)
 
 __title__ = "license-normaliser"
 __version__ = "0.2.0"
@@ -26,6 +31,9 @@ __all__ = (
     "LicenseFamilyEnum",
     "LicenseNameEnum",
     "LicenseVersionEnum",
+    "LicenseNormaliserError",
+    "LicenseNotFoundError",
+    "DataSourceError",
     "__version__",
     "normalise_license",
     "normalise_licenses",
