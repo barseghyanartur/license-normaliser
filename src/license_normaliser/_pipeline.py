@@ -16,7 +16,7 @@ Steps
 6. ``step_fallback`` - always matches; returns an
    unknown :class:`~._models.LicenseVersion`
 
-The orchestrator in :mod:`_core` calls these in order.  Each step can also
+The orchestrator in :mod:`_cache` calls these in order.  Each step can also
 be called directly in tests.
 """
 
@@ -99,15 +99,12 @@ _PROSE_PATTERNS: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"open\s*access", re.I), "other-oa"),
 ]
 
-# URL normalisation helper (mirrors _registry._normalise_url_key)
-_SCHEME_RE = re.compile(r"^https?://", re.I)
-
 
 def _normalise_url_for_lookup(cleaned: str) -> str:
-    """Apply the same scheme-normalisation used to build URL_MAP."""
+    """Normalise scheme to https and strip trailing slash for URL_MAP lookup."""
     if cleaned.startswith("http://"):
-        return "https://" + cleaned[len("http://") :]
-    return cleaned
+        cleaned = "https://" + cleaned[len("http://") :]
+    return cleaned.rstrip("/")
 
 
 # ---------------------------------------------------------------------------
@@ -126,7 +123,13 @@ def step_alias(cleaned: str) -> Optional[str]:
 
 
 def step_url(cleaned: str) -> Optional[str]:
-    """Step 3: exact URL map lookup (scheme-normalised, trailing-slash stripped)."""
+    """Step 3: exact URL map lookup (scheme-normalised, trailing-slash stripped).
+
+    Strips the trailing slash here so that this function is correct whether
+    called through the normal pipeline (where _clean has already stripped it)
+    or called directly in tests / external code where it may not have been
+    stripped yet.
+    """
     normalised = _normalise_url_for_lookup(cleaned)
     return URL_MAP.get(normalised)
 

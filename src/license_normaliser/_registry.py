@@ -3,8 +3,8 @@
 This is the single file to edit when adding new licenses.  It contains:
 
 * ``VERSION_REGISTRY`` - derived from :class:`~._enums.LicenseVersionEnum`
-* ``ALIASES``           - prose / SPDX / short-form → version key
-* ``URL_MAP``           - canonical HTTPS URL (lowercase) → version key
+* ``ALIASES``           - prose / SPDX / short-form -> version key
+* ``URL_MAP``           - canonical HTTPS URL (lowercase) -> version key
 * CC URL regex helpers  - structural parsing of creativecommons.org URLs
 * Factory functions     - ``make()``, ``make_unknown()``, ``make_synthetic()``
 
@@ -211,7 +211,8 @@ ALIASES: dict[str, str] = {
     "author manuscript": "author-manuscript",
     "all rights reserved": "all-rights-reserved",
     "no reuse": "no-reuse",
-    "© the author(s)": "publisher-specific-oa",
+    # Properly-encoded copyright symbol (mojibake variant handled in _cache.py)
+    "\u00a9 the author(s)": "publisher-specific-oa",
     # Publisher shorthand
     "elsevier user license": "elsevier-oa",
     "wiley tdm license": "wiley-tdm",
@@ -232,21 +233,63 @@ ALIASES: dict[str, str] = {
 
 def _normalise_url_key(url: str) -> str:
     """Normalise a URL for use as a map key."""
-    # Strip trailing slash then lowercase
     key = url.rstrip("/").lower()
-    # Normalise scheme to https
     if key.startswith("http://"):
         key = "https://" + key[len("http://") :]
     return key
 
 
+def _url_key_priority(vkey: str) -> int:
+    """Return a priority score for a version key when multiple keys share a URL.
+
+    Higher score = higher priority (wins the URL slot).
+
+    Rules:
+    - IGO variants that reuse a non-IGO URL get the lowest priority (0).
+    - Version-free keys (no dot, e.g. ``cc-by``, ``cc0``) get low priority (1)
+      because a URL like https://creativecommons.org/licenses/by/4.0/ should
+      resolve to ``cc-by-4.0``, not the version-free ``cc-by``.
+    - ``-only`` SPDX suffixes are aliases for the base version key; they get
+      medium priority (2) so the base key wins.
+    - Everything else (proper versioned keys) gets the highest priority (3).
+    """
+    if vkey.endswith("-igo") and not any(
+        c.isdigit() for c in vkey.split("-igo")[0].split(".")
+    ):
+        # version-free IGO: lowest
+        return 0
+    if vkey.endswith("-igo"):
+        return 0  # any IGO reusing a non-IGO URL loses
+    if vkey.endswith("-only"):
+        return 2
+    # Check for a version number (digit.digit pattern) in the key
+    if re.search(r"\d+\.\d+", vkey) or re.search(r"\d+$", vkey):
+        return 3
+    # version-free (e.g. cc-by, cc0, gpl-3, fal)
+    return 1
+
+
 def _build_url_map() -> dict[str, str]:
     url_map: dict[str, str] = {}
+    # Track the priority of the current occupant so a higher-priority key
+    # can displace it.
+    url_priority: dict[str, int] = {}
 
-    # Primary source: enum registry (already has canonical HTTPS URLs)
+    # Primary source: enum registry (already has canonical HTTPS URLs).
+    # When multiple enum entries share the same canonical URL, the key with
+    # the highest _url_key_priority wins.  This handles three collision types:
+    #   1. version-free vs versioned  (cc-by vs cc-by-4.0 -> cc-by-4.0 wins)
+    #   2. base vs -only SPDX alias  (gpl-3.0 vs gpl-3.0-only -> gpl-3.0 wins)
+    #   3. versioned vs IGO reusing same URL
+    #      (cc-by-4.0 vs cc-by-4.0-igo -> cc-by-4.0 wins)
     for vkey, (url, _) in VERSION_REGISTRY.items():
-        if url:
-            url_map[_normalise_url_key(url)] = vkey
+        if not url:
+            continue
+        normalised = _normalise_url_key(url)
+        priority = _url_key_priority(vkey)
+        if normalised not in url_map or priority > url_priority[normalised]:
+            url_map[normalised] = vkey
+            url_priority[normalised] = priority
 
     # Supplementary entries: URL variants not captured by canonical enum URLs.
     # These are URLs found in the wild that differ structurally from the

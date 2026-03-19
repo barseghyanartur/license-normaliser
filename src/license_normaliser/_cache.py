@@ -53,6 +53,8 @@ def _try_decode_mojibake(s: str) -> str:
     """Attempt to fix common latin-1/utf-8 mojibake (e.g. Â© -> ©).
 
     Returns the decoded string on success, or the original string on failure.
+    This is a no-op for any string that cannot be round-tripped through
+    latin-1 encoding (i.e. normal ASCII and properly-encoded UTF-8).
     """
     try:
         return s.encode("latin-1").decode("utf-8")
@@ -80,7 +82,7 @@ def _resolve(cleaned: str) -> LicenseVersion:
     if key := step_alias(cleaned):
         return make(key)
 
-    # Step 3 - exact URL map (scheme-normalised)
+    # Step 3 - exact URL map (scheme-normalised, trailing-slash stripped)
     if key := step_url(cleaned):
         return make(key)
 
@@ -106,23 +108,19 @@ def normalise_license_cached(raw: str) -> LicenseVersion:
 
     Empty / whitespace-only inputs immediately return the ``"unknown"``
     version without entering the cache.
+
+    Mojibake decoding is attempted on the *raw* string before cleaning,
+    because ``_clean`` calls ``.lower()`` which changes the code-point values
+    of high Latin-1 characters and makes post-clean detection unreliable.
     """
     if not raw or not raw.strip():
-        # Import here to avoid circular import; make() is cheap
-        from ._registry import make as _make
+        return make("unknown")
 
-        return _make("unknown")
+    # Attempt mojibake fix on the raw string BEFORE cleaning.
+    # _try_decode_mojibake is a no-op for normal ASCII/UTF-8 input.
+    raw = _try_decode_mojibake(raw)
 
-    cleaned = _clean(raw)
-
-    # Attempt mojibake fix only when the cleaned string contains suspicious
-    # sequences (the © alias would otherwise never fire).
-    if "\xc2" in cleaned or "\xc3" in cleaned:
-        fixed = _try_decode_mojibake(cleaned)
-        if fixed != cleaned:
-            cleaned = fixed
-
-    return _resolve(cleaned)
+    return _resolve(_clean(raw))
 
 
 def normalise_licenses(raws: Iterable[str]) -> list[LicenseVersion]:

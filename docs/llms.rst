@@ -16,11 +16,19 @@ the contents of each key file.
    │       ├── tests
    │       │   ├── __init__.py
    │       │   ├── conftest.py
+   │       │   ├── test_cache.py
    │       │   ├── test_cli.py
-   │       │   └── test_core.py
+   │       │   ├── test_core.py
+   │       │   ├── test_models.py
+   │       │   ├── test_pipeline.py
+   │       │   └── test_registry.py
    │       ├── __init__.py
+   │       ├── _cache.py
    │       ├── _core.py
    │       ├── _enums.py
+   │       ├── _models.py
+   │       ├── _pipeline.py
+   │       ├── _registry.py
    │       └── py.typed
    ├── AGENTS.md
    ├── conftest.py
@@ -30,8 +38,7 @@ the contents of each key file.
    ├── Makefile
    ├── pyproject.toml
    ├── README.rst
-   ├── tox.ini
-   └── uv.lock
+   └── tox.ini
 
 README.rst
 ----------
@@ -82,6 +89,13 @@ src/license_normaliser/__init__.py
    :language: python
    :caption: src/license_normaliser/__init__.py
 
+src/license_normaliser/_cache.py
+--------------------------------
+
+.. literalinclude:: ../src/license_normaliser/_cache.py
+   :language: python
+   :caption: src/license_normaliser/_cache.py
+
 src/license_normaliser/_core.py
 -------------------------------
 
@@ -95,6 +109,27 @@ src/license_normaliser/_enums.py
 .. literalinclude:: ../src/license_normaliser/_enums.py
    :language: python
    :caption: src/license_normaliser/_enums.py
+
+src/license_normaliser/_models.py
+---------------------------------
+
+.. literalinclude:: ../src/license_normaliser/_models.py
+   :language: python
+   :caption: src/license_normaliser/_models.py
+
+src/license_normaliser/_pipeline.py
+-----------------------------------
+
+.. literalinclude:: ../src/license_normaliser/_pipeline.py
+   :language: python
+   :caption: src/license_normaliser/_pipeline.py
+
+src/license_normaliser/_registry.py
+-----------------------------------
+
+.. literalinclude:: ../src/license_normaliser/_registry.py
+   :language: python
+   :caption: src/license_normaliser/_registry.py
 
 src/license_normaliser/cli/__init__.py
 --------------------------------------
@@ -124,6 +159,13 @@ src/license_normaliser/tests/conftest.py
    :language: python
    :caption: src/license_normaliser/tests/conftest.py
 
+src/license_normaliser/tests/test_cache.py
+------------------------------------------
+
+.. literalinclude:: ../src/license_normaliser/tests/test_cache.py
+   :language: python
+   :caption: src/license_normaliser/tests/test_cache.py
+
 src/license_normaliser/tests/test_cli.py
 ----------------------------------------
 
@@ -137,3 +179,24 @@ src/license_normaliser/tests/test_core.py
 .. literalinclude:: ../src/license_normaliser/tests/test_core.py
    :language: python
    :caption: src/license_normaliser/tests/test_core.py
+
+src/license_normaliser/tests/test_models.py
+-------------------------------------------
+
+.. literalinclude:: ../src/license_normaliser/tests/test_models.py
+   :language: python
+   :caption: src/license_normaliser/tests/test_models.py
+
+src/license_normaliser/tests/test_pipeline.py
+---------------------------------------------
+
+.. literalinclude:: ../src/license_normaliser/tests/test_pipeline.py
+   :language: python
+   :caption: src/license_normaliser/tests/test_pipeline.py
+
+src/license_normaliser/tests/test_registry.py
+---------------------------------------------
+
+.. literalinclude:: ../src/license_normaliser/tests/test_registry.py
+   :language: python
+   :caption: src/license_normaliser/tests/test_registry.py
