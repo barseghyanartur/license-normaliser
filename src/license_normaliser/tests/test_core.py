@@ -92,6 +92,37 @@ class TestCreativeCommons:
         assert v.key == "cc-by-nc-nd"
         assert v.license.key == "cc-by-nc-nd"
 
+    def test_cc_prose_nc_nd_4_0(self):
+        v = normalise_license(
+            "creative commons attribution-noncommercial-noderivatives 4.0"
+        )
+        assert v.key == "cc-by-nc-nd-4.0"
+
+    def test_cc_prose_nc_nd_4_0_international(self):
+        v = normalise_license(
+            "creative commons attribution-noncommercial-noderivatives 4.0 international"
+        )
+        assert v.key == "cc-by-nc-nd-4.0"
+
+    def test_cc_igo_url(self):
+        v = normalise_license("https://creativecommons.org/licenses/by/3.0/igo/")
+        assert v.key == "cc-by-3.0-igo"
+        assert v.license.key == "cc-by-igo"
+        assert v.family.key == "cc"
+
+    def test_cc_igo_http(self):
+        v = normalise_license("http://creativecommons.org/licenses/by/3.0/igo")
+        assert v.key == "cc-by-3.0-igo"
+
+    def test_cc_base_not_mistaken_as_igo(self):
+        for url in [
+            "https://creativecommons.org/licenses/by/4.0/",
+            "https://creativecommons.org/licenses/by/4.0/#section",
+            "http://creativecommons.org/licenses/by/3.0/",
+        ]:
+            v = normalise_license(url)
+            assert not v.key.endswith("-igo"), f"{url} should not be IGO, got {v.key}"
+
     def test_cc_by_url(self):
         v = normalise_license("http://creativecommons.org/licenses/by/4.0/")
         assert v.key == "cc-by-4.0"
@@ -264,6 +295,11 @@ class TestURLNormalisation:
         v1 = normalise_license("HTTP://creativecommons.org/licenses/by/4.0/")
         v2 = normalise_license("http://creativecommons.org/licenses/by/4.0/")
         assert v1.key == v2.key == "cc-by-4.0"
+
+    def test_url_fragment_stripped(self):
+        v = normalise_license("https://creativecommons.org/licenses/by/4.0/#legalcode")
+        assert v.key == "cc-by-4.0"
+        assert v.url == "https://creativecommons.org/licenses/by/4.0/"
 
 
 class TestEnums:

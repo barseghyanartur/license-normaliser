@@ -368,13 +368,9 @@ _VERSION_REGISTRY: dict[str, tuple[Optional[str], LicenseNameEnum]] = {
         "https://creativecommons.org/licenses/by-nc-nd/2.0/",
         LicenseNameEnum.CC_BY_NC_ND,
     ),
-    # CC IGO variants
+    # CC IGO variants (4.0 IGO URLs don't exist; handled by structural regex)
     "cc-by-3.0-igo": (
         "https://creativecommons.org/licenses/by/3.0/igo/",
-        LicenseNameEnum.CC_BY_IGO,
-    ),
-    "cc-by-4.0-igo": (
-        "https://creativecommons.org/licenses/by/4.0/",
         LicenseNameEnum.CC_BY_IGO,
     ),
     "cc-by-nc-sa-3.0-igo": (
@@ -383,10 +379,6 @@ _VERSION_REGISTRY: dict[str, tuple[Optional[str], LicenseNameEnum]] = {
     ),
     "cc-by-nc-nd-3.0-igo": (
         "https://creativecommons.org/licenses/by-nc-nd/3.0/igo/",
-        LicenseNameEnum.CC_BY_NC_ND_IGO,
-    ),
-    "cc-by-nc-nd-4.0-igo": (
-        "https://creativecommons.org/licenses/by-nc-nd/4.0/",
         LicenseNameEnum.CC_BY_NC_ND_IGO,
     ),
     # OSI permissive
@@ -727,7 +719,7 @@ _ALIASES: dict[str, str] = {
     "creative commons attribution-noncommercial 4.0": "cc-by-nc-4.0",
     "creative commons attribution-noderivatives": "cc-by-nd",
     "creative commons attribution-sharealike": "cc-by-sa",
-    "creative commons attribution-noncommercial-noderivatives 4.0": ("cc-by-nc-nd-4.0"),
+    "creative commons attribution-noncommercial-noderivatives 4.0": "cc-by-nc-nd-4.0",
     "creative commons attribution-noncommercial-noderivatives "
     "4.0 international": "cc-by-nc-nd-4.0",
     # OSI
@@ -968,7 +960,7 @@ _CC_PATH_RE = re.compile(
     r"creativecommons\.org/licenses/"
     r"(?P<type>by(?:-nc)?(?:-nd|-sa)?)"
     r"/(?P<ver>\d+\.\d+)"
-    r"(?:/(?P<igo>igo))?",
+    r"(?:/(?P<igo>igo))?(?:/|$)",
     re.IGNORECASE,
 )
 _CC_ZERO_RE = re.compile(
@@ -1065,7 +1057,7 @@ _PROSE_PATTERNS: list[tuple[re.Pattern, str]] = [
 
 
 def _clean(raw: str) -> str:
-    return _WHITESPACE_RE.sub(" ", raw.strip().rstrip("/")).lower()
+    return _WHITESPACE_RE.sub(" ", raw.strip().split("#", 1)[0].rstrip("/")).lower()
 
 
 @lru_cache(maxsize=8192)
