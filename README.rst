@@ -6,7 +6,7 @@ license-normaliser
    :alt: license-normaliser logo
    :align: center
 
-Comprehensive license normalsation with a three-level hierarchy.
+Comprehensive license normalisation with a three-level hierarchy.
 
 .. image:: https://img.shields.io/pypi/v/license-normaliser.svg
    :target: https://pypi.python.org/pypi/license-normaliser

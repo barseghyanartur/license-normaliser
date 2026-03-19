@@ -183,6 +183,10 @@ When asked to add a feature or fix a bug, follow these steps in order:
 
 ### All tests must run inside Docker
 
+> [!NOTE]
+> Python 3.15 is being tested on GitHub CI, but not inside a local Docker
+> image.
+
 ```sh
 make test                   # full matrix (Python 3.10–3.14)
 make test-env ENV=py312     # single version
