@@ -157,7 +157,9 @@ When adding a new feature
 GitHub Actions
 --------------
 
-Tests run on Python 3.10–3.14 (all non-EOL versions).  See the
+Tests run on Python 3.10–3.14 (all non-EOL versions). Additionally,
+unreleased versions of Python (e.g. 3.15) run in a separate workflow on GitHub
+CI. That allows early acknowledgement of potential issues. See the
 `versions manifest`_ for the full list of available Python versions.
 
 Questions

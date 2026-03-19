@@ -9,6 +9,10 @@ from license_normaliser import (
     normalise_licenses,
 )
 
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2026 Artur Barseghyan"
+__license__ = "MIT"
+
 
 class TestLicenseFamily:
     """Tests for LicenseFamily."""
