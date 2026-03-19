@@ -6,7 +6,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 from functools import lru_cache
-from typing import Optional
+from typing import Iterable, Optional
 
 from ._enums import (
     LicenseFamilyEnum,
@@ -24,6 +24,8 @@ __all__ = (
     "normalise_license",
     "normalise_licenses",
 )
+
+_WHITESPACE_RE = re.compile(r"\s+")
 
 
 # ===========================================================================
@@ -172,7 +174,7 @@ _NAME_REGISTRY: dict[LicenseNameEnum, LicenseFamilyEnum] = {
     # Publisher proprietary – ACS
     LicenseNameEnum.ACS_AUTHORCHOICE: LicenseFamilyEnum.PUBLISHER_OA,
     LicenseNameEnum.ACS_AUTHORCHOICE_CCBY: LicenseFamilyEnum.PUBLISHER_OA,
-    LicenseNameEnum.ACS_AUTHORCHOICE_CCBNYCND: LicenseFamilyEnum.PUBLISHER_OA,
+    LicenseNameEnum.ACS_AUTHORCHOICE_CCBYNCND: LicenseFamilyEnum.PUBLISHER_OA,
     LicenseNameEnum.ACS_AUTHORCHOICE_NIH: LicenseFamilyEnum.PUBLISHER_OA,
     # Publisher proprietary – RSC
     LicenseNameEnum.RSC_TERMS: LicenseFamilyEnum.PUBLISHER_PROPRIETARY,
@@ -504,7 +506,7 @@ _VERSION_REGISTRY: dict[str, tuple[Optional[str], LicenseNameEnum]] = {
     ),
     "acs-authorchoice-ccbyncnd": (
         "https://pubs.acs.org/page/policy/authorchoice_ccbyncnd_termsofuse.html",
-        LicenseNameEnum.ACS_AUTHORCHOICE_CCBNYCND,
+        LicenseNameEnum.ACS_AUTHORCHOICE_CCBYNCND,
     ),
     "acs-authorchoice": (
         "https://pubs.acs.org/page/policy/authorchoice_termsofuse.html",
@@ -1063,17 +1065,18 @@ _PROSE_PATTERNS: list[tuple[re.Pattern, str]] = [
 
 
 def _clean(raw: str) -> str:
-    return re.sub(r"\s+", " ", raw.strip().rstrip("/")).lower()
+    return _WHITESPACE_RE.sub(" ", raw.strip().rstrip("/")).lower()
 
 
 @lru_cache(maxsize=8192)
-def normalise_license(raw: str) -> LicenseVersion:
+def normalise_license(raw: str | None) -> LicenseVersion:
     """Normalise any license string to a :class:`LicenseVersion`.
 
     Parameters
     ----------
-    raw : str
+    raw : str | None
         Any form – token, URL, prose, SPDX expression.
+        None raises TypeError.
 
     Returns
     -------
@@ -1083,7 +1086,14 @@ def normalise_license(raw: str) -> LicenseVersion:
         ``.license``         :class:`LicenseName`, e.g. ``"cc-by-nc-nd"``
         ``.license.family``  :class:`LicenseFamily`, e.g. ``"cc"``
         ``.family``          shortcut for ``.license.family``
+
+    Raises
+    ------
+    TypeError
+        If ``raw`` is not a string or None.
     """
+    if raw is None:
+        raise TypeError("raw must be a string, got None")
     if not raw or not raw.strip():
         return _make("unknown")
 
@@ -1120,6 +1130,6 @@ def normalise_license(raw: str) -> LicenseVersion:
     return _make_unknown(cleaned)
 
 
-def normalise_licenses(raws: list[str]) -> list[LicenseVersion]:
+def normalise_licenses(raws: Iterable[str]) -> list[LicenseVersion]:
     """Normalise a list of license strings."""
     return [normalise_license(r) for r in raws]

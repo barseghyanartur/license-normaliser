@@ -95,7 +95,7 @@ class LicenseNameEnum(Enum):
     # Publisher - ACS
     ACS_AUTHORCHOICE = "acs-authorchoice"
     ACS_AUTHORCHOICE_CCBY = "acs-authorchoice-ccby"
-    ACS_AUTHORCHOICE_CCBNYCND = "acs-authorchoice-ccbyncnd"
+    ACS_AUTHORCHOICE_CCBYNCND = "acs-authorchoice-ccbyncnd"
     ACS_AUTHORCHOICE_NIH = "acs-authorchoice-nih"
 
     # Publisher - RSC

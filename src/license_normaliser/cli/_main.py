@@ -6,6 +6,9 @@ import sys
 from license_normaliser import __version__, normalise_license
 
 __all__ = ("main",)
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2026 Artur Barseghyan"
+__license__ = "MIT"
 
 
 def _build_parser() -> argparse.ArgumentParser:
