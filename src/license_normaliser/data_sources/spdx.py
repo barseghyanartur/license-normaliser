@@ -97,7 +97,6 @@ class SpdxSource:
             # by another source).
             if cleaned_id not in metadata:
                 metadata[cleaned_id] = {
-                    "name_key": cleaned_id,
                     "family_key": "",
                 }
 

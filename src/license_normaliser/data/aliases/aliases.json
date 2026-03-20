@@ -83,6 +83,9 @@
 
   "elsevier user license": {"version_key": "elsevier-oa", "name_key": "elsevier-oa", "family_key": "publisher-oa"},
   "wiley tdm license": {"version_key": "wiley-tdm", "name_key": "wiley-tdm", "family_key": "publisher-tdm"},
+  "implied oa": {"version_key": "implied-oa", "name_key": "implied-oa", "family_key": "publisher-oa"},
+  "unspecified oa": {"version_key": "unspecified-oa", "name_key": "unspecified-oa", "family_key": "other-oa"},
+  "thieme nlm": {"version_key": "thieme-nlm", "name_key": "thieme-nlm", "family_key": "publisher-oa"},
   "acs authorchoice": {"version_key": "acs-authorchoice", "name_key": "acs-authorchoice", "family_key": "publisher-oa"},
   "springer tdm": {"version_key": "springer-tdm", "name_key": "springer-tdm", "family_key": "publisher-tdm"},
   "springer nature tdm": {"version_key": "springernature-tdm", "name_key": "springernature-tdm", "family_key": "publisher-tdm"}

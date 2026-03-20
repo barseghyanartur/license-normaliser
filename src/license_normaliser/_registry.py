@@ -127,10 +127,9 @@ def _get_license_family(family_key: str) -> LicenseFamily:
 @lru_cache(maxsize=512)
 def _get_license_name(name_key: str) -> LicenseName:
     """Return a cached LicenseName for *name_key*."""
-    return LicenseName(
-        key=name_key,
-        family=_get_license_family(_NAME_TO_FAMILY.get(name_key, "")),
-    )
+    vkey = _NAME_KEY_TO_VERSION_KEY.get(name_key, name_key)
+    family_key = _NAME_TO_FAMILY.get(vkey, "unknown")
+    return LicenseName(key=name_key, family=_get_license_family(family_key))
 
 
 # ---------------------------------------------------------------------------
@@ -225,6 +224,13 @@ if "unknown" not in VERSION_REGISTRY:
         "family_key": "unknown",
         "url": None,
     }
+
+# Build _NAME_KEY_TO_VERSION_KEY reverse map: name_key -> version_key (first match wins)
+_NAME_KEY_TO_VERSION_KEY: dict[str, str] = {}
+for vkey, meta in VERSION_REGISTRY.items():
+    nk = meta.get("name_key", "")
+    if nk and nk not in _NAME_KEY_TO_VERSION_KEY:
+        _NAME_KEY_TO_VERSION_KEY[nk] = vkey
 
 # Build _NAME_TO_FAMILY lookup from merged VERSION_REGISTRY
 _NAME_TO_FAMILY: dict[str, str] = {
