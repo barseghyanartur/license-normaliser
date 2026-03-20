@@ -468,16 +468,35 @@ Coding Conventions
 Testing
 =======
 
-All tests run inside Docker::
+.. note::
+   Python 3.15 is being tested on GitHub CI, but not inside a local Docker image.
 
+Docker-based testing (recommended)
+-----------------------------------
+
+All tests run inside Docker for platform independence and consistency::
+
+    make test                    # full matrix (Python 3.10-3.14)
     make test-env ENV=py312      # single Python version
-    make test                    # full matrix (py310–py314)
+    make shell                   # interactive shell in test container
+    make shell-env ENV=py312     # interactive shell for specific Python
 
-Interactive shell::
+Local testing (alternative)
+---------------------------
 
-    make shell                   # default Python
-    make shell-env ENV=py312     # specific Python
+For faster iteration during development, you can run tests locally
+with ``uv``::
 
-Code quality::
+    make install                 # one-time setup
+    uv run pytest                # run all tests
+    uv run pytest path/to/test_something.py  # run specific test
 
-    make pre-commit              # runs all hooks (ruff, ...)
+**Important**: If you encounter tooling errors with local testing, fall back to
+Docker-based testing which is the canonical environment.
+
+Code quality
+------------
+
+Run all linting and formatting checks::
+
+    make pre-commit              # runs all hooks (ruff, doc8, detect-secrets, etc.)
