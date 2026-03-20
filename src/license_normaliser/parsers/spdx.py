@@ -8,6 +8,9 @@ from .base import BaseParser
 
 
 class SPDXParser(BaseParser):
+    url = "https://raw.githubusercontent.com/spdx/license-list-data/main/json/licenses.json"
+    local_path = "data/spdx/spdx.json"
+
     def parse(self) -> list[tuple[str, dict[str, Any]]]:
         path = Path(__file__).parent.parent / "data" / "spdx" / "spdx.json"
         data = json.loads(path.read_text(encoding="utf-8"))

@@ -8,6 +8,9 @@ from .base import BaseParser
 
 
 class OSIParser(BaseParser):
+    url = "https://opensource.org/api/license"
+    local_path = "data/osi/osi.json"
+
     def parse(self) -> list[tuple[str, dict[str, Any]]]:
         path = Path(__file__).parent.parent / "data" / "osi" / "osi.json"
         data = json.loads(path.read_text(encoding="utf-8"))

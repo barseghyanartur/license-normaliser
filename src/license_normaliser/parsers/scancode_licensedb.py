@@ -8,6 +8,9 @@ from .base import BaseParser
 
 
 class ScanCodeLicenseDBParser(BaseParser):
+    url = "https://scancode-licensedb.aboutcode.org/index.json"
+    local_path = "data/scancode_licensedb/scancode_licensedb.json"
+
     def parse(self) -> list[tuple[str, dict[str, Any]]]:
         path = (
             Path(__file__).parent.parent

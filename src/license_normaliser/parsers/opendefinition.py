@@ -8,6 +8,9 @@ from .base import BaseParser
 
 
 class OpenDefinitionParser(BaseParser):
+    url = "https://licenses.opendefinition.org/licenses/groups/all.json"
+    local_path = "data/opendefinition/opendefinition.json"
+
     def parse(self) -> list[tuple[str, dict[str, Any]]]:
         path = (
             Path(__file__).parent.parent
