@@ -2,6 +2,7 @@
 
 from .base import BaseParser
 from .opendefinition import OpenDefinitionParser
+from .osi import OSIParser
 from .scancode_licensedb import ScanCodeLicenseDBParser
 from .spdx import SPDXParser
 
@@ -12,5 +13,6 @@ def get_parsers() -> list[BaseParser]:
     return [
         SPDXParser(),
         OpenDefinitionParser(),
+        OSIParser(),
         ScanCodeLicenseDBParser(),
     ]
