@@ -6,7 +6,7 @@ import pytest
 
 from license_normaliser._cache import (
     _clean,
-    normalise_license_cached,
+    normalise_license,
     normalise_licenses,
 )
 
@@ -47,26 +47,26 @@ class TestClean:
 
 class TestNormaliseLicenseCached:
     def test_mit_basic(self):
-        v = normalise_license_cached("MIT")
+        v = normalise_license("MIT")
         assert v.key == "mit"
 
     def test_whitespace_variants_share_result(self):
-        v1 = normalise_license_cached("MIT")
-        v2 = normalise_license_cached("MIT ")
-        v3 = normalise_license_cached("  MIT  ")
+        v1 = normalise_license("MIT")
+        v2 = normalise_license("MIT ")
+        v3 = normalise_license("  MIT  ")
         assert v1.key == v2.key == v3.key == "mit"
 
     def test_case_variants_share_result(self):
-        v1 = normalise_license_cached("Apache-2.0")
-        v2 = normalise_license_cached("apache-2.0")
+        v1 = normalise_license("Apache-2.0")
+        v2 = normalise_license("apache-2.0")
         assert v1.key == v2.key == "apache-2.0"
 
     def test_empty_string_returns_unknown(self):
-        v = normalise_license_cached("")
+        v = normalise_license("")
         assert v.key == "unknown"
 
     def test_whitespace_only_returns_unknown(self):
-        v = normalise_license_cached("   ")
+        v = normalise_license("   ")
         assert v.key == "unknown"
 
     def test_cc_by_4_0_various_forms(self):
@@ -78,25 +78,23 @@ class TestNormaliseLicenseCached:
             "https://creativecommons.org/licenses/by/4.0/",
         ]
         for form in forms:
-            v = normalise_license_cached(form)
+            v = normalise_license(form)
             assert v.key == "cc-by-4.0", f"Failed for: {form!r}"
 
     def test_url_http_and_https_same_result(self):
-        v_http = normalise_license_cached(
-            "http://creativecommons.org/licenses/by-nc-nd/4.0/"
-        )
-        v_https = normalise_license_cached(
+        v_http = normalise_license("http://creativecommons.org/licenses/by-nc-nd/4.0/")
+        v_https = normalise_license(
             "https://creativecommons.org/licenses/by-nc-nd/4.0/"
         )
         assert v_http.key == v_https.key == "cc-by-nc-nd-4.0"
 
     def test_unknown_input_uses_cleaned_key(self):
-        v = normalise_license_cached("Some Unknown License 999")
+        v = normalise_license("Some Unknown License 999")
         assert v.key == "some unknown license 999"
         assert v.family.key == "unknown"
 
     def test_result_is_frozen(self):
-        v = normalise_license_cached("MIT")
+        v = normalise_license("MIT")
         with pytest.raises((AttributeError, TypeError)):
             v.key = "other"  # type: ignore[misc]
 
@@ -106,7 +104,7 @@ class TestNormaliseLicenseCached:
 
         def _call():
             barrier.wait()
-            results.append(normalise_license_cached("CC BY 4.0").key)
+            results.append(normalise_license("CC BY 4.0").key)
 
         threads = [threading.Thread(target=_call) for _ in range(10)]
         for t in threads:
@@ -119,11 +117,11 @@ class TestNormaliseLicenseCached:
 class TestMojibakeDecode:
     def test_copyright_symbol_mojibake(self):
         mojibake = "\xc2\xa9 the author(s)"
-        v = normalise_license_cached(mojibake)
+        v = normalise_license(mojibake)
         assert v.key == "publisher-specific-oa"
 
     def test_clean_copyright_symbol(self):
-        v = normalise_license_cached("\u00a9 the author(s)")
+        v = normalise_license("\u00a9 the author(s)")
         assert v.key == "publisher-specific-oa"
 
 

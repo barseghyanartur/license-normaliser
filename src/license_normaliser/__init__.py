@@ -1,5 +1,4 @@
-"""license_normaliser - Comprehensive license normalisation with a
-three-level hierarchy."""
+"""license_normaliser - License normalisation with a three-level hierarchy."""
 
 from ._core import (
     LicenseFamily,
@@ -8,25 +7,25 @@ from ._core import (
     normalise_license,
     normalise_licenses,
 )
-from .exceptions import (
-    DataSourceError,
-    LicenseNormaliserError,
-    LicenseNotFoundError,
-)
+from ._enums import LicenseFamilyEnum, LicenseNameEnum, LicenseVersionEnum
+from ._exceptions import LicenseNormalisationError
+from .exceptions import LicenseNotFoundError
 
 __title__ = "license-normaliser"
-__version__ = "0.2"
+__version__ = "0.3.0"
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"
 __license__ = "MIT"
+
 __all__ = (
     "LicenseFamily",
     "LicenseName",
     "LicenseVersion",
-    "LicenseNormaliserError",
+    "LicenseFamilyEnum",
+    "LicenseNameEnum",
+    "LicenseVersionEnum",
+    "LicenseNormalisationError",
     "LicenseNotFoundError",
-    "DataSourceError",
-    "__version__",
     "normalise_license",
     "normalise_licenses",
 )

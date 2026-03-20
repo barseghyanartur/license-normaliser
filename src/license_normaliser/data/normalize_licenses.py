@@ -18,12 +18,12 @@ logger = logging.getLogger(__name__)
 
 
 def load_json(path: Path) -> dict:
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         return json.load(f)
 
 
 def process_opendefinition(data: dict) -> list[tuple[str, str]]:
-    results = []
+    results: list[tuple[str, str]] = []
     for entry in data.values():
         if not isinstance(entry, dict):
             continue
@@ -32,7 +32,7 @@ def process_opendefinition(data: dict) -> list[tuple[str, str]]:
 
 
 def process_spdx(data: dict) -> list[tuple[str, str]]:
-    results = []
+    results: list[tuple[str, str]] = []
     for entry in data.get("licenses", []):
         if not isinstance(entry, dict):
             continue
@@ -73,12 +73,11 @@ def main():
 
     summary: list[dict] = []
 
-    # Process opendefinition
-    od_path = data_dir / "opendefinition_licenses_all.json"
+    od_path = data_dir / "opendefinition" / "opendefinition_licenses_all.json"
     logger.info("Processing %s", od_path.name)
     od_data = load_json(od_path)
     od_items = process_opendefinition(od_data)
-    result = normalize_batch(od_items, od_path.name)
+    result = normalize_batch(od_items, str(od_path))
     summary.append(result)
     logger.info(
         "  %s: %d/%d normalized",
@@ -87,12 +86,11 @@ def main():
         result["total"],
     )
 
-    # Process SPDX
-    spdx_path = data_dir / "spdx-licenses.json"
+    spdx_path = data_dir / "spdx" / "spdx-licenses.json"
     logger.info("Processing %s", spdx_path.name)
     spdx_data = load_json(spdx_path)
     spdx_items = process_spdx(spdx_data)
-    result = normalize_batch(spdx_items, spdx_path.name)
+    result = normalize_batch(spdx_items, str(spdx_path))
     summary.append(result)
     logger.info(
         "  %s: %d/%d normalized",
@@ -101,7 +99,6 @@ def main():
         result["total"],
     )
 
-    # Print summary
     print("\n" + "=" * 60)
     print("SUMMARY")
     print("=" * 60)

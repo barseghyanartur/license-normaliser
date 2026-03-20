@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-from ._cache import normalise_license_cached as normalise_license
-from ._cache import normalise_licenses
+from ._cache import normalise_license, normalise_licenses
 from ._models import LicenseFamily, LicenseName, LicenseVersion
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"

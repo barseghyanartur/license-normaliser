@@ -10,6 +10,7 @@ __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"
 __license__ = "MIT"
 __all__ = (
+    "LicenseNormalisationError",
     "LicenseNormaliserError",
     "LicenseNotFoundError",
     "DataSourceError",
@@ -34,3 +35,7 @@ class LicenseNotFoundError(LicenseNormaliserError):
 
 class DataSourceError(LicenseNormaliserError):
     """Raised when a data source file cannot be loaded or parsed."""
+
+
+class LicenseNormalisationError(ValueError):
+    """Raised when ``strict=True`` and no canonical license could be resolved."""

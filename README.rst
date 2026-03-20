@@ -134,15 +134,20 @@ Batch normalisation
     # Strict batch - raises on first unresolvable
     results = normalise_licenses(["MIT", "Apache-2.0"], strict=True)
 
-Resolution pipeline (first match wins)
-======================================
+Update data sources (CLI)
+=========================
 
-1. Direct registry lookup (cleaned lowercase key)
-2. Alias table (loaded from ``data/aliases/aliases.json``)
-3. Exact URL map (loaded from ``data/urls/url_map.json``)
-4. Structural CC URL regex (any creativecommons.org URL not in the map)
-5. Prose keyword scan (loaded from ``data/prose/prose_patterns.json``)
-6. Fallback (key = cleaned string, family = unknown)
+.. code-block:: sh
+
+    license-normaliser update-data --force
+    # Fetches fresh SPDX + OpenDefinition JSONs into src/license_normaliser/data/
+
+Integration tests (public API only)
+===================================
+
+All integration tests live in
+``src/license_normaliser/tests/test_integration.py``
+and only import the public API.
 
 CLI usage
 =========
@@ -171,31 +176,6 @@ Batch normalise:
     license-normaliser batch MIT "Apache-2.0" "CC BY 4.0"
     license-normaliser batch --strict MIT "Apache-2.0"
 
-Extending the data
-==================
-
-To add a new alias, URL mapping, or prose pattern **without touching Python**:
-
-1. Edit the relevant JSON file in ``data/``.
-2. Restart the Python process (the registry is built at import time).
-
-See ``data/README.md`` for the full format specification and examples.
-
-To add a brand-new license (with a new key):
-
-1. Add entries to the JSON data files (``aliases.json``, ``url_map.json``, or
-   ``prose_patterns.json``).  Each entry maps a key to a dict with
-   ``version_key``, ``name_key``, and ``family_key``.
-2. If the family is not covered by the regex fallback table
-   in ``_registry.py``, add an explicit entry to ``aliases.json`` first.
-
-To add an entirely new external data source:
-
-1. Create ``src/license_normaliser/data_sources/my_source.py`` implementing
-   the ``DataSource`` protocol.
-2. Add it to ``REGISTERED_SOURCES`` in
-   ``src/license_normaliser/data_sources/__init__.py``.
-
 Exceptions
 ==========
 
@@ -205,7 +185,6 @@ Exceptions
     from license_normaliser.exceptions import (
         LicenseNormaliserError,   # base class
         LicenseNotFoundError,     # raised by strict mode
-        DataSourceError,          # raised when a data file cannot be loaded
     )
 
 Testing

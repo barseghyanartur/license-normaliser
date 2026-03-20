@@ -1,6 +1,6 @@
-# AGENTS.md – license-normaliser
+# AGENTS.md - license-normaliser
 
-**Package version**: 0.2.0
+**Package version**: 0.3.0
 **Repository**: https://github.com/barseghyanartur/license-normaliser
 **Maintainer**: Artur Barseghyan <artur.barseghyan@gmail.com>
 
@@ -8,14 +8,15 @@
 
 ## 1. Project Mission (Never Deviate)
 
-> Comprehensive license normalisation with a three-level hierarchy – secure,
+> Comprehensive license normalisation with a three-level hierarchy - secure,
 > fast, and extensible.
 
 - Maps any license representation to a canonical three-level hierarchy
 - Supports SPDX tokens, URLs, and prose descriptions
 - No external dependencies (only optional dev/test deps)
 - LRU caching for performance
-- Data-file-driven: add synonyms by editing JSON, not Python
+- Data-file-driven: parsers load from package data JSON files
+- `license-normaliser update-data` CLI command to refresh SPDX + OpenDefinition data
 
 ---
 
@@ -25,37 +26,30 @@
 
 | Level | Class | Example |
 |-------|-------|---------|
-| **Family** | `LicenseFamily` | `"cc"`, `"osi"`, `"copyleft"`, `"publisher-tdm"` |
-| **Name** | `LicenseName` | `"cc-by"`, `"mit"`, `"wiley-tdm"` |
-| **Version** | `LicenseVersion` | `"cc-by-4.0"`, `"mit"`, `"wiley-tdm-1.1"` |
+| **Family** | `LicenseFamily` | `"cc"`, `"osi"`, `"copyleft"`, `"data"` |
+| **Name** | `LicenseName` | `"cc-by"`, `"mit"`, `"gpl-3.0-only"` |
+| **Version** | `LicenseVersion` | `"cc-by-4.0"`, `"mit"`, `"gpl-3.0-only"` |
 
 ### Resolution Pipeline
 
-1. **Direct registry lookup** – cleaned lowercase key matches a `VERSION_REGISTRY` entry
-2. **Alias table** – hit in merged `ALIASES` dict (from `data/aliases/aliases.json` + data sources)
-3. **URL map** – hit in merged `URL_MAP` dict (from `data/urls/url_map.json` + data sources)
-4. **Structural CC URL regex** – any `creativecommons.org` URL not in the map
-5. **Prose keyword scan** – regex patterns from `data/prose/prose_patterns.json`
-6. **Fallback** – key = cleaned string, family = unknown
+1. **Direct registry lookup** - cleaned lowercase key matches `REGISTRY`
+2. **Alias table** - hit in `ALIASES` dict (built-in CC aliases)
+3. **URL map** - hit in `URL_MAP` (loaded from SPDX + OpenDefinition data)
+4. **Fallback** - key = cleaned string, family = unknown
 
 ### Key Files
 
 | File | Purpose |
 |------|---------|
 | `src/license_normaliser/_models.py` | Frozen dataclass hierarchy |
-| `src/license_normaliser/_registry.py` | VERSION_REGISTRY built from data sources + family inference |
-| `src/license_normaliser/data_sources/` | Pluggable data-source package |
-| `src/license_normaliser/_pipeline.py` | Six-step resolution pipeline |
+| `src/license_normaliser/_registry.py` | REGISTRY, URL_MAP, ALIASES built from parsers |
 | `src/license_normaliser/_cache.py` | LRU caching + strict mode |
-| `src/license_normaliser/exceptions.py` | Public exception hierarchy |
-| `data/aliases/aliases.json` | Curated alias map (dict format) |
-| `data/urls/url_map.json` | Curated URL map (dict format) |
-| `data/prose/prose_patterns.json` | Ordered prose regex patterns (dict format) |
-| `data/spdx/spdx-licenses.json` | SPDX curated subset (loaded at runtime) |
-| `data/opendefinition/opendefinition_licenses_all.json` | OD curated subset (loaded at runtime) |
-| `data/normalize_licenses.py` | Developer tool: finds coverage gaps in upstream files |
-| `data/spdx-licenses.json` | SPDX upstream originals (used by normalize_licenses.py) |
-| `data/opendefinition_licenses_all.json` | OD upstream originals (used by normalize_licenses.py) |
+| `src/license_normaliser/parsers/` | Pluggable parser package (SPDX, OpenDefinition) |
+| `src/license_normaliser/cli/_main.py` | CLI with normalise, batch, update-data |
+| `src/license_normaliser/_exceptions.py` | LicenseNormalisationError |
+| `src/license_normaliser/data/spdx/spdx-licenses.json` | Curated SPDX subset |
+| `src/license_normaliser/data/opendefinition/opendefinition_licenses_all.json` | Curated OD subset |
+| `src/license_normaliser/data/original/` | **DO NOT MODIFY** - upstream originals |
 
 ---
 
@@ -82,14 +76,12 @@ print(v.family.key)    # "cc"
 ### Strict mode
 
 ```python
-from license_normaliser import normalise_license
-from license_normaliser.exceptions import LicenseNotFoundError
+from license_normaliser import normalise_license, LicenseNormalisationError
 
 try:
     v = normalise_license("unknown string", strict=True)
-except LicenseNotFoundError as exc:
-    print(exc.raw)      # original input
-    print(exc.cleaned)  # cleaned form
+except LicenseNormalisationError as exc:
+    print(exc)  # License not found: 'unknown string'
 
 # Batch strict
 from license_normaliser import normalise_licenses
@@ -98,77 +90,50 @@ results = normalise_licenses(["MIT", "Apache-2.0"], strict=True)
 
 ---
 
-## 4. Extending Without Python Changes
+## 4. Updating Data Sources
 
-### Adding a new alias
-Edit `data/aliases/aliases.json`:
-```json
-{ "my new alias": {"version_key": "existing-version-key", "name_key": "existing-name", "family_key": "cc"} }
+SPDX and OpenDefinition data can be updated via the CLI:
+
+```sh
+license-normaliser update-data --force
 ```
 
-### Adding a new URL
-Edit `data/urls/url_map.json`:
-```json
-{ "https://example.com/license/": {"version_key": "existing-version-key", "name_key": "existing-name", "family_key": "osi"} }
-```
+This fetches fresh JSON from the authoritative upstream URLs and writes them to:
+- `src/license_normaliser/data/spdx/spdx-licenses.json`
+- `src/license_normaliser/data/opendefinition/opendefinition_licenses_all.json`
 
-### Adding a prose pattern
-Edit `data/prose/prose_patterns.json` (order matters – specific before general):
-```json
-[
-  {"pattern": "my specific phrase", "version_key": "existing-version-key", "name_key": "existing-name", "family_key": "osi"},
-  ...
-]
-```
+**Important**: The files in `src/license_normaliser/data/original/` are **DO NOT MODIFY** -
+they are the upstream originals preserved for reference.
 
 ---
 
-## 5. Adding a Brand-New License
+## 5. Adding a New Parser
 
-1. Add entries to the JSON data files (aliases.json, url_map.json, or prose_patterns.json).
-   Each entry maps a key (alias string, URL, or pattern) to a dict with `version_key`, `name_key`, and `family_key`.
-2. If the family is not covered by the regex fallback table in `_registry.py`, add an explicit entry to `aliases.json` first.
-3. Write tests.
-
----
-
-## 6. Adding a New Data Source
-
-1. Create `src/license_normaliser/data_sources/my_source.py`:
+1. Create `src/license_normaliser/parsers/my_parser.py` implementing `BaseParser`:
 
 ```python
-from . import DataSource, SourceContribution
-from pathlib import Path
+from .base import BaseParser
 
-class MySource:
-    name = "my-source"
-
-    def load(self, data_dir: Path) -> SourceContribution:
-        # Read data_dir / "my_subdir" / "my_file.json"
-        # Return aliases, url_map, prose dicts
-        return SourceContribution(
-            name=self.name,
-            aliases={"some alias": "mit"},
-            url_map={},
-            prose={},
-        )
+class MyParser(BaseParser):
+    def parse(self) -> list[tuple[str, dict]]:
+        # Return [(license_id, {"url": "...", "name": "..."}), ...]
+        return []
 ```
 
-2. Register it in `REGISTERED_SOURCES` (in `data_sources/__init__.py`):
+2. Register it in `src/license_normaliser/parsers/__init__.py`:
 
 ```python
-REGISTERED_SOURCES = [
-    ...
-    ("license_normaliser.data_sources.my_source", "MySource"),
-]
+def get_parsers() -> list[BaseParser]:
+    return [
+        SPDXParser(),
+        OpenDefinitionParser(),
+        MyParser(),
+    ]
 ```
-
-All contributed values pointing to unknown version keys are **automatically
-filtered and logged** – they cannot corrupt the registry.
 
 ---
 
-## 7. Coding Conventions
+## 6. Coding Conventions
 
 - Line length: **88 characters** (ruff)
 - Every non-test module must have `__all__`, `__author__`, `__copyright__`, `__license__`
@@ -180,30 +145,27 @@ Run linting: `make ruff` or `make pre-commit`
 
 ---
 
-## 8. Agent Workflow: Adding Features or Fixing Bugs
+## 7. Agent Workflow: Adding Features or Fixing Bugs
 
-1. **Check the mission** – does the change preserve the no-dependencies policy and three-level hierarchy?
+1. **Check the mission** - does the change preserve the no-dependencies policy and three-level hierarchy?
 2. **Identify the correct location**:
-   - New synonym for existing license → JSON data file only
-   - New license → JSON data files (all three support dict entries with `version_key`, `name_key`, `family_key`)
-   - New external data source → `data_sources/my_source.py` + `REGISTERED_SOURCES`
-   - Core pipeline change → `_pipeline.py`
-   - New public API → `_cache.py` + `__init__.py`
-3. **For bug fixes**: write the regression test first
-4. **Implement the change**
-5. **Write tests** covering both success and error cases
-6. **Update README.rst** if the API changed
-7. **Suggest running**: `make test-env ENV=py312` then `make test`
-8. **Suggest running**: `make pre-commit`
+   - New SPDX/OD license → update curated JSON files (then re-run `update-data` to refresh)
+   - New CC alias → add to `_registry.py` `_build_aliases()` function
+   - New parser → `parsers/my_parser.py` + `parsers/__init__.py`
+   - Core pipeline change → `_cache.py`
+3. **Write tests** covering both success and error cases
+4. **Update README.rst** if the API changed
+5. **Suggest running**: `make test-env ENV=py312` then `make test`
+6. **Suggest running**: `make pre-commit`
 
 ---
 
-## 9. Testing Rules
+## 8. Testing Rules
 
 All tests run inside Docker (safest option, always available):
 
 ```sh
-make test                   # full matrix (Python 3.10–3.14)
+make test                   # full matrix (Python 3.10-3.14)
 make test-env ENV=py312     # single version
 ```
 
@@ -215,30 +177,24 @@ Docker-based testing.
 
 ```
 src/license_normaliser/tests/
-    test_core.py          – end-to-end pipeline integration tests
-    test_cache.py         – caching, cleaning, strict mode
-    test_exceptions.py    – exception hierarchy and strict mode
-    test_data_sources.py  – data source loading and registry consistency
-    test_pipeline.py      – each pipeline step in isolation
-    test_registry.py      – VERSION_REGISTRY, ALIASES, URL_MAP consistency
-    test_models.py        – LicenseFamily, LicenseName, LicenseVersion
-    test_cli.py           – CLI commands including --strict
+    test_integration.py    - public API only (survives any rewrite)
+    test_cache.py          - caching, cleaning, strict mode
+    test_exceptions.py     - exception hierarchy and strict mode
+    test_cli.py            - CLI commands including update-data
+    test_models.py         - LicenseFamily, LicenseName, LicenseVersion
+    test_core.py           - end-to-end pipeline tests
 ```
 
 ---
 
-## 10. Forbidden
+## 9. Forbidden
 
 - Adding external dependencies
 - Removing existing normalisation coverage
 - Changing the three-level hierarchy structure
-- Hard-coding new aliases or URL entries inside Python modules
-  (use the JSON data files instead)
+- Modifying files in `src/license_normaliser/data/original/` - these are upstream originals, **DO NOT MODIFY**
 - Modifying the curated SPDX and OpenDefinition subset files:
   `src/license_normaliser/data/spdx/spdx-licenses.json` and
-  `src/license_normaliser/data/opendefinition/opendefinition_licenses_all.json`.
-  These are loaded from external upstream sources and must not be edited
-  directly. To resolve conflicts or add coverage, modify
-  `data/aliases/aliases.json`, `data/urls/url_map.json`, or
-  `data/prose/prose_patterns.json` instead. Use `data/normalize_licenses.py`
-  to identify gaps.
+  `src/license_normaliser/data/opendefinition/opendefinition_licenses_all.json`
+  directly. Use `license-normaliser update-data --force` to refresh them
+  from upstream sources.
