@@ -45,11 +45,13 @@ def _normalise(url: str) -> str:
 
 
 def _canonicalise(url: str) -> str:
-    """Return the canonical form of a URL for storage (preserves original casing)."""
+    """Return the canonical form of a URL for storage.
+
+    Preserves original casing and trailing slash.
+    """
     key = url.strip()
     if key.startswith("http://"):
         key = "https://" + key[len("http://") :]
-    key = key.rstrip("/")
     return key
 
 
@@ -59,13 +61,14 @@ def _load_entry(
 ) -> tuple[str, VersionMetadata] | None:
     """Parse a single url_map.json entry. Returns (version_key, metadata) or None."""
     if isinstance(raw_value, str):
-        logger.warning(
-            "Entry %r has a bare string value; expected a dict with "
-            "version_key, name_key, family_key. "
-            "Update %r to the new dict format.",
-            key,
-            _URL_MAP_FILE,
-        )
+        if not key.startswith("_comment"):
+            logger.warning(
+                "Entry %r has a bare string value; expected a dict with "
+                "version_key, name_key, family_key. "
+                "Update %r to the new dict format.",
+                key,
+                _URL_MAP_FILE,
+            )
         return str(raw_value), {
             "name_key": "",
             "family_key": "",

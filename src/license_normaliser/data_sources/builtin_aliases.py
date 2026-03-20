@@ -41,13 +41,14 @@ def _load_entry(
 ) -> tuple[str, VersionMetadata] | None:
     """Parse a single aliases.json entry. Returns (version_key, metadata) or None."""
     if isinstance(raw_value, str):
-        logger.warning(
-            "Entry %r has a bare string value; expected a dict with "
-            "version_key, name_key, family_key. "
-            "Update %r to the new dict format.",
-            key,
-            _ALIASES_FILE,
-        )
+        if not key.startswith("_comment"):
+            logger.warning(
+                "Entry %r has a bare string value; expected a dict with "
+                "version_key, name_key, family_key. "
+                "Update %r to the new dict format.",
+                key,
+                _ALIASES_FILE,
+            )
         return None
     if not isinstance(raw_value, dict):
         return None
