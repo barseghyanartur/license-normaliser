@@ -54,7 +54,6 @@
   "https://www.gnu.org/licenses/lgpl-3.0": {"version_key": "lgpl-3.0", "name_key": "lgpl-3", "family_key": "copyleft"},
 
   "https://opensource.org/licenses/MIT": {"version_key": "mit", "name_key": "mit", "family_key": "osi"},
-  "https://opensource.org/licenses/mit": {"version_key": "mit", "name_key": "mit", "family_key": "osi"},
   "https://www.apache.org/licenses/LICENSE-2.0": {"version_key": "apache-2.0", "name_key": "apache", "family_key": "osi"},
   "https://www.apache.org/licenses/LICENSE-2.0.html": {"version_key": "apache-2.0", "name_key": "apache", "family_key": "osi"},
   "https://opensource.org/licenses/Apache-2.0": {"version_key": "apache-2.0", "name_key": "apache", "family_key": "osi"},

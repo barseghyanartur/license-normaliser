@@ -37,10 +37,19 @@ _URL_MAP_FILE = "urls/url_map.json"
 
 
 def _normalise(url: str) -> str:
-    """Normalise a URL for use as a lookup key."""
+    """Normalise a URL for use as a lookup key (case-insensitive)."""
     key = url.strip().rstrip("/").lower()
     if key.startswith("http://"):
         key = "https://" + key[len("http://") :]
+    return key
+
+
+def _canonicalise(url: str) -> str:
+    """Return the canonical form of a URL for storage (preserves original casing)."""
+    key = url.strip()
+    if key.startswith("http://"):
+        key = "https://" + key[len("http://") :]
+    key = key.rstrip("/")
     return key
 
 
@@ -60,7 +69,7 @@ def _load_entry(
         return str(raw_value), {
             "name_key": "",
             "family_key": "",
-            "url": _normalise(key),
+            "url": _canonicalise(key),
         }
     if not isinstance(raw_value, dict):
         return None
@@ -77,7 +86,7 @@ def _load_entry(
         str(vkey),  # type: ignore[arg-type]
         {
             "name_key": str(name_key),
-            "url": _normalise(key),
+            "url": _canonicalise(key),
         },
     )
 
