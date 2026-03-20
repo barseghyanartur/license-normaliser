@@ -13,7 +13,7 @@ class OpenDefinitionParser(BaseParser):
             Path(__file__).parent.parent
             / "data"
             / "opendefinition"
-            / "opendefinition_licenses_all.json"
+            / "opendefinition.json"
         )
         data = json.loads(path.read_text(encoding="utf-8"))
         results: list[tuple[str, dict[str, Any]]] = []

@@ -9,7 +9,7 @@ from .base import BaseParser
 
 class SPDXParser(BaseParser):
     def parse(self) -> list[tuple[str, dict[str, Any]]]:
-        path = Path(__file__).parent.parent / "data" / "spdx" / "spdx-licenses.json"
+        path = Path(__file__).parent.parent / "data" / "spdx" / "spdx.json"
         data = json.loads(path.read_text(encoding="utf-8"))
         results: list[tuple[str, dict[str, Any]]] = []
         for entry in data.get("licenses", []):
