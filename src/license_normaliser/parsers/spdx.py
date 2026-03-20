@@ -6,6 +6,11 @@ from typing import Any
 
 from .base import BaseParser
 
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2026 Artur Barseghyan"
+__license__ = "MIT"
+__all__ = ("SPDXParser",)
+
 
 class SPDXParser(BaseParser):
     url = "https://raw.githubusercontent.com/spdx/license-list-data/main/json/licenses.json"

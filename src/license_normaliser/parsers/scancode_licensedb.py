@@ -6,6 +6,11 @@ from typing import Any
 
 from .base import BaseParser
 
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2026 Artur Barseghyan"
+__license__ = "MIT"
+__all__ = ("ScanCodeLicenseDBParser",)
+
 
 class ScanCodeLicenseDBParser(BaseParser):
     url = "https://scancode-licensedb.aboutcode.org/index.json"

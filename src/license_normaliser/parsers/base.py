@@ -4,6 +4,11 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Any
 
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2026 Artur Barseghyan"
+__license__ = "MIT"
+__all__ = ("BaseParser",)
+
 
 class BaseParser(ABC):
     """All data parsers must implement this."""
