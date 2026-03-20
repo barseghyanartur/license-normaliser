@@ -1,8 +1,8 @@
-====================
+===================
  Architecture Guide
-====================
+===================
 
-:Version: 0.2.0
+:Version: 0.2
 :Author: Artur Barseghyan <artur.barseghyan@gmail.com>
 :Repository: https://github.com/barseghyanartur/license-normaliser
 
@@ -560,8 +560,10 @@ Directory Structure
     ├── aliases/aliases.json
     ├── urls/url_map.json
     ├── prose/prose_patterns.json
-    ├── spdx/spdx-licenses.json       (auto-parsed)
-    └── opendefinition/...json        (auto-parsed)
+    ├── spdx-licenses.json             (upstream originals — see below)
+    ├── opendefinition_licenses_all.json
+    ├── spdx/spdx-licenses.json        (curated subset — loaded at runtime)
+    └── opendefinition/...json         (curated subset — loaded at runtime)
 
 
 Exception Hierarchy
@@ -593,6 +595,36 @@ Interactive shell::
 Code quality::
 
     make pre-commit              # runs all hooks (ruff, pydoclint, ...)
+
+
+Developer Tools
+===============
+
+``data/normalize_licenses.py``
+------------------------------
+
+A standalone script that finds coverage gaps in the curated data files.
+
+It loads the **upstream originals** (``spdx-licenses.json`` and
+``opendefinition_licenses_all.json`` at the top level of ``data/``),
+runs ``normalise_licenses()`` on every ID, and reports which ones
+resolve to ``family=unknown`` — meaning no entry exists for them.
+
+Run from the repository root::
+
+    python src/license_normaliser/data/normalize_licenses.py
+
+The curated subsets in ``data/spdx/`` and ``data/opendefinition/`` are
+what the runtime data sources actually load. They are **not**
+auto-generated; they are manually trimmed subsets of the upstream files.
+
+To add coverage for a missing upstream ID:
+
+1. Note the ``family=unknown`` entry from the script's output.
+2. Add an entry to ``data/aliases/aliases.json`` or
+   ``data/urls/url_map.json`` with the correct ``version_key``,
+   ``name_key``, and ``family_key``.
+3. Run the script again to confirm it now resolves correctly.
 
 
 Coding Conventions

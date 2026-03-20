@@ -51,8 +51,11 @@
 | `data/aliases/aliases.json` | Curated alias map (dict format) |
 | `data/urls/url_map.json` | Curated URL map (dict format) |
 | `data/prose/prose_patterns.json` | Ordered prose regex patterns (dict format) |
-| `data/spdx/spdx-licenses.json` | SPDX license list (auto-parsed) |
-| `data/opendefinition/opendefinition_licenses_all.json` | OD license list (auto-parsed) |
+| `data/spdx/spdx-licenses.json` | SPDX curated subset (loaded at runtime) |
+| `data/opendefinition/opendefinition_licenses_all.json` | OD curated subset (loaded at runtime) |
+| `data/normalize_licenses.py` | Developer tool: finds coverage gaps in upstream files |
+| `data/spdx-licenses.json` | SPDX upstream originals (used by normalize_licenses.py) |
+| `data/opendefinition_licenses_all.json` | OD upstream originals (used by normalize_licenses.py) |
 
 ---
 
