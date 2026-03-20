@@ -7,36 +7,50 @@ the contents of each key file.
 .. code-block:: text
    :caption: Project directory layout
 
-   license-normaliser/
-   ├── data
-   │   ├── normalize_licenses.py
-   │   ├── opendefinition_licenses_all.json
-   │   └── spdx-licenses.json
-   ├── docs
-   │   ├── conf.py
-   │   └── full_llms.rst
-   ├── src
-   │   └── license_normaliser
-   │       ├── cli
-   │       │   ├── __init__.py
-   │       │   └── _main.py
-   │       ├── tests
-   │       │   ├── __init__.py
-   │       │   ├── conftest.py
-   │       │   ├── test_cache.py
-   │       │   ├── test_cli.py
-   │       │   ├── test_core.py
-   │       │   ├── test_models.py
-   │       │   ├── test_pipeline.py
-   │       │   └── test_registry.py
-   │       ├── __init__.py
-   │       ├── _cache.py
-   │       ├── _core.py
-   │       ├── _enums.py
-   │       ├── _models.py
-   │       ├── _pipeline.py
-   │       ├── _registry.py
-   │       └── py.typed
+    license-normaliser/
+    ├── data
+    │   ├── aliases/aliases.json
+    │   ├── urls/url_map.json
+    │   ├── prose/prose_patterns.json
+    │   ├── spdx/spdx-licenses.json         (curated subset)
+    │   ├── opendefinition/opendefinition_licenses_all.json  (curated subset)
+    │   ├── spdx-licenses.json               (upstream originals)
+    │   ├── opendefinition_licenses_all.json
+    │   └── normalize_licenses.py            (developer tool)
+    ├── docs
+    │   ├── conf.py
+    │   └── full_llms.rst
+    ├── src
+    │   └── license_normaliser
+    │       ├── cli
+    │       │   ├── __init__.py
+    │       │   └── _main.py
+    │       ├── data_sources
+    │       │   ├── __init__.py
+    │       │   ├── builtin_aliases.py
+    │       │   ├── builtin_prose.py
+    │       │   ├── builtin_urls.py
+    │       │   ├── opendefinition.py
+    │       │   └── spdx.py
+    │       ├── tests
+    │       │   ├── __init__.py
+    │       │   ├── conftest.py
+    │       │   ├── test_cache.py
+    │       │   ├── test_cli.py
+    │       │   ├── test_core.py
+    │       │   ├── test_data_sources.py
+    │       │   ├── test_exceptions.py
+    │       │   ├── test_models.py
+    │       │   ├── test_pipeline.py
+    │       │   └── test_registry.py
+    │       ├── __init__.py
+    │       ├── _cache.py
+    │       ├── _core.py
+    │       ├── _models.py
+    │       ├── _pipeline.py
+    │       ├── _registry.py
+    │       ├── exceptions.py
+    │       └── py.typed
    ├── AGENTS.md
    ├── conftest.py
    ├── CONTRIBUTING.rst
