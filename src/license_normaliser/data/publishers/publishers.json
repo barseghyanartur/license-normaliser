@@ -1,0 +1,340 @@
+{
+  "_comment": "Publisher-specific license URLs and shorthand aliases.",
+  "_comment2": "URLs: normalized to https with no trailing slash on lookup.",
+  "_comment3": "Aliases: cleaned-lowercase form -> version_key.",
+
+  "urls": {
+    "https://www.elsevier.com/open-access/userlicense/1.0/": {
+      "version_key": "elsevier-oa",
+      "name_key": "elsevier-oa",
+      "family_key": "publisher-oa"
+    },
+    "http://www.elsevier.com/open-access/userlicense/1.0/": {
+      "version_key": "elsevier-oa",
+      "name_key": "elsevier-oa",
+      "family_key": "publisher-oa"
+    },
+    "https://www.elsevier.com/tdm/userlicense/1.0/": {
+      "version_key": "elsevier-tdm",
+      "name_key": "elsevier-tdm",
+      "family_key": "publisher-tdm"
+    },
+    "http://www.elsevier.com/tdm/userlicense/1.0/": {
+      "version_key": "elsevier-tdm",
+      "name_key": "elsevier-tdm",
+      "family_key": "publisher-tdm"
+    },
+    "http://doi.wiley.com/10.1002/tdm_license_1": {
+      "version_key": "wiley-tdm",
+      "name_key": "wiley-tdm",
+      "family_key": "publisher-tdm"
+    },
+    "http://doi.wiley.com/10.1002/tdm_license_1.1": {
+      "version_key": "wiley-tdm-1.1",
+      "name_key": "wiley-tdm",
+      "family_key": "publisher-tdm"
+    },
+    "http://onlinelibrary.wiley.com/termsAndConditions#vor": {
+      "version_key": "wiley-vor",
+      "name_key": "wiley-vor",
+      "family_key": "publisher-proprietary"
+    },
+    "http://onlinelibrary.wiley.com/termsAndConditions#am": {
+      "version_key": "wiley-am",
+      "name_key": "wiley-am",
+      "family_key": "publisher-proprietary"
+    },
+    "https://onlinelibrary.wiley.com/termsandconditions#vor": {
+      "version_key": "wiley-vor",
+      "name_key": "wiley-vor",
+      "family_key": "publisher-proprietary"
+    },
+    "https://onlinelibrary.wiley.com/termsandconditions#am": {
+      "version_key": "wiley-am",
+      "name_key": "wiley-am",
+      "family_key": "publisher-proprietary"
+    },
+    "https://onlinelibrary.wiley.com/termsandconditions": {
+      "version_key": "wiley-terms",
+      "name_key": "wiley-terms",
+      "family_key": "publisher-proprietary"
+    },
+    "https://onlinelibrary.wiley.com/terms-and-conditions": {
+      "version_key": "wiley-terms",
+      "name_key": "wiley-terms",
+      "family_key": "publisher-proprietary"
+    },
+    "https://www.springer.com/tdm": {
+      "version_key": "springer-tdm",
+      "name_key": "springer-tdm",
+      "family_key": "publisher-tdm"
+    },
+    "http://www.springer.com/tdm": {
+      "version_key": "springer-tdm",
+      "name_key": "springer-tdm",
+      "family_key": "publisher-tdm"
+    },
+    "https://www.springernature.com/gp/researchers/text-and-data-mining": {
+      "version_key": "springernature-tdm",
+      "name_key": "springernature-tdm",
+      "family_key": "publisher-tdm"
+    },
+    "https://www.tandfonline.com/action/showCopyRight": {
+      "version_key": "tandf-terms",
+      "name_key": "tandf-terms",
+      "family_key": "publisher-proprietary"
+    },
+    "https://www.tandfonline.com/action/showcopyright": {
+      "version_key": "tandf-terms",
+      "name_key": "tandf-terms",
+      "family_key": "publisher-proprietary"
+    },
+    "https://tandfonline.com/action/showcopyright": {
+      "version_key": "tandf-terms",
+      "name_key": "tandf-terms",
+      "family_key": "publisher-proprietary"
+    },
+    "https://www.tandfonline.com/action/showcopyright?show=full": {
+      "version_key": "tandf-terms",
+      "name_key": "tandf-terms",
+      "family_key": "publisher-proprietary"
+    },
+    "https://us.sagepub.com/en-us/nam/journals-permissions": {
+      "version_key": "sage-permissions",
+      "name_key": "sage-permissions",
+      "family_key": "publisher-proprietary"
+    },
+    "https://www.sagepub.com/journalspermissions.nav": {
+      "version_key": "sage-permissions",
+      "name_key": "sage-permissions",
+      "family_key": "publisher-proprietary"
+    },
+    "https://pubs.acs.org/page/policy/authorchoice_ccby_termsofuse.html": {
+      "version_key": "acs-authorchoice-ccby",
+      "name_key": "acs-authorchoice-ccby",
+      "family_key": "publisher-oa"
+    },
+    "http://pubs.acs.org/page/policy/authorchoice_ccby_termsofuse.html": {
+      "version_key": "acs-authorchoice-ccby",
+      "name_key": "acs-authorchoice-ccby",
+      "family_key": "publisher-oa"
+    },
+    "https://pubs.acs.org/page/policy/authorchoice_ccbyncnd_termsofuse.html": {
+      "version_key": "acs-authorchoice-ccbyncnd",
+      "name_key": "acs-authorchoice-ccbyncnd",
+      "family_key": "publisher-oa"
+    },
+    "https://pubs.acs.org/page/policy/authorchoice_termsofuse.html": {
+      "version_key": "acs-authorchoice",
+      "name_key": "acs-authorchoice",
+      "family_key": "publisher-oa"
+    },
+    "https://pubs.acs.org/page/policy/acs_authorchoice_with_nih_addendum_termsofuse.html": {
+      "version_key": "acs-authorchoice-nih",
+      "name_key": "acs-authorchoice-nih",
+      "family_key": "publisher-oa"
+    },
+    "https://doi.org/10.1021/policy/oa-license": {
+      "version_key": "acs-authorchoice",
+      "name_key": "acs-authorchoice",
+      "family_key": "publisher-oa"
+    },
+    "https://www.rsc.org/journals-books-databases/journal-authors-reviewers/licences-copyright-permissions/": {
+      "version_key": "rsc-terms",
+      "name_key": "rsc-terms",
+      "family_key": "publisher-proprietary"
+    },
+    "https://www.rsc.org/help/disclaimer/pages/term3.aspx": {
+      "version_key": "rsc-terms",
+      "name_key": "rsc-terms",
+      "family_key": "publisher-proprietary"
+    },
+    "https://iopscience.iop.org/info/page/text-and-data-mining": {
+      "version_key": "iop-tdm",
+      "name_key": "iop-tdm",
+      "family_key": "publisher-tdm"
+    },
+    "http://iopscience.iop.org/info/page/text-and-data-mining": {
+      "version_key": "iop-tdm",
+      "name_key": "iop-tdm",
+      "family_key": "publisher-tdm"
+    },
+    "https://iopscience.iop.org/page/copyright": {
+      "version_key": "iop-copyright",
+      "name_key": "iop-copyright",
+      "family_key": "publisher-proprietary"
+    },
+    "https://www.bmj.com/company/legal-stuff/copyright-notice/": {
+      "version_key": "bmj-copyright",
+      "name_key": "bmj-copyright",
+      "family_key": "publisher-proprietary"
+    },
+    "https://group.bmj.com/group/rights-licensing/permissions": {
+      "version_key": "bmj-copyright",
+      "name_key": "bmj-copyright",
+      "family_key": "publisher-proprietary"
+    },
+    "https://www.science.org/content/page/science-licenses-journal-article-reuse": {
+      "version_key": "aaas-author-reuse",
+      "name_key": "aaas-author-reuse",
+      "family_key": "publisher-proprietary"
+    },
+    "https://www.sciencemag.org/about/science-licenses-journal-article-reuse": {
+      "version_key": "aaas-author-reuse",
+      "name_key": "aaas-author-reuse",
+      "family_key": "publisher-proprietary"
+    },
+    "https://www.pnas.org/site/aboutpnas/licenses.xhtml": {
+      "version_key": "pnas-licenses",
+      "name_key": "pnas-licenses",
+      "family_key": "publisher-proprietary"
+    },
+    "https://link.aps.org/licenses/aps-default-license": {
+      "version_key": "aps-default",
+      "name_key": "aps-default",
+      "family_key": "publisher-proprietary"
+    },
+    "https://link.aps.org/licenses/aps-default-text-mining-license": {
+      "version_key": "aps-tdm",
+      "name_key": "aps-tdm",
+      "family_key": "publisher-tdm"
+    },
+    "https://www.cambridge.org/core/terms": {
+      "version_key": "cup-terms",
+      "name_key": "cup-terms",
+      "family_key": "publisher-proprietary"
+    },
+    "https://publishing.aip.org/authors/rights-and-permissions": {
+      "version_key": "aip-rights",
+      "name_key": "aip-rights",
+      "family_key": "publisher-proprietary"
+    },
+    "http://publishing.aip.org/authors/rights-and-permissions": {
+      "version_key": "aip-rights",
+      "name_key": "aip-rights",
+      "family_key": "publisher-proprietary"
+    },
+    "https://jamanetwork.com/pages/cc-by-license-permissions": {
+      "version_key": "jama-cc-by",
+      "name_key": "jama-cc-by",
+      "family_key": "publisher-oa"
+    },
+    "https://www.degruyter.com/dg/page/496": {
+      "version_key": "degruyter-terms",
+      "name_key": "degruyter-terms",
+      "family_key": "publisher-proprietary"
+    },
+    "https://academic.oup.com/journals/pages/open_access/funder_policies/chorus/standard_publication_model": {
+      "version_key": "oup-chorus",
+      "name_key": "oup-chorus",
+      "family_key": "publisher-oa"
+    },
+    "https://academic.oup.com/pages/standard-publication-reuse-rights": {
+      "version_key": "oup-terms",
+      "name_key": "oup-terms",
+      "family_key": "publisher-proprietary"
+    },
+    "https://www.gnu.org/licenses/gpl-2.0.html": {
+      "version_key": "gpl-2.0",
+      "name_key": "gpl-2",
+      "family_key": "copyleft"
+    },
+    "https://www.gnu.org/licenses/gpl-3.0.html": {
+      "version_key": "gpl-3.0",
+      "name_key": "gpl-3",
+      "family_key": "copyleft"
+    },
+    "https://www.gnu.org/licenses/agpl-3.0.html": {
+      "version_key": "agpl-3.0",
+      "name_key": "agpl-3",
+      "family_key": "copyleft"
+    },
+    "https://www.gnu.org/licenses/lgpl-2.1.html": {
+      "version_key": "lgpl-2.1",
+      "name_key": "lgpl-2.1",
+      "family_key": "copyleft"
+    },
+    "https://www.gnu.org/licenses/lgpl-3.0.html": {
+      "version_key": "lgpl-3.0",
+      "name_key": "lgpl-3",
+      "family_key": "copyleft"
+    },
+    "https://opendatacommons.org/licenses/odbl/1-0/": {
+      "version_key": "odbl",
+      "name_key": "odbl",
+      "family_key": "open-data"
+    },
+    "https://opendatacommons.org/licenses/by/1-0/": {
+      "version_key": "odc-by",
+      "name_key": "odc-by",
+      "family_key": "open-data"
+    },
+    "https://opendatacommons.org/licenses/pddl/1-0/": {
+      "version_key": "pddl",
+      "name_key": "pddl",
+      "family_key": "open-data"
+    }
+  },
+
+  "shorthand_aliases": {
+    "elsevier user license": "elsevier-oa",
+    "elsevier tdm": "elsevier-tdm",
+    "elsevier tdmu": "elsevier-tdm",
+    "wiley tdm license": "wiley-tdm",
+    "wiley tdm": "wiley-tdm",
+    "wiley vor": "wiley-vor",
+    "wiley am": "wiley-am",
+    "wiley author manuscript": "wiley-am",
+    "springer tdm": "springer-tdm",
+    "springer nature tdm": "springernature-tdm",
+    "springer nature text and data mining": "springernature-tdm",
+    "tandf terms": "tandf-terms",
+    "taylor and francis terms": "tandf-terms",
+    "taylor francis terms": "tandf-terms",
+    "sage permissions": "sage-permissions",
+    "acs authorchoice": "acs-authorchoice",
+    "acs author choice": "acs-authorchoice",
+    "acs authorchoice cc by": "acs-authorchoice-ccby",
+    "acs authorchoice cc by nc nd": "acs-authorchoice-ccbyncnd",
+    "acs authorchoice nih": "acs-authorchoice-nih",
+    "rsc terms": "rsc-terms",
+    "rsc copyright": "rsc-terms",
+    "iop tdm": "iop-tdm",
+    "iop text and data mining": "iop-tdm",
+    "iop copyright": "iop-copyright",
+    "bmj copyright": "bmj-copyright",
+    "bmj permissions": "bmj-copyright",
+    "aaas author reuse": "aaas-author-reuse",
+    "aaas reuse": "aaas-author-reuse",
+    "science author reuse": "aaas-author-reuse",
+    "pnas licenses": "pnas-licenses",
+    "pnas terms": "pnas-licenses",
+    "aps default": "aps-default",
+    "aps tdm": "aps-tdm",
+    "aps text mining": "aps-tdm",
+    "aps default license": "aps-default",
+    "cambridge terms": "cup-terms",
+    "cup terms": "cup-terms",
+    "aip rights": "aip-rights",
+    "aip permissions": "aip-rights",
+    "jama cc by": "jama-cc-by",
+    "jama open access": "jama-cc-by",
+    "degruyter terms": "degruyter-terms",
+    "de gruyter terms": "degruyter-terms",
+    "oup chorus": "oup-chorus",
+    "oup terms": "oup-terms",
+    "oup standard publication": "oup-terms",
+    "thieme nlm": "thieme-nlm",
+    "implied oa": "implied-oa",
+    "implied open access": "implied-oa",
+    "unspecified oa": "unspecified-oa",
+    "publisher specific oa": "publisher-specific-oa",
+    "author manuscript": "author-manuscript",
+    "all rights reserved": "all-rights-reserved",
+    "no reuse": "no-reuse",
+    "public domain": "public-domain",
+    "open access": "other-oa",
+    "creative commons public domain": "cc-pdm",
+    "pd": "cc-pdm"
+  }
+}

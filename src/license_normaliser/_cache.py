@@ -18,6 +18,17 @@ __all__ = ("normalise_license", "normalise_licenses")
 
 _WHITESPACE_RE = re.compile(r"\s+")
 _MAX_INPUT = 4096
+_PROSE_PATTERNS: list[tuple[re.Pattern[str], str]] = []
+
+
+def _load_prose_patterns() -> list[tuple[re.Pattern[str], str]]:
+    global _PROSE_PATTERNS
+    if _PROSE_PATTERNS:
+        return _PROSE_PATTERNS
+    from license_normaliser.parsers.prose import get_prose_patterns
+
+    _PROSE_PATTERNS = get_prose_patterns()
+    return _PROSE_PATTERNS
 
 
 def _clean(raw: str) -> str:
@@ -41,13 +52,17 @@ def _normalise_url(cleaned: str) -> str:
 
 @lru_cache(maxsize=8192)
 def _resolve(cleaned: str) -> LicenseVersion:
-    if cleaned in REGISTRY:
-        return make(cleaned)
     if cleaned in ALIASES:
         return make(ALIASES[cleaned])
+    if cleaned in REGISTRY:
+        return make(cleaned)
     url_key = _normalise_url(cleaned)
     if url_key in URL_MAP:
         return make(URL_MAP[url_key])
+    if len(cleaned) > 20:
+        for pattern, vkey in _load_prose_patterns():
+            if pattern.search(cleaned):
+                return make(vkey)
     return make_unknown(cleaned)
 
 

@@ -58,7 +58,7 @@ def test_real_world_license_strings():
         ("http://creativecommons.org/licenses/by-nc/4.0/", "cc-by-nc-4.0"),
         (
             "http://www.elsevier.com/open-access/userlicense/1.0/",
-            "http://www.elsevier.com/open-access/userlicense/1.0",
+            "elsevier-oa",
         ),
         (
             "http://creativecommons.org/licenses/by-nc-nd/3.0/igo/",

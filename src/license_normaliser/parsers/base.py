@@ -15,6 +15,7 @@ class BaseParser(ABC):
 
     url: str | None
     local_path: str
+    is_registry_entry: bool = True
 
     @abstractmethod
     def parse(self) -> list[tuple[str, dict[str, Any]]]:

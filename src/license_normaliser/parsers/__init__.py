@@ -1,9 +1,12 @@
 """license_normaliser.parsers - dynamic parser registry."""
 
+from .alias import AliasParser
 from .base import BaseParser
 from .creativecommons import CreativeCommonsParser
 from .opendefinition import OpenDefinitionParser
 from .osi import OSIParser
+from .prose import ProseParser
+from .publisher import PublisherParser
 from .scancode_licensedb import ScanCodeLicenseDBParser
 from .spdx import SPDXParser
 
@@ -17,4 +20,7 @@ def get_parsers() -> list[BaseParser]:
         OSIParser(),
         ScanCodeLicenseDBParser(),
         CreativeCommonsParser(),
+        ProseParser(),
+        AliasParser(),
+        PublisherParser(),
     ]
