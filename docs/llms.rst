@@ -15,8 +15,7 @@ the contents of each key file.
     │   ├── spdx/spdx-licenses.json         (curated subset)
     │   ├── opendefinition/opendefinition_licenses_all.json  (curated subset)
     │   ├── spdx-licenses.json               (upstream originals)
-    │   ├── opendefinition_licenses_all.json
-    │   └── normalize_licenses.py            (developer tool)
+    │   └── opendefinition_licenses_all.json
     ├── src
     │   └── license_normaliser
     │       ├── cli
@@ -85,13 +84,6 @@ conftest.py
 .. literalinclude:: ../conftest.py
    :language: python
    :caption: conftest.py
-
-data/normalize_licenses.py
---------------------------
-
-.. literalinclude:: ../data/normalize_licenses.py
-   :language: python
-   :caption: data/normalize_licenses.py
 
 data/opendefinition_licenses_all.json
 -------------------------------------

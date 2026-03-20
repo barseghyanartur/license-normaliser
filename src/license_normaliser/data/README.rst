@@ -135,24 +135,6 @@ To refresh the curated subsets from upstream:
 Unknown license IDs from the curated subsets are silently skipped — they
 do **not** cause errors.
 
-The ``normalize_licenses.py`` tool (see below) automates discovering
-which upstream IDs are missing from the curated subsets.
-
-``normalize_licenses.py`` — Finding Coverage Gaps
--------------------------------------------------
-
-``normalize_licenses.py`` is a **developer utility** that runs against
-the full upstream files and reports which IDs normalise to ``family=unknown``.
-It tells you exactly which entries to add to the curated subsets.
-
-Run it from the repository root::
-
-    python src/license_normaliser/data/normalize_licenses.py
-
-The output shows successes and failures per upstream file. Any "failure"
-means the ID has no coverage yet — add it to ``aliases/aliases.json`` or
-``urls/url_map.json`` to fix it.
-
 Metadata Merge Priority
 -----------------------
 
