@@ -69,67 +69,64 @@ Class relationships
 Resolution Pipeline
 ===================
 
-Normalisation happens through a **six-step pipeline** (``_pipeline.py``)
+Normalisation happens through a **five-step pipeline** (``_cache.py``)
 where the **first step that matches wins**:
 
 .. list-table::
    :header-rows: 1
-   :widths: 15 20 65
+   :widths: 15 25 60
 
    * - Step
      - Function
      - Logic
    * - 1
-     - ``step_direct``
-     - Direct key in ``VERSION_REGISTRY``
-   * - 2
-     - ``step_alias``
+     - direct lookup
      - Cleaned string in ``ALIASES`` dict
+   * - 2
+     - registry lookup
+     - Cleaned key in ``REGISTRY`` dict
    * - 3
-     - ``step_url``
+     - URL map
      - Normalised URL in ``URL_MAP`` dict
    * - 4
-     - ``step_cc_regex``
-     - Creative Commons URL parsed by structural regex
-   * - 5
-     - ``step_prose``
+     - prose scan
      - Regex pattern from ``PROSE_PATTERNS`` matches (min 20 chars)
-   * - 6
-     - ``step_fallback``
+   * - 5
+     - fallback
      - Always matches -- returns ``"unknown"`` version
 
-Step 1 -- Direct registry lookup
---------------------------------
-
-The ``VERSION_REGISTRY`` is a dict mapping every known version key to a
-metadata dict.  Example::
-
-    "mit" → {"url": "https://opensource.org/licenses/MIT",
-              "name_key": "mit", "family_key": "osi"}
-
-It is built at import time from all registered data sources (see
-Registry Architecture below).
-
-Step 2 -- Alias table
+Step 1 -- Alias table
 ---------------------
 
-``ALIASES`` is a merged dict built from:
+``ALIASES`` is a merged dict built from three sources:
 
-* ``data/aliases/aliases.json`` -- manually curated entries.
-* SPDX data source -- maps lowercase SPDX IDs to their canonical key.
-* Open Definition data source -- maps lowercase Open Definition IDs
-  to their canonical key.
+* ``data/aliases/aliases.json`` -- manually curated aliases with rich metadata
+  (version_key, name_key, family_key).
+* ``data/publishers/publishers.json`` -- publisher shorthand aliases.
+* Built-in CC forms in ``_registry.py``.
 
-Each entry maps a cleaned string to a version key.
+Each entry maps a cleaned string to a version key.  Aliases are checked
+**before** the registry to ensure canonical forms (e.g. ``"gpl-3.0+"``)
+resolve correctly.
+
+Step 2 -- Direct registry lookup
+--------------------------------
+
+``REGISTRY`` is built from all registered parsers that set
+``is_registry_entry = True`` (the default).  Parsers contribute license
+keys from SPDX, OpenDefinition, OSI, ScanCode, and Creative Commons
+data sources.
 
 Step 3 -- URL map
 -----------------
 
 ``URL_MAP`` is a merged dict built from:
 
-* ``data/urls/url_map.json`` -- manually curated URL entries.
+* ``data/publishers/publishers.json`` -- publisher-specific URLs.
 * SPDX data source -- official reference URLs.
 * Open Definition data source -- official reference URLs.
+* OSI data source -- HTML reference URLs.
+* Creative Commons scraped data -- multilingual deed URLs.
 
 URLs are **normalised once at registry-build time**:
 
@@ -137,22 +134,16 @@ URLs are **normalised once at registry-build time**:
 * Trailing slash stripped.
 * Lowercased.
 
-Step 4 -- Creative Commons structural parser
---------------------------------------------
-not already in the URL map.  It uses regex to extract the licence type
-and version from the URL path, then constructs the version key and
-canonical URL.  Supports standard licences, IGO variants, and the
-public-domain mark.
-
-Step 5 -- Prose pattern scan
+Step 4 -- Prose pattern scan
 ----------------------------
 
 ``PROSE_PATTERNS`` is a list of compiled ``(Pattern, version_key)``
-tuples.  Patterns are evaluated in order, and the **first match** wins.
-Only inputs of 20 characters or longer are tested against prose
-patterns.  Patterns are compiled once at import time.
+tuples loaded from ``data/prose/prose_patterns.json`` by the
+``ProseParser``.  Patterns are evaluated in order, and the **first
+match** wins.  Only inputs of 20 characters or longer are tested
+against prose patterns.  Patterns are compiled once at import time.
 
-Step 6 -- Fallback
+Step 5 -- Fallback
 ------------------
 
 Always matches.  Returns the ``"unknown"`` version key with family
@@ -164,259 +155,145 @@ Registry Architecture
 =====================
 
 The registry (``_registry.py``) is the canonical source of truth for all
-known version keys.  It is built in two passes at **import time**:
+known version keys.  It is built at **import time** by running all
+registered parsers.
 
-Phase 1 -- Collect keys
------------------------
+Parsers
+-------
 
-Every registered data source contributes aliases, URL entries, and prose
-patterns.  The complete set of known version keys is assembled from all
-contributions.  Any key that cannot be resolved to metadata is logged
-at DEBUG level and retained so it can be used as a direct lookup target.
-
-Phase 2 -- Merge metadata
--------------------------
-
-The three lookup tables are assembled from multiple data sources:
-
-``VERSION_REGISTRY: dict[str, dict[str, str]]``
-    Version key → ``{"url": str, "name_key": str, "family_key": str}``.
-    ``url`` is the canonical URL (may be empty when no URL is known).
-
-``ALIASES: dict[str, str]``
-    Cleaned string → version key.
-
-``URL_MAP: dict[str, str]``
-    Normalised URL → version key.
-
-``PROSE_PATTERNS: list[tuple[re.Pattern[str], str]]``
-    Compiled regex → version key.
-
-Family inference
-~~~~~~~~~~~~~~~~
-
-For entries that carry no explicit family (e.g. SPDX-only licenses),
-family is inferred from a small regex table in ``_registry.py``.  This
-is the last resort; it does not affect any entry covered by the curated
-JSON files.  The table covers common prefixes:
-
-``cc0`` → ``cc0``, ``cc-pdm`` → ``public-domain``, ``cc*`` → ``cc``,
-``gpl*`` → ``copyleft``, ``lgpl*`` → ``copyleft``,
-``agpl*`` → ``copyleft``, ``mpl*`` → ``osi``, ``bsd*`` → ``osi``,
-``mit`` → ``osi``, ``apache`` → ``osi``, ``odbl`` → ``open-data``,
-``odc-by`` → ``open-data``, ``pddl`` → ``open-data``, ``fal*`` →
-``other-oa``, ``elsevier*`` → ``publisher-oa``,
-``wiley*`` → ``publisher-proprietary``, ``springer*`` → ``publisher-tdm``,
-``springernature*`` → ``publisher-tdm``, ``acs*`` → ``publisher-oa``,
-``rsc*`` → ``publisher-proprietary``, ``iop*`` → ``publisher-tdm``,
-``bmj*`` → ``publisher-proprietary``, ``cup*`` → ``publisher-proprietary``,
-``aip*``, ``pnas*`` → ``publisher-proprietary``,
-``aps*`` → ``publisher-proprietary``, ``jama*`` → ``publisher-oa``,
-``degruyter*`` → ``publisher-proprietary``, ``thieme*`` → ``publisher-oa``,
-``tandf*`` → ``publisher-proprietary``, ``oup*`` → ``publisher-oa``,
-``sage*`` → ``publisher-proprietary``,
-``aaas*`` → ``publisher-proprietary``,
-``no-reuse`` → ``publisher-proprietary``,
-``all-rights-reserved`` → ``publisher-proprietary``,
-``author-manuscript`` → ``publisher-oa``,
-``implied-oa`` → ``publisher-oa``,
-``open-access`` → ``other-oa``, ``unspecified-oa`` → ``other-oa``,
-``publisher-specific-oa`` → ``publisher-oa``,
-``other-oa`` → ``other-oa``.
-
-Factory functions
------------------
-
-* ``make(version_key)`` -- creates ``LicenseVersion`` from the registry.
-* ``make_unknown(raw_key)`` -- creates ``"unknown"`` ``LicenseVersion``.
-* ``make_synthetic(version_key, url, name_key)`` -- creates a version
-  from the CC URL parser output.
-
-
-Data Source Plugin System
-=========================
-
-Data sources are implemented as classes that satisfy the ``DataSource``
-Protocol (``data_sources/__init__.py``).
-
-Protocol definition
--------------------
+Parsers implement ``BaseParser`` (``parsers/base.py``):
 
 .. code-block:: python
 
-    class DataSource(Protocol):
-        name: str
-        def load(self, data_dir: Path) -> SourceContribution: ...
+    class BaseParser(ABC):
+        url: str | None          # upstream URL for refresh (None for local-only)
+        local_path: str           # path to local JSON data
+        is_registry_entry: bool = True  # whether parse() contributes to REGISTRY
 
-    @dataclass(slots=True)
-    class SourceContribution:
-        name: str
-        aliases: dict[str, str]
-        url_map: dict[str, str]
-        prose: dict[str, str]
-        metadata: dict[str, VersionMetadata]
+        def parse(self) -> list[tuple[str, dict[str, Any]]]:
+            """Return (license_key, metadata_dict) for every entry."""
+            ...
 
-``VersionMetadata`` is ``dict[str, str]`` mapping fields
-``name_key``, ``family_key``, and ``url`` to their values.
-The ``metadata`` dict holds per-version-key metadata; empty strings
-mean "no value provided" and are filled in by later sources.
-
-Loading
--------
-
-``load_all_sources(data_dir)`` iterates ``REGISTERED_SOURCES``, imports
-each module, instantiates the class, and calls ``load()``.  Errors from
-individual sources are caught and logged; other sources continue
-normally.  The only exception that propagates is ``DataSourceError``
-(which signals a critical parse failure).
-
-Registered sources
-------------------
-
-The sources are processed in order; **later sources override earlier
-ones** on key conflicts.
+Registered parsers (in ``parsers/__init__.py``):
 
 .. list-table::
    :header-rows: 1
 
    * - Class
      - Reads
+     - Contributes to REGISTRY
      - Purpose
-   * - ``BuiltinAliasSource``
+   * - ``SPDXParser``
+     - ``data/spdx/spdx.json``
+     - Yes
+     - SPDX licence list (full, auto-refreshed)
+   * - ``OpenDefinitionParser``
+     - ``data/opendefinition/opendefinition.json``
+     - Yes
+     - Open Definition licence list (auto-refreshed)
+   * - ``OSIParser``
+     - ``data/osi/osi.json``
+     - Yes
+     - OSI licences (auto-refreshed)
+   * - ``ScanCodeLicenseDBParser``
+     - ``data/scancode_licensedb/scancode_licensedb.json``
+     - Yes
+     - ScanCode license DB (auto-refreshed)
+   * - ``CreativeCommonsParser``
+     - ``data/creativecommons/creativecommons.json``
+     - Yes
+     - CC licences (scraped fromcreativecommons.org)
+   * - ``AliasParser``
      - ``data/aliases/aliases.json``
-     - Curated alias map
-   * - ``BuiltinUrlSource``
-     - ``data/urls/url_map.json``
-     - Curated URL map
-   * - ``BuiltinProseSource``
+     - No
+     - Curated aliases with rich metadata
+   * - ``PublisherParser``
+     - ``data/publishers/publishers.json``
+     - No
+     - Publisher URLs and shorthand aliases
+   * - ``ProseParser``
      - ``data/prose/prose_patterns.json``
+     - No
      - Curated prose regex patterns
-   * - ``SpdxSource``
-     - ``data/spdx/spdx-licenses.json``
-     - SPDX licence list (auto-parsed)
-   * - ``OpenDefinitionSource``
-     - ``data/opendefinition/opendefinition_licenses_all.json``
-     - Open Definition licence list (auto-parsed)
 
-Adding a new data source
-------------------------
+Global lookup tables
+--------------------
 
-1. Create ``src/license_normaliser/data_sources/my_source.py``::
+``REGISTRY: dict[str, str]``
+    Version key → version key (all known canonical keys).
 
-       from . import DataSource, SourceContribution
-       from pathlib import Path
+``ALIASES: dict[str, str]``
+    Cleaned string → version key (all aliases, prose targets, shorthand).
 
-       class MySource:
-           name = "my-source"
+``URL_MAP: dict[str, str]``
+    Normalised URL → version key (all known URLs).
 
-           def load(self, data_dir: Path) -> SourceContribution:
-               # Read data_dir / "my_subdir" / "my_file.json"
-               return SourceContribution(
-                   name=self.name,
-                   aliases={"some alias": "mit"},
-                   url_map={},
-                   prose={},
-               )
+``FAMILY_OVERRIDES: dict[str, str]``
+    Version key → family key (explicit family from curated data files,
+    overrides inference).
 
-2. Register it in ``REGISTERED_SOURCES`` in
-   ``data_sources/__init__.py``.
+Family inference
+~~~~~~~~~~~~~~~~
 
+For entries that carry no explicit family, ``_infer_family()`` in
+``_registry.py`` classifies them from their key prefix.  This is the
+last resort; it does not affect any entry covered by curated data files.
 
-Caching
-=======
+The table covers common prefixes:
 
-The cache layer (``_cache.py``) sits between the public API and the
-pipeline.  It implements two LRU caches:
+``cc0*`` → ``cc0``, ``cc-pdm*`` → ``public-domain``, ``cc*`` → ``cc``,
+``gpl*``, ``lgpl*``, ``agpl*`` → ``copyleft``,
+``odbl*``, ``odc-*``, ``pddl*`` → ``open-data``,
+``elsevier-oa*``, ``acs-authorchoice*``, ``jama-cc-by*``,
+``thieme-nlm*``, ``implied-oa*``, ``oup-chorus*`` → ``publisher-oa``,
+``elsevier-tdm*``, ``wiley-tdm*``, ``springer*``, ``iop-tdm*``,
+``aps-tdm*`` → ``publisher-tdm``,
+all other publisher prefixes (``wiley-*``, ``rsc-*``, ``bmj-*``,
+``aaas-*``, ``pnas-*``, ``cup-*``, ``aip-*``, ``degruyter-*``,
+``tandf-*``, ``sage-*``) → ``publisher-proprietary``,
+``public-domain`` → ``public-domain``, ``other-oa``, ``open-access`` →
+``other-oa``, everything else → ``osi``.
 
-``_resolve()`` -- pipeline cache
-    Key: the fully cleaned input string.  Value: the resulting
-    ``LicenseVersion``.  Default size: **8192 entries**.
+Factory functions
+-----------------
 
-``_get_license_name()`` -- model cache
-    Key: name key string.  Value: the ``LicenseName`` instance.
-    Default size: **512 entries**.
-
-Input cleaning (``_clean()``)
------------------------------
-
-Before caching or lookup, every input string passes through:
-
-1. Strip leading/trailing whitespace.
-2. Attempt to decode mojibake (try latin-1, fall back to UTF-8).
-3. Collapse internal whitespace to single spaces.
-4. Lowercase.
-5. Strip trailing slash.
-6. Cap at 4096 characters.
-
-Strict mode
------------
-
-* ``strict=False`` (default) -- unknown input returns ``"unknown"``
-  ``LicenseVersion``.
-* ``strict=True`` -- raises ``LicenseNotFoundError`` with ``raw`` and
-  ``cleaned`` attributes.
+* ``make(version_key)`` -- creates ``LicenseVersion`` from the registry.
+* ``make_unknown(raw_key)`` -- creates ``"unknown"`` ``LicenseVersion``.
+* ``_infer_name(key)`` -- strips version from CC keys (e.g.
+  ``cc-by-4.0`` → ``cc-by``); non-CC keys are unchanged.
 
 
-Public API
-==========
+Adding a New Parser
+===================
 
-``__init__.py`` exports the public surface:
+1. Create ``src/license_normaliser/parsers/my_parser.py`` implementing
+   ``BaseParser``::
 
-.. code-block:: python
+       from .base import BaseParser
 
-    from license_normaliser import (
-        normalise_license,      # single input
-        normalise_licenses,      # batched iterable
-        LicenseFamily,
-        LicenseName,
-        LicenseVersion,
-    )
-    from license_normaliser.exceptions import (
-        LicenseNotFoundError,
-        DataSourceError,
-    )
+       class MyParser(BaseParser):
+           url = None  # or "https://upstream.example.com/data.json"
+           local_path = "data/my_parser/my_data.json"
+           is_registry_entry = True  # False for alias-only parsers
 
-Usage examples
---------------
+           def parse(self) -> list[tuple[str, dict[str, Any]]]:
+               # Return [(license_id, {"url": "...", "name": "..."}), ...]
+               return []
 
-Simple::
+2. Register it in ``src/license_normaliser/parsers/__init__.py``::
 
-    from license_normaliser import normalise_license
-
-    result = normalise_license("MIT")
-    str(result)          # "mit"
-    result.key           # "mit"
-    result.url           # "https://opensource.org/licenses/MIT"
-    result.license.key   # "mit"
-    result.family.key    # "osi"
-
-Full hierarchy::
-
-    v = normalise_license("CC BY-NC-ND 4.0")
-    v.key           # "cc-by-nc-nd-4.0"
-    v.license.key   # "cc-by-nc-nd"
-    v.family.key    # "cc"
-
-Strict mode::
-
-    from license_normaliser import normalise_license
-    from license_normaliser.exceptions import LicenseNotFoundError
-
-    try:
-        v = normalise_license("unknown string", strict=True)
-    except LicenseNotFoundError as exc:
-        exc.raw      # original input
-        exc.cleaned  # cleaned form
-
-CLI
----
-
-::
-
-    license-normaliser normalise "MIT"
-    license-normaliser normalise --full "CC BY 4.0"
-    license-normaliser normalise --strict "unknown"
-    license-normaliser batch MIT "Apache-2.0" "CC BY 4.0"
+       def get_parsers() -> list[BaseParser]:
+           return [
+               SPDXParser(),
+               OpenDefinitionParser(),
+               OSIParser(),
+               ScanCodeLicenseDBParser(),
+               CreativeCommonsParser(),
+               ProseParser(),
+               AliasParser(),
+               PublisherParser(),
+               MyParser(),  # <-- add here
+           ]
 
 
 Extending Without Python Changes
@@ -441,15 +318,30 @@ a dict with ``version_key``, ``name_key``, and ``family_key``:
 Adding a new URL
 ----------------
 
-Edit ``data/urls/url_map.json``:
+Edit ``data/publishers/publishers.json`` under ``urls``:
 
 .. code-block:: json
 
     {
-      "https://example.com/license/": {
-        "version_key": "existing-version-key",
-        "name_key": "existing-name",
-        "family_key": "osi"
+      "urls": {
+        "https://example.com/license/": {
+          "version_key": "my-license",
+          "name_key": "my-license",
+          "family_key": "osi"
+        }
+      }
+    }
+
+Adding a shorthand alias
+------------------------
+
+Edit ``data/publishers/publishers.json`` under ``shorthand_aliases``:
+
+.. code-block:: json
+
+    {
+      "shorthand_aliases": {
+        "my shorthand alias": "my-license"
       }
     }
 
@@ -465,61 +357,49 @@ patterns before general ones):
       {"pattern": "my specific phrase",
        "version_key": "existing-version-key",
        "name_key": "existing-name",
-       "family_key": "osi"},
-      ...
+       "family_key": "osi"}
     ]
 
 Note: prose patterns are only tested against inputs of 20 characters or
 longer to avoid false positives on short strings.
 
 
-Adding a Brand-New Licence
-==========================
+Caching
+=======
 
-1. Add entries to the JSON data files.  Each entry is a dict with
-   ``version_key``, ``name_key``, and ``family_key``::
+The cache layer (``_cache.py``) sits between the public API and the
+pipeline.  It implements one LRU cache:
 
-   ``data/aliases/aliases.json``:
+``_resolve()`` -- pipeline cache
+    Key: the fully cleaned input string.  Value: the resulting
+    ``LicenseVersion``.  Default size: **8192 entries**.
 
-   .. code-block:: json
+Input cleaning (``_clean()``)
+-----------------------------
 
-       { "my alias":
-         {"version_key": "my-license",
-          "name_key": "my-license",
-          "family_key": "osi"} }
+Before caching or lookup, every input string passes through:
 
-   ``data/urls/url_map.json``:
+1. Strip leading/trailing whitespace.
+2. Attempt to decode mojibake (try latin-1, fall back to UTF-8).
+3. Collapse internal whitespace to single spaces.
+4. Lowercase.
+5. Strip trailing slash.
+6. Cap at 4096 characters.
 
-   .. code-block:: json
+URL normalisation (``_normalise_url()``)
+----------------------------------------
 
-        { "https://example.com/license/":
-          {"version_key": "my-license",
-           "name_key": "my-license",
-           "family_key": "osi"} }
+* Scheme forced to ``https``.
+* Trailing slash stripped.
+* Lowercased.
 
-   ``data/prose/prose_patterns.json``:
+Strict mode
+-----------
 
-   .. code-block:: json
-
-        [
-          {"pattern": "my specific phrase",
-           "version_key": "my-license",
-           "name_key": "my-license",
-           "family_key": "osi"}
-       ]
-
-   At least one of these files must provide an entry for the new key.
-
-2. If the new licence has family information not covered by the regex
-   fallback table in ``_registry.py``, add an explicit entry to
-   ``data/aliases/aliases.json`` to ensure it is picked up.
-
-3. Write tests covering both the new licence and any edge cases.
-
-4. Run the test suite::
-
-       make test-env ENV=py312
-       make pre-commit
+* ``strict=False`` (default) -- unknown input returns ``"unknown"``
+  ``LicenseVersion``.
+* ``strict=True`` -- raises ``LicenseNotFoundError`` with ``raw`` and
+  ``cleaned`` attributes.
 
 
 Directory Structure
@@ -529,102 +409,48 @@ Directory Structure
 
     src/license_normaliser/
     ├── __init__.py              # Public API exports
-    ├── _models.py                # Frozen dataclass hierarchy
-    ├── _registry.py              # VERSION_REGISTRY + data source merge
-    ├── _pipeline.py              # Six-step resolution pipeline
-    ├── _cache.py                 # LRU caches + cleaning + strict mode
-    ├── _core.py                  # Internal resolve helpers
-    ├── exceptions.py             # LicenseNotFoundError, DataSourceError
+    ├── _models.py               # Frozen dataclass hierarchy
+    ├── _registry.py             # REGISTRY + URL_MAP + ALIASES + FAMILY_OVERRIDES
+    ├── _cache.py                # LRU caches + cleaning + strict mode
+    ├── _core.py                 # Internal resolve helpers
+    ├── _exceptions.py            # LicenseNormalisationError, LicenseNotFoundError
     ├── cli/
     │   ├── __init__.py
-    │   └── _main.py              # CLI entry point
-    ├── data_sources/
-    │   ├── __init__.py           # DataSource protocol + REGISTRY
-    │   ├── builtin_aliases.py    # aliases.json loader
-    │   ├── builtin_urls.py       # url_map.json loader
-    │   ├── builtin_prose.py      # prose_patterns.json loader
-    │   ├── spdx.py               # SPDX JSON parser
-    │   └── opendefinition.py     # Open Definition JSON parser
+    │   └── _main.py             # CLI entry point
+    ├── parsers/
+    │   ├── __init__.py          # Parser registry
+    │   ├── base.py              # BaseParser abstract class
+    │   ├── spdx.py              # SPDXParser
+    │   ├── opendefinition.py     # OpenDefinitionParser
+    │   ├── osi.py               # OSIParser
+    │   ├── scancode_licensedb.py # ScanCodeLicenseDBParser
+    │   ├── creativecommons.py    # CreativeCommonsParser
+    │   ├── prose.py             # ProseParser
+    │   ├── alias.py             # AliasParser
+    │   └── publisher.py          # PublisherParser
     └── tests/
-        ├── conftest.py           # pytest fixtures
+        ├── conftest.py
+        ├── test_aliases.py
         ├── test_cache.py
         ├── test_cli.py
         ├── test_core.py
-        ├── test_data_sources.py
         ├── test_exceptions.py
+        ├── test_integration.py
         ├── test_models.py
-        ├── test_pipeline.py
-        └── test_registry.py
+        ├── test_prose.py
+        └── test_publisher.py
 
     data/
     ├── aliases/aliases.json
     ├── urls/url_map.json
     ├── prose/prose_patterns.json
-    ├── spdx-licenses.json             (upstream originals — see below)
-    ├── opendefinition_licenses_all.json
-    ├── spdx/spdx-licenses.json        (curated subset — loaded at runtime)
-    └── opendefinition/...json         (curated subset — loaded at runtime)
-
-
-Exception Hierarchy
-===================
-
-::
-
-    LicenseNormaliserError (base)
-    ├── LicenseNotFoundError     # strict-mode failure
-    └── DataSourceError          # critical data source parse failure
-
-Only ``DataSourceError`` propagates from ``load_all_sources()``.
-All other exceptions are caught, logged, and the system continues.
-
-
-Testing
-=======
-
-All tests run inside Docker::
-
-    make test-env ENV=py312     # single Python version
-    make test                    # full matrix (py310–py314)
-
-Interactive shell::
-
-    make shell                   # default Python
-    make shell-env ENV=py312     # specific Python
-
-Code quality::
-
-    make pre-commit              # runs all hooks (ruff, pydoclint, ...)
-
-
-Developer Tools
-===============
-
-``data/normalize_licenses.py``
-------------------------------
-
-A standalone script that finds coverage gaps in the curated data files.
-
-It loads the **upstream originals** (``spdx-licenses.json`` and
-``opendefinition_licenses_all.json`` at the top level of ``data/``),
-runs ``normalise_licenses()`` on every ID, and reports which ones
-resolve to ``family=unknown`` — meaning no entry exists for them.
-
-Run from the repository root::
-
-    python src/license_normaliser/data/normalize_licenses.py
-
-The curated subsets in ``data/spdx/`` and ``data/opendefinition/`` are
-what the runtime data sources actually load. They are **not**
-auto-generated; they are manually trimmed subsets of the upstream files.
-
-To add coverage for a missing upstream ID:
-
-1. Note the ``family=unknown`` entry from the script's output.
-2. Add an entry to ``data/aliases/aliases.json`` or
-   ``data/urls/url_map.json`` with the correct ``version_key``,
-   ``name_key``, and ``family_key``.
-3. Run the script again to confirm it now resolves correctly.
+    ├── publishers/publishers.json
+    ├── spdx/spdx.json             (full SPDX list — loaded at runtime)
+    ├── opendefinition/opendefinition.json  (full OD list — loaded at runtime)
+    ├── osi/osi.json               (OSI API response)
+    ├── creativecommons/creativecommons.json (scraped CC data)
+    ├── scancode_licensedb/scancode_licensedb.json
+    └── original/                  **DO NOT MODIFY** — upstream originals
 
 
 Coding Conventions
@@ -636,3 +462,20 @@ Coding Conventions
 * Always chain exceptions: ``raise X(...) from exc``.
 * Type annotations on all public functions.
 * Target Python: **3.10+**.
+
+Testing
+=======
+
+All tests run inside Docker::
+
+    make test-env ENV=py312      # single Python version
+    make test                    # full matrix (py310–py314)
+
+Interactive shell::
+
+    make shell                   # default Python
+    make shell-env ENV=py312     # specific Python
+
+Code quality::
+
+    make pre-commit              # runs all hooks (ruff, ...)

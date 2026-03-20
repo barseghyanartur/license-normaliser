@@ -114,8 +114,8 @@ Parsers implement `BaseParser` and can be added to `src/license_normaliser/parse
 
 1. Create `src/license_normaliser/parsers/my_parser.py` implementing `BaseParser`:
 
-```python
-from .base import BaseParser
+```python name=test_adding_new_parser
+from license_normaliser.parsers.base import BaseParser
 
 class MyParser(BaseParser):
     url = None  # or upstream URL for refresh
