@@ -61,25 +61,41 @@ Installation
 Testing
 -------
 
-**All tests must be run inside Docker.**
+.. note::
+   Python 3.15 is being tested on GitHub CI, but not inside a local Docker image.
+
+Docker-based testing (recommended)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All tests run inside Docker for platform independence and consistency:
 
 .. code-block:: sh
 
-    make test
+    make test                    # full matrix (Python 3.10-3.14)
+    make test-env ENV=py312      # single Python version
+    make shell                   # interactive shell in test container
+    make shell-env ENV=py312     # interactive shell for specific Python
 
-To test a single environment:
+Local testing (alternative)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For faster iteration during development, you can run tests locally with ``uv``:
 
 .. code-block:: sh
 
-    make test-env ENV=py312
+    make install                 # one-time setup
+    uv run pytest                # run all tests
+    uv run pytest path/to/test_something.py  # run specific test
 
-For an interactive shell inside the container:
+**Important**: If you encounter tooling errors with local testing, fall back to
+Docker-based testing which is the canonical environment.
 
-.. code-block:: sh
-
-    make shell
+GitHub Actions
+~~~~~~~~~~~~~~
 
 In any case, GitHub Actions runs the full matrix automatically on every push.
+Tests run on Python 3.10–3.15 (all non-EOL versions).  See the
+`versions manifest`_ for the full list of available Python versions.
 
 Adding new normalisation rules
 ------------------------------
