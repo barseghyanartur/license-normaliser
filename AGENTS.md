@@ -61,7 +61,7 @@
 
 ### Simple case
 
-```python
+```python name=test_simple_case
 from license_normaliser import normalise_license
 
 v = normalise_license("MIT")
@@ -70,7 +70,8 @@ str(v)  # "mit"
 
 ### With full hierarchy
 
-```python
+<!-- continue: test_simple_case -->
+```python name=test_full_hierarchy
 v = normalise_license("CC BY-NC-ND 4.0")
 print(v.key)           # "cc-by-nc-nd-4.0"
 print(v.license.key)   # "cc-by-nc-nd"
@@ -79,17 +80,22 @@ print(v.family.key)    # "cc"
 
 ### Strict mode
 
-```python
-from license_normaliser import normalise_license, LicenseNormalisationError
+```python name=test_strict_mode
+import pytest
+from license_normaliser import normalise_license, LicenseNotFoundError
 
-try:
+# Would normally raise: License not found: 'unknown string'
+with pytest.raises(LicenseNotFoundError):
     v = normalise_license("unknown string", strict=True)
-except LicenseNormalisationError as exc:
-    print(exc)  # License not found: 'unknown string'
 
 # Batch strict
 from license_normaliser import normalise_licenses
-results = normalise_licenses(["MIT", "Apache-2.0"], strict=True)
+
+with pytest.raises(LicenseNotFoundError):
+    results = normalise_licenses(
+        ["unknown string", "unknown string 2.0"],
+        strict=True,
+    )
 ```
 
 ---
@@ -180,16 +186,23 @@ Run linting: `make ruff` or `make pre-commit`
 
 ## 8. Testing Rules
 
-All tests run inside Docker (safest option, always available):
+For ease and platform independent testing, all tests run inside Docker (safest
+option, always available, as long as there's Docker installed):
 
 ```sh
 make test                   # full matrix (Python 3.10-3.14)
 make test-env ENV=py312     # single version
 ```
 
-For individual local tests, you can use `uv run pytest`.
+Alternatively, for individual local tests, you can run local tests
+using `uv run pytest`.
 A prerequisite is `make install` first. On tooling errors, fallback to
 Docker-based testing.
+
+```sh
+make install
+uv run pytest path/to/test_something.py
+```
 
 ### Test layout
 
