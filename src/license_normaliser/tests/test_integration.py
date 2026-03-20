@@ -62,12 +62,12 @@ def test_real_world_license_strings():
         ),
         (
             "http://creativecommons.org/licenses/by-nc-nd/3.0/igo/",
-            "http://creativecommons.org/licenses/by-nc-nd/3.0/igo",
+            "cc-by-nc-nd-3.0-igo",
         ),
         ("CC BY-NC-ND 4.0", "cc-by-nc-nd-4.0"),
         (
             "http://creativecommons.org/licenses/by/3.0/igo/",
-            "http://creativecommons.org/licenses/by/3.0/igo",
+            "cc-by-3.0-igo",
         ),
     ]
     for raw, expected_key in cases:
