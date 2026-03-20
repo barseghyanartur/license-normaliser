@@ -214,10 +214,12 @@ JSON files.  The table covers common prefixes:
 ``aps*`` → ``publisher-proprietary``, ``jama*`` → ``publisher-oa``,
 ``degruyter*`` → ``publisher-proprietary``, ``thieme*`` → ``publisher-oa``,
 ``tandf*`` → ``publisher-proprietary``, ``oup*`` → ``publisher-oa``,
-``sage*`` → ``publisher-proprietary``, ``aaas*`` → ``publisher-proprietary``,
+``sage*`` → ``publisher-proprietary``,
+``aaas*`` → ``publisher-proprietary``,
 ``no-reuse`` → ``publisher-proprietary``,
 ``all-rights-reserved`` → ``publisher-proprietary``,
-``author-manuscript`` → ``publisher-oa``, ``implied-oa`` → ``publisher-oa``,
+``author-manuscript`` → ``publisher-oa``,
+``implied-oa`` → ``publisher-oa``,
 ``open-access`` → ``other-oa``, ``unspecified-oa`` → ``other-oa``,
 ``publisher-specific-oa`` → ``publisher-oa``,
 ``other-oa`` → ``other-oa``.
@@ -460,7 +462,10 @@ patterns before general ones):
 .. code-block:: json
 
     [
-      {"pattern": "my specific phrase", "version_key": "existing-version-key", "name_key": "existing-name", "family_key": "osi"},
+      {"pattern": "my specific phrase",
+       "version_key": "existing-version-key",
+       "name_key": "existing-name",
+       "family_key": "osi"},
       ...
     ]
 
@@ -478,20 +483,29 @@ Adding a Brand-New Licence
 
    .. code-block:: json
 
-       { "my alias": {"version_key": "my-license", "name_key": "my-license", "family_key": "osi"} }
+       { "my alias":
+         {"version_key": "my-license",
+          "name_key": "my-license",
+          "family_key": "osi"} }
 
    ``data/urls/url_map.json``:
 
    .. code-block:: json
 
-       { "https://example.com/license/": {"version_key": "my-license", "name_key": "my-license", "family_key": "osi"} }
+        { "https://example.com/license/":
+          {"version_key": "my-license",
+           "name_key": "my-license",
+           "family_key": "osi"} }
 
    ``data/prose/prose_patterns.json``:
 
    .. code-block:: json
 
-       [
-         {"pattern": "my specific phrase", "version_key": "my-license", "name_key": "my-license", "family_key": "osi"}
+        [
+          {"pattern": "my specific phrase",
+           "version_key": "my-license",
+           "name_key": "my-license",
+           "family_key": "osi"}
        ]
 
    At least one of these files must provide an entry for the new key.
