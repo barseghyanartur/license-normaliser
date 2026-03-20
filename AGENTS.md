@@ -129,7 +129,8 @@ class MyParser(BaseParser):
 
 2. Register it in `src/license_normaliser/parsers/__init__.py`:
 
-```python
+<!-- continue: test_adding_new_parser -->
+```python name=test_adding_new_parser_register
 def get_parsers() -> list[BaseParser]:
     return [
         SPDXParser(),
