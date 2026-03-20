@@ -5,8 +5,12 @@ readme = "README.rst"
 version = "0.2"
 requires-python = ">=3.10"
 dependencies = []
-authors = [{ name = "Artur Barseghyan", email = "artur.barseghyan@gmail.com" }]
-maintainers = [{ name = "Artur Barseghyan", email = "artur.barseghyan@gmail.com" }]
+authors = [
+    { name = "Artur Barseghyan", email = "artur.barseghyan@gmail.com" },
+]
+maintainers = [
+    { name = "Artur Barseghyan", email = "artur.barseghyan@gmail.com" },
+]
 license = "MIT"
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -21,7 +25,13 @@ classifiers = [
     "Programming Language :: Python",
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
-keywords = ["license", "normalisation", "spdx", "creative commons", "open source"]
+keywords = [
+    "license",
+    "normalisation",
+    "spdx",
+    "creative commons",
+    "open source",
+]
 
 [project.scripts]
 license-normaliser = "license_normaliser.cli:main"
@@ -40,9 +50,12 @@ dev = [
     "mypy",
     "ruff",
     "uv",
-    "httpx",
 ]
-test = ["pytest", "pytest-cov", "pytest-codeblock"]
+test = [
+    "pytest",
+    "pytest-cov",
+    "pytest-codeblock",
+]
 docs = [
     "sphinx",
     "sphinx-autobuild",
@@ -52,7 +65,11 @@ docs = [
     "sphinx-llms-txt-link",
     "sphinx-source-tree",
 ]
-build = ["build", "twine", "wheel"]
+build = [
+    "build",
+    "twine",
+    "wheel",
+]
 
 [tool.setuptools]
 package-dir = {"" = "src"}
@@ -70,19 +87,232 @@ build-backend = "setuptools.build_meta"
 
 [tool.ruff]
 line-length = 88
-lint.select = ["B", "C4", "E", "F", "G", "I", "ISC", "INP", "N", "PERF", "Q", "SIM"]
-lint.ignore = ["G004", "ISC003"]
+lint.select = [
+    "B",
+    "C4",
+    "E",
+    "F",
+    "G",
+    "I",
+    "ISC",
+    "INP",
+    "N",
+    "PERF",
+    "Q",
+    "SIM",
+]
+lint.ignore = [
+    "G004",
+    "ISC003",
+]
 fix = true
 src = ["src/license_normaliser"]
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    "docs",
+]
 target-version = "py310"
+lint.dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
 
 [tool.ruff.lint.isort]
 known-first-party = ["license_normaliser"]
 
+[tool.ruff.lint.per-file-ignores]
+"conftest.py" = [
+    "PERF203"
+]
+
+[tool.doc8]
+ignore-path = [
+    "docs/requirements.txt",
+    "src/license_normaliser.egg-info/SOURCES.txt",
+]
+
 [tool.pytest.ini_options]
-addopts = ["-ra", "-vvv", "-q", "--cov=license_normaliser", "--cov-report=html", "--cov-report=term"]
-testpaths = ["src/license_normaliser/tests", "."]
+addopts = [
+    "-ra",
+    "-vvv",
+    "-q",
+    "--cov=license_normaliser",
+    "--ignore=.tox",
+    "--cov-report=html",
+    "--cov-report=term",
+    "--cov-append",
+    "--capture=no",
+]
+testpaths = [
+    "src/license_normaliser/tests",
+    ".",
+    "**/*.rst",
+    "**/*.md",
+]
 pythonpath = ["src"]
+norecursedirs = [".git", ".tox"]
 
 [tool.coverage.run]
+relative_files = true
+omit = [".tox/*"]
 source = ["license_normaliser"]
+
+[tool.coverage.report]
+show_missing = true
+exclude_lines = [
+    "pragma: no cover",
+    "@overload",
+]
+
+[tool.mypy]
+check_untyped_defs = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
+ignore_missing_imports = true
+
+[tool.sphinx-source-tree]
+ignore = [
+    "*.egg-info",
+    "*.py,cover",
+    "*.pyc",
+    "*.pyo",
+    ".DS_Store",
+    ".coverage",
+    ".coverage.*",
+    ".git",
+    ".hg",
+    ".hypothesis",
+    ".idea",
+    ".mypy_cache",
+    ".nox",
+    ".pre-commit-config.yaml",
+    ".pre-commit-hooks.yaml",
+    ".pytest_cache",
+    ".readthedocs.yaml",
+    ".ruff_cache",
+    ".secrets.baseline",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "CHANGELOG.rst",
+    "CODE_OF_CONDUCT.rst",
+    "LICENSE",
+    "SECURITY.rst",
+    "Thumbs.db",
+    "__pycache__",
+    "build",
+    "codebin",
+    "dist",
+    "docs/Makefile",
+    "docs/_build",
+    "docs/_static",
+    "docs/changelog.rst",
+    "docs/code_of_conduct.rst",
+    "docs/make.bat",
+    "docs/requirements.txt",
+    "docs/security.rst",
+    "docs/source_tree.rst",
+    "docs/source_tree_full.rst",
+    "env",
+    "htmlcov",
+    "node_modules",
+    "venv",
+    "ARCHITECTURE.rst",
+    ".coderabbit.yaml",
+    ".coveralls",
+    "docs/full-llms.rst",
+    "docs/llms.rst",
+    "docs/contributor_guidelines.rst",
+    "docs/package.rst",
+    "docs/documentation.rst",
+    "docs/index.rst",
+]
+order = [
+    "README.rst",
+    "CONTRIBUTING.rst",
+    "AGENTS.md",
+]
+
+[[tool.sphinx-source-tree.files]]
+output = "docs/full_llms.rst"
+title = "Full project source-tree"
+
+[[tool.sphinx-source-tree.files]]
+output = "docs/llms.rst"
+title = "Project source-tree"
+ignore = [
+    "*.egg-info",
+    "*.py,cover",
+    "*.pyc",
+    "*.pyo",
+    ".DS_Store",
+    ".coverage",
+    ".coverage.*",
+    ".git",
+    ".hg",
+    ".hypothesis",
+    ".idea",
+    ".mypy_cache",
+    ".nox",
+    ".pre-commit-config.yaml",
+    ".pre-commit-hooks.yaml",
+    ".pytest_cache",
+    ".readthedocs.yaml",
+    ".ruff_cache",
+    ".secrets.baseline",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "CHANGELOG.rst",
+    "CODE_OF_CONDUCT.rst",
+    "LICENSE",
+    "SECURITY.rst",
+    "Thumbs.db",
+    "__pycache__",
+    "build",
+    "codebin",
+    "dist",
+    "docs/Makefile",
+    "docs/_build",
+    "docs/_static",
+    "docs/changelog.rst",
+    "docs/code_of_conduct.rst",
+    "docs/make.bat",
+    "docs/requirements.txt",
+    "docs/security.rst",
+    "docs/source_tree.rst",
+    "docs/source_tree_full.rst",
+    "env",
+    "htmlcov",
+    "node_modules",
+    "venv",
+    "examples",
+    "docs",
+    "ARCHITECTURE.rst",
+    ".coderabbit.yaml",
+    ".coveralls",
+    "docs/full-llms.rst",
+    "docs/llms.rst",
+    "docs/contributor_guidelines.rst",
+    "docs/package.rst",
+    "docs/documentation.rst",
+    "docs/index.rst",
+]
