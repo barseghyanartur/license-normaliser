@@ -1,0 +1,227 @@
+[
+  {
+    "license_key": "cc-by-nc-nd-2.0",
+    "url": "https://creativecommons.org/licenses/by-nc-nd/2.0/",
+    "path": "by-nc-nd/2.0"
+  },
+  {
+    "license_key": "cc-by-nc-nd-2.5",
+    "url": "https://creativecommons.org/licenses/by-nc-nd/2.5/",
+    "path": "by-nc-nd/2.5"
+  },
+  {
+    "license_key": "cc-by-nc-nd-3.0",
+    "url": "https://creativecommons.org/licenses/by-nc-nd/3.0/",
+    "path": "by-nc-nd/3.0"
+  },
+  {
+    "license_key": "cc-by-nc-nd-3.0-igo",
+    "url": "https://creativecommons.org/licenses/by-nc-nd/3.0/igo/",
+    "path": "by-nc-nd/3.0/igo"
+  },
+  {
+    "license_key": "cc-by-nc-nd-4.0",
+    "url": "https://creativecommons.org/licenses/by-nc-nd/4.0/",
+    "path": "by-nc-nd/4.0"
+  },
+  {
+    "license_key": "cc-by-nc-sa-1.0",
+    "url": "https://creativecommons.org/licenses/by-nc-sa/1.0/",
+    "path": "by-nc-sa/1.0"
+  },
+  {
+    "license_key": "cc-by-nc-sa-2.0",
+    "url": "https://creativecommons.org/licenses/by-nc-sa/2.0/",
+    "path": "by-nc-sa/2.0"
+  },
+  {
+    "license_key": "cc-by-nc-sa-2.5",
+    "url": "https://creativecommons.org/licenses/by-nc-sa/2.5/",
+    "path": "by-nc-sa/2.5"
+  },
+  {
+    "license_key": "cc-by-nc-sa-3.0",
+    "url": "https://creativecommons.org/licenses/by-nc-sa/3.0/",
+    "path": "by-nc-sa/3.0"
+  },
+  {
+    "license_key": "cc-by-nc-sa-3.0-igo",
+    "url": "https://creativecommons.org/licenses/by-nc-sa/3.0/igo/",
+    "path": "by-nc-sa/3.0/igo"
+  },
+  {
+    "license_key": "cc-by-nc-sa-4.0",
+    "url": "https://creativecommons.org/licenses/by-nc-sa/4.0/",
+    "path": "by-nc-sa/4.0"
+  },
+  {
+    "license_key": "cc-by-nc-1.0",
+    "url": "https://creativecommons.org/licenses/by-nc/1.0/",
+    "path": "by-nc/1.0"
+  },
+  {
+    "license_key": "cc-by-nc-2.0",
+    "url": "https://creativecommons.org/licenses/by-nc/2.0/",
+    "path": "by-nc/2.0"
+  },
+  {
+    "license_key": "cc-by-nc-2.5",
+    "url": "https://creativecommons.org/licenses/by-nc/2.5/",
+    "path": "by-nc/2.5"
+  },
+  {
+    "license_key": "cc-by-nc-3.0",
+    "url": "https://creativecommons.org/licenses/by-nc/3.0/",
+    "path": "by-nc/3.0"
+  },
+  {
+    "license_key": "cc-by-nc-3.0-igo",
+    "url": "https://creativecommons.org/licenses/by-nc/3.0/igo/",
+    "path": "by-nc/3.0/igo"
+  },
+  {
+    "license_key": "cc-by-nc-4.0",
+    "url": "https://creativecommons.org/licenses/by-nc/4.0/",
+    "path": "by-nc/4.0"
+  },
+  {
+    "license_key": "cc-by-nd-1.0",
+    "url": "https://creativecommons.org/licenses/by-nd/1.0/",
+    "path": "by-nd/1.0"
+  },
+  {
+    "license_key": "cc-by-nd-2.0",
+    "url": "https://creativecommons.org/licenses/by-nd/2.0/",
+    "path": "by-nd/2.0"
+  },
+  {
+    "license_key": "cc-by-nd-2.5",
+    "url": "https://creativecommons.org/licenses/by-nd/2.5/",
+    "path": "by-nd/2.5"
+  },
+  {
+    "license_key": "cc-by-nd-3.0",
+    "url": "https://creativecommons.org/licenses/by-nd/3.0/",
+    "path": "by-nd/3.0"
+  },
+  {
+    "license_key": "cc-by-nd-3.0-igo",
+    "url": "https://creativecommons.org/licenses/by-nd/3.0/igo/",
+    "path": "by-nd/3.0/igo"
+  },
+  {
+    "license_key": "cc-by-nd-4.0",
+    "url": "https://creativecommons.org/licenses/by-nd/4.0/",
+    "path": "by-nd/4.0"
+  },
+  {
+    "license_key": "cc-by-sa-1.0",
+    "url": "https://creativecommons.org/licenses/by-sa/1.0/",
+    "path": "by-sa/1.0"
+  },
+  {
+    "license_key": "cc-by-sa-2.0",
+    "url": "https://creativecommons.org/licenses/by-sa/2.0/",
+    "path": "by-sa/2.0"
+  },
+  {
+    "license_key": "cc-by-sa-2.5",
+    "url": "https://creativecommons.org/licenses/by-sa/2.5/",
+    "path": "by-sa/2.5"
+  },
+  {
+    "license_key": "cc-by-sa-3.0",
+    "url": "https://creativecommons.org/licenses/by-sa/3.0/",
+    "path": "by-sa/3.0"
+  },
+  {
+    "license_key": "cc-by-sa-3.0-igo",
+    "url": "https://creativecommons.org/licenses/by-sa/3.0/igo/",
+    "path": "by-sa/3.0/igo"
+  },
+  {
+    "license_key": "cc-by-sa-4.0",
+    "url": "https://creativecommons.org/licenses/by-sa/4.0/",
+    "path": "by-sa/4.0"
+  },
+  {
+    "license_key": "cc-by-1.0",
+    "url": "https://creativecommons.org/licenses/by/1.0/",
+    "path": "by/1.0"
+  },
+  {
+    "license_key": "cc-by-2.0",
+    "url": "https://creativecommons.org/licenses/by/2.0/",
+    "path": "by/2.0"
+  },
+  {
+    "license_key": "cc-by-2.5",
+    "url": "https://creativecommons.org/licenses/by/2.5/",
+    "path": "by/2.5"
+  },
+  {
+    "license_key": "cc-by-3.0",
+    "url": "https://creativecommons.org/licenses/by/3.0/",
+    "path": "by/3.0"
+  },
+  {
+    "license_key": "cc-by-3.0-igo",
+    "url": "https://creativecommons.org/licenses/by/3.0/igo/",
+    "path": "by/3.0/igo"
+  },
+  {
+    "license_key": "cc-by-4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/",
+    "path": "by/4.0"
+  },
+  {
+    "license_key": "cc-devnations-2.0",
+    "url": "https://creativecommons.org/licenses/devnations/2.0/",
+    "path": "devnations/2.0"
+  },
+  {
+    "license_key": "cc-nc-sa-1.0",
+    "url": "https://creativecommons.org/licenses/nc-sa/1.0/",
+    "path": "nc-sa/1.0"
+  },
+  {
+    "license_key": "cc-nc-sampling-plus-1.0",
+    "url": "https://creativecommons.org/licenses/nc-sampling+/1.0/",
+    "path": "nc-sampling+/1.0"
+  },
+  {
+    "license_key": "cc-nc-1.0",
+    "url": "https://creativecommons.org/licenses/nc/1.0/",
+    "path": "nc/1.0"
+  },
+  {
+    "license_key": "cc-nd-nc-1.0",
+    "url": "https://creativecommons.org/licenses/nd-nc/1.0/",
+    "path": "nd-nc/1.0"
+  },
+  {
+    "license_key": "cc-nd-1.0",
+    "url": "https://creativecommons.org/licenses/nd/1.0/",
+    "path": "nd/1.0"
+  },
+  {
+    "license_key": "cc-sa-1.0",
+    "url": "https://creativecommons.org/licenses/sa/1.0/",
+    "path": "sa/1.0"
+  },
+  {
+    "license_key": "cc-sampling-plus-1.0",
+    "url": "https://creativecommons.org/licenses/sampling+/1.0/",
+    "path": "sampling+/1.0"
+  },
+  {
+    "license_key": "cc-sampling-1.0",
+    "url": "https://creativecommons.org/licenses/sampling/1.0/",
+    "path": "sampling/1.0"
+  },
+  {
+    "license_key": "cc0-1.0",
+    "url": "https://creativecommons.org/licenses/zero/1.0/",
+    "path": "zero/1.0"
+  }
+]

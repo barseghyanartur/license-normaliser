@@ -48,8 +48,14 @@ Features
 - **Creative Commons support** - Full CC family with versions and IGO variants.
 - **Publisher-specific licenses** - Springer, Nature, Elsevier, Wiley, ACS,
   and more.
+- **File-driven data** - Add aliases, URLs, and patterns by editing JSON files.
+  No Python code changes required for new synonyms.
+- **Pluggable data sources** - Drop in a new ``DataSource`` class to ingest
+  any external license registry automatically.
+- **Strict mode** - Raise ``LicenseNotFoundError`` instead of silently
+  returning ``"unknown"``.
 - **Caching** - LRU caching for performance.
-- **CLI** - Command-line interface for quick normalisation.
+- **CLI** - Command-line interface with ``--strict`` support.
 
 Hierarchy
 =========
@@ -90,15 +96,58 @@ Quick start
     str(v.license)          # "cc-by-nc-nd"       ← LicenseName
     str(v.license.family)   # "cc"                ← LicenseFamily
 
-Resolution pipeline (first match wins)
-======================================
+Strict mode
+===========
 
-1. Direct registry lookup (cleaned lowercase key)
-2. Alias table (prose variants, SPDX tokens, mixed-case short-forms)
-3. Exact URL map (http/https, trailing-slash normalised, fragment-aware)
-4. Structural CC URL regex (any creativecommons.org URL not in the map)
-5. Prose keyword scan (full sentences from license documents)
-6. Fallback (key = cleaned string, everything else unknown/None)
+By default, unresolvable inputs return an ``"unknown"`` result.  Pass
+``strict=True`` to raise ``LicenseNotFoundError`` instead:
+
+.. code-block:: python
+    :name: test_strict_mode
+
+    from license_normaliser import normalise_license
+    from license_normaliser.exceptions import LicenseNotFoundError
+
+    # Silent fallback (default)
+    v = normalise_license("some-unknown-string")
+    v.family.key  # "unknown"
+
+    # Strict: raises on unresolvable input
+    try:
+        v = normalise_license("some-unknown-string", strict=True)
+    except LicenseNotFoundError as exc:
+        print(exc.raw)      # original input
+        print(exc.cleaned)  # cleaned form that failed lookup
+
+Batch normalisation
+===================
+
+.. code-block:: python
+    :name: test_batch_normalisation
+
+    from license_normaliser import normalise_licenses
+
+    results = normalise_licenses(["MIT", "Apache-2.0", "CC BY 4.0"])
+    for r in results:
+        print(r.key)
+
+    # Strict batch - raises on first unresolvable
+    results = normalise_licenses(["MIT", "Apache-2.0"], strict=True)
+
+Update data sources (CLI)
+=========================
+
+.. code-block:: sh
+
+    license-normaliser update-data --force
+    # Fetches fresh SPDX + OpenDefinition JSONs into src/license_normaliser/data/
+
+Integration tests (public API only)
+===================================
+
+All integration tests live in
+``src/license_normaliser/tests/test_integration.py``
+and only import the public API.
 
 CLI usage
 =========
@@ -117,15 +166,26 @@ Normalise a single license:
     # License: cc-by
     # Family: cc
 
-Batch normalise multiple licenses:
+    license-normaliser normalise --strict "totally-unknown"
+    # Exits with code 1 and prints an error
+
+Batch normalise:
 
 .. code-block:: sh
 
     license-normaliser batch MIT "Apache-2.0" "CC BY 4.0"
-    # Output:
-    # MIT: mit
-    # Apache-2.0: apache-2.0
-    # CC BY 4.0: cc-by-4.0
+    license-normaliser batch --strict MIT "Apache-2.0"
+
+Exceptions
+==========
+
+.. code-block:: python
+    :name: test_exceptions
+
+    from license_normaliser.exceptions import (
+        LicenseNormaliserError,   # base class
+        LicenseNotFoundError,     # raised by strict mode
+    )
 
 Testing
 =======
@@ -146,11 +206,6 @@ License
 =======
 
 MIT
-
-Support
-=======
-
-For issues, go to `GitHub <https://github.com/barseghyanartur/license-normaliser/issues>`_.
 
 Author
 ======

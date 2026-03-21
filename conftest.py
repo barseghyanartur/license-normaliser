@@ -1,5 +1,11 @@
-"""
-Pytest fixtures for documentation testing.
+"""Pytest fixtures for documentation testing."""
 
-DO NOT ADD OTHER FIXTURES HERE - these are for pytest-codeblock only.
-"""
+from typing import Any as AnyType
+
+import pytest
+
+
+@pytest.fixture()
+def Any() -> AnyType:  # noqa
+    """For to be used in documentation."""
+    return AnyType

@@ -1,23 +1,22 @@
-"""
-Pytest fixtures for documentation testing and general testing.
-"""
+"""Shared fixtures for license_normaliser tests."""
 
 import pytest
 
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2026 Artur Barseghyan"
+__license__ = "MIT"
+
 
 @pytest.fixture()
-def simple_license():
-    """A simple license string for testing."""
+def mit_raw() -> str:
     return "MIT"
 
 
 @pytest.fixture()
-def cc_by_nc_nd_license():
-    """A CC BY-NC-ND 4.0 license string."""
+def cc_by_nc_nd_4_raw() -> str:
     return "CC BY-NC-ND 4.0"
 
 
 @pytest.fixture()
-def multiple_licenses():
-    """Multiple license strings for batch testing."""
+def batch_raw() -> list[str]:
     return ["MIT", "Apache-2.0", "CC BY 4.0"]
