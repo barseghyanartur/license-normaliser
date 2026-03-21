@@ -202,7 +202,7 @@ Registered parsers (in ``parsers/__init__.py``):
    * - ``CreativeCommonsParser``
      - ``data/creativecommons/creativecommons.json``
      - Yes
-     - CC licences (scraped fromcreativecommons.org)
+     - CC licences (scraped from creativecommons.org)
    * - ``AliasParser``
      - ``data/aliases/aliases.json``
      - No

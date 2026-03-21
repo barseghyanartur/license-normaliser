@@ -100,22 +100,44 @@ Tests run on Python 3.10–3.15 (all non-EOL versions).  See the
 Adding new normalisation rules
 ------------------------------
 
-For a new **alias, URL, or prose pattern** for an *existing* license:
+For a new **alias** or **family override** for an *existing* license:
 
-1. Edit the appropriate JSON file under ``data/``.
-2. No Python changes needed.
+1. Add an entry to ``src/license_normaliser/data/aliases/aliases.json``.
+2. Add a test in ``src/license_normaliser/tests/test_aliases.py``.
+3. No Python changes needed.
 
-For a **brand-new license**:
+For a new **prose pattern** (regex matching free-text descriptions):
 
-1. Add enum entries to ``src/license_normaliser/_enums.py``.
-2. Populate ``data/`` JSON files.
-3. Add tests.
+1. Add an entry to ``src/license_normaliser/data/prose/prose_patterns.json``.
+2. Add a test in ``src/license_normaliser/tests/test_prose.py``.
+3. No Python changes needed.
 
-For a **new external data source**:
+For a new **URL mapping**:
 
-1. Implement the ``DataSource`` protocol in ``data_sources/``.
-2. Register it in ``REGISTERED_SOURCES``.
-3. Add tests.
+1. Add an entry to ``src/license_normaliser/data/urls/url_map.json`` or
+   ``src/license_normaliser/data/publishers/publishers.json``.
+2. Add a test in ``src/license_normaliser/tests/test_publisher.py``.
+3. No Python changes needed.
+
+For a **brand-new license key** (SPDX, OpenDefinition, OSI, CC, or ScanCode):
+
+1. The upstream data source must be updated first
+   (``license-normaliser update-data --force`` for SPDX/OpenDefinition, or
+   edit the upstream source for OSI/CC/ScanCode).
+2. The parser will pick it up automatically on the next import.
+3. Add an alias in ``aliases.json`` if needed.
+4. Add family override in ``aliases.json`` if needed.
+5. Add tests.
+
+For a **new parser** (new upstream data source):
+
+1. Create ``src/license_normaliser/parsers/my_parser.py`` implementing
+   ``BaseParser``.
+2. Register it in ``src/license_normaliser/parsers/__init__.py``.
+3. Set ``is_registry_entry = False`` if the parser only contributes
+   aliases/URLs/patterns (not new license keys).
+4. Add tests.
+
 
 Releases
 --------
@@ -189,12 +211,6 @@ When adding a new feature
 
 - Update ``README.rst``.
 - Add appropriate tests.
-
-GitHub Actions
---------------
-
-Tests run on Python 3.10–3.14 (all non-EOL versions).  See the
-`versions manifest`_ for the full list of available Python versions.
 
 Questions
 ---------
