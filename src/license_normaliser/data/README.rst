@@ -1,0 +1,159 @@
+Data Directory
+==============
+
+This directory contains all normalisation data files loaded at runtime
+by ``license-normaliser``. You can extend or override entries without
+touching any Python code.
+
+Structure
+---------
+
+::
+
+    data/
+    ├── aliases/
+    │   └── aliases.json             # Alias string → metadata dict
+    ├── urls/
+    │   └── url_map.json             # Canonical URL → metadata dict
+    ├── prose/
+    │   └── prose_patterns.json      # Ordered regex patterns for long text scanning
+    ├── publishers/
+    │   └── publishers.json          # Publisher URLs and shorthand aliases
+    ├── spdx/
+    │   └── spdx.json                # SPDX license list (auto-refreshed)
+    ├── opendefinition/
+    │   └── opendefinition.json      # Open Definition list (auto-refreshed)
+    ├── osi/
+    │   └── osi.json                 # OSI license list (auto-refreshed)
+    ├── creativecommons/
+    │   └── creativecommons.json     # CC licenses (scraped from creativecommons.org)
+    └── scancode_licensedb/
+        └── scancode_licensedb.json  # ScanCode license DB (auto-refreshed)
+
+Entry Format
+------------
+
+Every entry maps a **lookup key** (alias string, URL, or prose pattern)
+to a metadata dict with three required fields:
+
+- ``version_key`` – the canonical version-level identifier
+  (e.g. ``"cc-by-4.0"``)
+- ``name_key`` – the name-level identifier without version suffix
+  (e.g. ``"cc-by"``)
+- ``family_key`` – the family-level identifier (e.g. ``"cc"``)
+
+URLs are stored separately in the ``url`` field of the metadata dict.
+
+How to Add a New License Alias
+------------------------------
+
+Edit ``aliases/aliases.json``:
+
+.. code:: json
+
+   {
+     "my new alias": {
+       "version_key": "cc-by-4.0",
+       "name_key": "cc-by",
+       "family_key": "cc"
+     }
+   }
+
+The key must be **lowercase and whitespace-collapsed**.
+
+How to Add a Publisher URL or Shorthand
+---------------------------------------
+
+Edit ``publishers/publishers.json``:
+
+.. code:: json
+
+   {
+     "urls": {
+       "https://example.com/my-license/": {
+         "version_key": "my-license",
+         "name_key": "my-license",
+         "family_key": "publisher-oa"
+       }
+     },
+     "shorthand_aliases": {
+       "my shorthand alias": "my-license"
+     }
+   }
+
+Both ``http://`` and ``https://`` URL variants may be listed; they are
+normalised at lookup time (http→https, trailing slash stripped).
+
+How to Add a New URL Mapping
+----------------------------
+
+Edit ``urls/url_map.json``:
+
+.. code:: json
+
+   {
+     "https://example.com/my-license/": {
+       "version_key": "my-license",
+       "name_key": "my-license",
+       "family_key": "publisher-oa"
+     }
+   }
+
+How to Add a New Prose Pattern
+------------------------------
+
+Edit ``prose/prose_patterns.json`` — insert your entry **before** any
+pattern it should take priority over:
+
+.. code:: json
+
+   [
+     {"pattern": "my very specific phrase",
+      "version_key": "my-license",
+      "name_key": "my-license",
+      "family_key": "publisher-oa"},
+     ...
+   ]
+
+Patterns are Python regular expressions matched case-insensitively.
+More-specific patterns must come first.
+
+How to Add a Brand-New License
+------------------------------
+
+1. Add entries to one or more JSON data files (``aliases/aliases.json``,
+   ``urls/url_map.json``, ``prose/prose_patterns.json``, or
+   ``publishers/publishers.json``). Each entry maps a key to a dict with
+   ``version_key``, ``name_key``, and ``family_key``.
+
+2. If the ``family_key`` is not covered by the regex fallback table in
+   ``_registry.py``, add an explicit ``family_key`` value in the JSON
+   entry (recommended).
+
+3. Run ``make test-env ENV=py312`` to verify.
+
+Updating SPDX or OpenDefinition
+-------------------------------
+
+The ``license-normaliser update-data`` CLI command fetches fresh upstream data:
+
+.. code:: sh
+
+    license-normaliser update-data --force
+
+This updates:
+
+- ``spdx/spdx.json`` — full `SPDX license list <https://spdx.org/licenses/>`_
+- ``opendefinition/opendefinition.json`` — full `Open Definition list <https://opendefinition.org/>`_
+- ``osi/osi.json`` — `OSI license list <https://opensource.org/licenses>`_
+- ``creativecommons/creativecommons.json`` — scraped from creativecommons.org
+- ``scancode_licensedb/scancode_licensedb.json`` — `ScanCode license DB <https://scancode-licensedb.aboutcode.org/>`_
+
+Family Override Files
+---------------------
+
+Some entries carry an explicit ``family_key`` that overrides the
+inference logic in ``_registry.py``.  These are stored in:
+
+- ``aliases/aliases.json`` — ``family_key`` on any alias entry populates
+  ``FAMILY_OVERRIDES`` at import time.

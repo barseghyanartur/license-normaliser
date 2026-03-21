@@ -2,7 +2,7 @@
 name = "license-normaliser"
 description = "Comprehensive license normalisation with a three-level hierarchy."
 readme = "README.rst"
-version = "0.1.1"
+version = "0.2"
 requires-python = ">=3.10"
 dependencies = []
 authors = [
@@ -77,6 +77,9 @@ package-dir = {"" = "src"}
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["license_normaliser", "license_normaliser.*"]
+
+[tool.setuptools.package-data]
+"license_normaliser" = ["data/**/*.json"]
 
 [build-system]
 requires = ["setuptools>=41.0", "wheel"]

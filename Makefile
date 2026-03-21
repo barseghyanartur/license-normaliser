@@ -1,7 +1,7 @@
 .PHONY: build test test-env shell shell-env \
         doc8 ruff mypy clean-dev clean-test clean pre-commit
 
-VERSION := 0.1.1
+VERSION := 0.2
 SHELL := /bin/bash
 # Makefile for project
 VENV := .venv/bin/activate
@@ -39,6 +39,9 @@ shell-env: build
 		exit 1; \
 	fi
 	docker compose run --rm --entrypoint bash tox -e $(ENV)
+
+ipython:
+	uv run ipython
 
 # -----------------------------------------------------------------------
 # Code quality (run locally)

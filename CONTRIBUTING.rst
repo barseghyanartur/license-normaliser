@@ -61,25 +61,83 @@ Installation
 Testing
 -------
 
-**All tests must be run inside Docker.**
+.. note::
+   Python 3.15 is being tested on GitHub CI, but not inside a local Docker image.
+
+Docker-based testing (recommended)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+All tests run inside Docker for platform independence and consistency:
 
 .. code-block:: sh
 
-    make test
+    make test                    # full matrix (Python 3.10-3.14)
+    make test-env ENV=py312      # single Python version
+    make shell                   # interactive shell in test container
+    make shell-env ENV=py312     # interactive shell for specific Python
 
-To test a single environment:
+Local testing (alternative)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For faster iteration during development, you can run tests locally with ``uv``:
 
 .. code-block:: sh
 
-    make test-env ENV=py312
+    make install                 # one-time setup
+    uv run pytest                # run all tests
+    uv run pytest path/to/test_something.py  # run specific test
 
-For an interactive shell inside the container:
+**Important**: If you encounter tooling errors with local testing, fall back to
+Docker-based testing which is the canonical environment.
 
-.. code-block:: sh
-
-    make shell
+GitHub Actions
+~~~~~~~~~~~~~~
 
 In any case, GitHub Actions runs the full matrix automatically on every push.
+Tests run on Python 3.10–3.15 (all non-EOL versions).  See the
+`versions manifest`_ for the full list of available Python versions.
+
+Adding new normalisation rules
+------------------------------
+
+For a new **alias** or **family override** for an *existing* license:
+
+1. Add an entry to ``src/license_normaliser/data/aliases/aliases.json``.
+2. Add a test in ``src/license_normaliser/tests/test_aliases.py``.
+3. No Python changes needed.
+
+For a new **prose pattern** (regex matching free-text descriptions):
+
+1. Add an entry to ``src/license_normaliser/data/prose/prose_patterns.json``.
+2. Add a test in ``src/license_normaliser/tests/test_prose.py``.
+3. No Python changes needed.
+
+For a new **URL mapping**:
+
+1. Add an entry to ``src/license_normaliser/data/urls/url_map.json`` or
+   ``src/license_normaliser/data/publishers/publishers.json``.
+2. Add a test in ``src/license_normaliser/tests/test_publisher.py``.
+3. No Python changes needed.
+
+For a **brand-new license key** (SPDX, OpenDefinition, OSI, CC, or ScanCode):
+
+1. The upstream data source must be updated first
+   (``license-normaliser update-data --force`` for SPDX/OpenDefinition, or
+   edit the upstream source for OSI/CC/ScanCode).
+2. The parser will pick it up automatically on the next import.
+3. Add an alias in ``aliases.json`` if needed.
+4. Add family override in ``aliases.json`` if needed.
+5. Add tests.
+
+For a **new parser** (new upstream data source):
+
+1. Create ``src/license_normaliser/parsers/my_parser.py`` implementing
+   ``BaseParser``.
+2. Register it in ``src/license_normaliser/parsers/__init__.py``.
+3. Set ``is_registry_entry = False`` if the parser only contributes
+   aliases/URLs/patterns (not new license keys).
+4. Add tests.
+
 
 Releases
 --------
@@ -138,7 +196,8 @@ Examples of welcome contributions:
 General checklist
 ~~~~~~~~~~~~~~~~~
 
-- Does your change require documentation updates?
+- Does your change require documentation updates (``README.rst``,
+  ``AGENTS.md``, ``ARCHITECTURE.rst``, ``CONTRIBUTING.rst``)?
 - Does your change require new tests?
 - Does your change add any external dependencies?
   If so, reconsider: ``license-normaliser`` should have minimal dependencies.
@@ -151,14 +210,8 @@ When fixing bugs
 When adding a new feature
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Update ``README.rst``.
+- Update ``README.rst``, ``AGENTS.md``, and ``ARCHITECTURE.rst`` if applicable.
 - Add appropriate tests.
-
-GitHub Actions
---------------
-
-Tests run on Python 3.10–3.14 (all non-EOL versions).  See the
-`versions manifest`_ for the full list of available Python versions.
 
 Questions
 ---------

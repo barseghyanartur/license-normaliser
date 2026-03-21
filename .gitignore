@@ -40,3 +40,4 @@ local_settings.py
 .mypy_cache/
 benchmark.py
 uv.lock
+licenses_md/
