@@ -20,7 +20,7 @@ class AliasParser(BaseParser):
     is_registry_entry = False
 
     def parse(self) -> list[tuple[str, dict[str, Any]]]:
-        path = Path(__file__).parent.parent / "data" / "aliases" / "aliases.json"
+        path = Path(__file__).parent.parent / self.local_path
         data: dict[str, dict[str, str]] = json.loads(path.read_text(encoding="utf-8"))
         results: list[tuple[str, dict[str, Any]]] = []
         for alias_key, meta in data.items():
@@ -36,7 +36,7 @@ class AliasParser(BaseParser):
     @staticmethod
     def get_aliases() -> dict[str, str]:
         """Return the full aliases dict: alias_key -> version_key."""
-        path = Path(__file__).parent.parent / "data" / "aliases" / "aliases.json"
+        path = Path(__file__).parent.parent / AliasParser.local_path
         data: dict[str, dict[str, str]] = json.loads(path.read_text(encoding="utf-8"))
         aliases: dict[str, str] = {}
         for alias_key, meta in data.items():
@@ -52,7 +52,7 @@ class AliasParser(BaseParser):
     @staticmethod
     def get_family_overrides() -> dict[str, str]:
         """Return version_key -> family_key overrides from aliases."""
-        path = Path(__file__).parent.parent / "data" / "aliases" / "aliases.json"
+        path = Path(__file__).parent.parent / AliasParser.local_path
         data: dict[str, dict[str, str]] = json.loads(path.read_text(encoding="utf-8"))
         overrides: dict[str, str] = {}
         for meta in data.values():
