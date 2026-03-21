@@ -7,8 +7,7 @@ from ._core import (
     normalise_license,
     normalise_licenses,
 )
-from ._exceptions import LicenseNormalisationError
-from .exceptions import LicenseNotFoundError
+from .exceptions import LicenseNormalisationError, LicenseNotFoundError
 
 __title__ = "license-normaliser"
 __version__ = "0.2"
