@@ -196,7 +196,8 @@ Examples of welcome contributions:
 General checklist
 ~~~~~~~~~~~~~~~~~
 
-- Does your change require documentation updates?
+- Does your change require documentation updates (``README.rst``,
+  ``AGENTS.md``, ``ARCHITECTURE.rst``, ``CONTRIBUTING.rst``)?
 - Does your change require new tests?
 - Does your change add any external dependencies?
   If so, reconsider: ``license-normaliser`` should have minimal dependencies.
@@ -209,7 +210,7 @@ When fixing bugs
 When adding a new feature
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-- Update ``README.rst``.
+- Update ``README.rst``, ``AGENTS.md``, and ``ARCHITECTURE.rst`` if applicable.
 - Add appropriate tests.
 
 Questions
