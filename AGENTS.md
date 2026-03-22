@@ -42,15 +42,16 @@
 | File | Purpose |
 | ---- | ------- |
 | `src/license_normaliser/_models.py` | Frozen dataclass hierarchy |
-| `src/license_normaliser/_registry.py` | REGISTRY, URL_MAP, ALIASES, FAMILY_OVERRIDES built from parsers |
-| `src/license_normaliser/_cache.py` | LRU caching + strict mode + prose pattern step |
-| `src/license_normaliser/parsers/` | Pluggable parser package (SPDX, OpenDefinition, OSI, CC, ScanCode, Alias, Prose, Publisher) |
+| `src/license_normaliser/_normaliser.py` | `LicenseNormaliser` class with plugin-based resolution |
+| `src/license_normaliser/plugins.py` | Plugin interfaces (BasePlugin, RegistryPlugin, URLPlugin, etc.) |
+| `src/license_normaliser/defaults.py` | Lazy-loading default plugin bundle |
+| `src/license_normaliser/_cache.py` | Module-level API delegating to `LicenseNormaliser` |
+| `src/license_normaliser/parsers/` | Parser classes implementing plugin interfaces |
 | `src/license_normaliser/cli/_main.py` | CLI with normalise, batch, update-data |
 | `src/license_normaliser/_exceptions.py` | LicenseNormalisationError |
 | `src/license_normaliser/data/spdx/spdx.json` | Full SPDX license list (loaded at runtime) |
 | `src/license_normaliser/data/opendefinition/opendefinition.json` | Full OpenDefinition list (loaded at runtime) |
 | `src/license_normaliser/data/aliases/aliases.json` | Curated aliases with rich metadata |
-| `src/license_normaliser/data/urls/url_map.json` | Curated URL-to-metadata mappings |
 | `src/license_normaliser/data/prose/prose_patterns.json` | Curated prose regex patterns |
 | `src/license_normaliser/data/publishers/publishers.json` | Publisher URLs and shorthand aliases |
 | `src/license_normaliser/data/original/` | **DO NOT MODIFY** - upstream originals |
@@ -116,42 +117,41 @@ This fetches fresh JSON from the authoritative upstream URLs and writes them to:
 
 ## 5. Adding a New Parser
 
-Parsers implement `BaseParser` and can be added to `src/license_normaliser/parsers/`:
+Parsers implement plugin interfaces and can be added to `src/license_normaliser/parsers/`:
 
-1. Create `src/license_normaliser/parsers/my_parser.py` implementing `BaseParser`:
+1. Create `src/license_normaliser/parsers/my_parser.py` implementing one or more plugin interfaces:
 
 ```python name=test_adding_new_parser
-from license_normaliser.parsers.base import BaseParser
+from license_normaliser.plugins import BasePlugin, RegistryPlugin, URLPlugin
 
-class MyParser(BaseParser):
+class MyParser(BasePlugin, RegistryPlugin, URLPlugin):
     url = None  # or upstream URL for refresh
     local_path = "data/my_parser/my_data.json"
-    is_registry_entry = True  # False for alias-only parsers
 
-    def parse(self) -> list[tuple[str, dict]]:
-        # Return [(license_id, {"url": "...", "name": "..."}), ...]
-        return []
+    def load_registry(self) -> dict[str, str]:
+        # Return {"license_key": "license_key", ...}
+        return {}
+
+    def load_urls(self) -> dict[str, str]:
+        # Return {"https://...": "license_key", ...}
+        return {}
 ```
 
-2. Register it in `src/license_normaliser/parsers/__init__.py`:
+2. Register it in `src/license_normaliser/defaults.py`:
 
 <!-- continue: test_adding_new_parser -->
 ```python name=test_adding_new_parser_register
-def get_parsers() -> list[BaseParser]:
+def _load_registry_plugins() -> list[type]:
+    from .parsers.spdx import SPDXParser
+    # ... other imports
     return [
-        SPDXParser(),
-        OpenDefinitionParser(),
-        OSIParser(),
-        ScanCodeLicenseDBParser(),
-        CreativeCommonsParser(),
-        ProseParser(),
-        AliasParser(),
-        PublisherParser(),
-        MyParser(),
+        SPDXParser,
+        # ... other plugins
+        MyParser,
     ]
 ```
 
-**Key attribute**: Set `is_registry_entry = False` on parsers that only contribute aliases/URLs/patterns (not new license keys) to avoid polluting the REGISTRY.
+**Key attribute**: Set `url = None` on parsers that only contribute local data (no refresh capability).
 
 ---
 
@@ -173,10 +173,10 @@ Run linting: `make ruff` or `make pre-commit`
 2. **Identify the correct location**:
    - New SPDX/OD license → update SPDX/OpenDefinition JSON files (run `update-data`)
    - New alias or family override → add to `data/aliases/aliases.json`
-   - New URL mapping → add to `data/urls/url_map.json` or `data/publishers/publishers.json`
+   - New URL mapping → add to `data/publishers/publishers.json`
    - New prose pattern → add to `data/prose/prose_patterns.json`
-   - New parser → `parsers/my_parser.py` + `parsers/__init__.py`
-   - Core pipeline change → `_cache.py` or `_registry.py`
+   - New parser → `parsers/my_parser.py` + `defaults.py`
+   - Core pipeline change → `_normaliser.py` or `_cache.py`
 3. **Write tests** covering both success and error cases
 4. **Update README.rst** if the API changed
 5. **Suggest running**: `make test-env ENV=py312` then `make test`

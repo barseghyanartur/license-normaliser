@@ -69,7 +69,7 @@ Class relationships
 Resolution Pipeline
 ===================
 
-Normalisation happens through a **five-step pipeline** (``_cache.py``)
+Normalisation happens through a **five-step pipeline** (``_normaliser.py``)
 where the **first step that matches wins**:
 
 .. list-table::
@@ -151,93 +151,106 @@ Always matches.  Returns the ``"unknown"`` version key with family
 in strict mode a ``LicenseNotFoundError`` is raised instead.
 
 
-Registry Architecture
-=====================
+Plugin Architecture
+===================
 
-The registry (``_registry.py``) is the canonical source of truth for all
-known version keys.  It is built at **import time** by running all
-registered parsers.
+The normalisation logic lives in ``LicenseNormaliser`` (``_normaliser.py``),
+which is configured with plugin CLASSES (not instances).  Plugins are
+instantiated lazily when their data is first accessed.
 
-Parsers
--------
+Plugin Interfaces
+-----------------
 
-Parsers implement ``BaseParser`` (``parsers/base.py``):
+Six plugin types are supported (defined in ``plugins.py``):
 
-.. code-block:: python
+.. list-table::
+   :header-rows: 1
 
-    class BaseParser(ABC):
-        url: str | None          # upstream URL for refresh (None for local-only)
-        local_path: str           # path to local JSON data
-        is_registry_entry: bool = True  # whether parse() contributes to REGISTRY
+   * - Interface
+     - Method
+     - Returns
+   * - ``BasePlugin``
+     - ``refresh(force)``
+     - Fetches fresh data from upstream URL
+   * - ``RegistryPlugin``
+     - ``load_registry()``
+     - ``dict[str, str]``: key → canonical_key
+   * - ``URLPlugin``
+     - ``load_urls()``
+     - ``dict[str, str]``: cleaned_url → version_key
+   * - ``AliasPlugin``
+     - ``load_aliases()``
+     - ``dict[str, str]``: alias_string → version_key
+   * - ``FamilyPlugin``
+     - ``load_families()``
+     - ``dict[str, str]``: version_key → family_key
+   * - ``NamePlugin``
+     - ``load_names()``
+     - ``dict[str, str]``: version_key → name_key
+   * - ``ProsePlugin``
+     - ``load_prose()``
+     - ``list[tuple[Pattern, str]]``: compiled patterns → version_key
 
-        def parse(self) -> list[tuple[str, dict[str, Any]]]:
-            """Return (license_key, metadata_dict) for every entry."""
-            ...
+Parser Classes
+--------------
 
-Registered parsers (in ``parsers/__init__.py``):
+Each parser class inherits from ``BasePlugin`` plus one or more plugin
+interfaces.  Parsers contribute data to ``LicenseNormaliser``:
 
 .. list-table::
    :header-rows: 1
 
    * - Class
-     - Reads
-     - Contributes to REGISTRY
-     - Purpose
+     - Plugins
+     - Data Source
    * - ``SPDXParser``
-     - ``data/spdx/spdx.json``
-     - Yes
-     - SPDX licence list (full, auto-refreshed)
+     - Registry + URL + BasePlugin
+     - ``data/spdx/spdx.json`` (auto-refreshed)
    * - ``OpenDefinitionParser``
-     - ``data/opendefinition/opendefinition.json``
-     - Yes
-     - Open Definition licence list (auto-refreshed)
+     - Registry + URL + BasePlugin
+     - ``data/opendefinition/opendefinition.json`` (auto-refreshed)
    * - ``OSIParser``
-     - ``data/osi/osi.json``
-     - Yes
-     - OSI licences (auto-refreshed)
+     - Registry + URL + BasePlugin
+     - ``data/osi/osi.json`` (auto-refreshed)
    * - ``ScanCodeLicenseDBParser``
-     - ``data/scancode_licensedb/scancode_licensedb.json``
-     - Yes
-     - ScanCode license DB (auto-refreshed)
+     - Registry + BasePlugin
+     - ``data/scancode_licensedb/scancode_licensedb.json`` (auto-refreshed)
    * - ``CreativeCommonsParser``
-     - ``data/creativecommons/creativecommons.json``
-     - Yes
-     - CC licences (scraped from creativecommons.org)
+     - Registry + URL + BasePlugin
+     - ``data/creativecommons/creativecommons.json`` (scraped)
    * - ``AliasParser``
-     - ``data/aliases/aliases.json``
-     - No
-     - Curated aliases with rich metadata
+     - Alias + Family + Name + BasePlugin
+     - ``data/aliases/aliases.json`` (local-only)
    * - ``PublisherParser``
-     - ``data/publishers/publishers.json``
-     - No
-     - Publisher URLs and shorthand aliases
+     - Alias + URL + BasePlugin
+     - ``data/publishers/publishers.json`` (local-only)
    * - ``ProseParser``
-     - ``data/prose/prose_patterns.json``
-     - No
-     - Curated prose regex patterns
+     - Prose + BasePlugin
+     - ``data/prose/prose_patterns.json`` (local-only)
 
-Global lookup tables
---------------------
+Default Plugins
+---------------
 
-``REGISTRY: dict[str, str]``
-    Version key → version key (all known canonical keys).
+The default plugin bundle is defined in ``defaults.py`` using lazy loading
+(``_LazyDefaults`` class) to avoid circular imports.  Use the helper
+functions to get plugin CLASSES:
 
-``ALIASES: dict[str, str]``
-    Cleaned string → version key (all aliases, prose targets, shorthand).
+* ``get_default_registry()``
+* ``get_default_url()``
+* ``get_default_alias()``
+* ``get_default_family()``
+* ``get_default_name()``
+* ``get_default_prose()``
 
-``URL_MAP: dict[str, str]``
-    Normalised URL → version key (all known URLs).
-
-``FAMILY_OVERRIDES: dict[str, str]``
-    Version key → family key (explicit family from curated data files,
-    overrides inference).
+Or get all refreshable plugins for the CLI via
+``get_all_refreshable_plugins()``.
 
 Family inference
-~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 For entries that carry no explicit family, ``_infer_family()`` in
-``_registry.py`` classifies them from their key prefix.  This is the
-last resort; it does not affect any entry covered by curated data files.
+``_normaliser.py`` classifies them from their key prefix.  This is the
+last resort; it does not affect any entry covered by plugin data.
 
 The table covers common prefixes:
 
@@ -252,14 +265,16 @@ all other publisher prefixes (``wiley-*``, ``rsc-*``, ``bmj-*``,
 ``aaas-*``, ``pnas-*``, ``cup-*``, ``aip-*``, ``degruyter-*``,
 ``tandf-*``, ``sage-*``) → ``publisher-proprietary``,
 ``public-domain`` → ``public-domain``, ``other-oa``, ``open-access`` →
-``other-oa``, everything else → ``osi``.
+``other-oa``, everything else → ``unknown``.
 
-Factory functions
------------------
+Factory Methods
+---------------
 
-* ``make(version_key)`` -- creates ``LicenseVersion`` from the registry.
-* ``make_unknown(raw_key)`` -- creates ``"unknown"`` ``LicenseVersion``.
-* ``_infer_name(key)`` -- strips version from CC keys (e.g.
+``LicenseNormaliser`` provides these factory methods:
+
+* ``_make(version_key)`` -- creates ``LicenseVersion`` from resolved key.
+* ``_make_unknown(raw_key)`` -- creates ``"unknown"`` ``LicenseVersion``.
+* ``_infer_name(key)`` -- for CC keys returns name without version (e.g.
   ``cc-by-4.0`` → ``cc-by``); non-CC keys are unchanged.
 
 
@@ -267,36 +282,42 @@ Adding a New Parser
 ===================
 
 1. Create ``src/license_normaliser/parsers/my_parser.py`` implementing
-   ``BaseParser``:
+   plugin interfaces:
 
    .. pytestfixture: Any
 
    .. code-block:: python
        :name: test_adding_new_parser
 
-       from license_normaliser.parsers.base import BaseParser
+       from license_normaliser.plugins import BasePlugin, RegistryPlugin, URLPlugin
 
-       class MyParser(BaseParser):
+       class MyParser(BasePlugin, RegistryPlugin, URLPlugin):
            url = None  # or "https://upstream.example.com/data.json"
            local_path = "data/my_parser/my_data.json"
-           is_registry_entry = True  # False for alias-only parsers
 
-           def parse(self) -> list[tuple[str, dict[str, Any]]]:
-               # Return [(license_id, {"url": "...", "name": "..."}), ...]
-               return []
+           def load_registry(self) -> dict[str, str]:
+               # Return {"license_key": "canonical_key", ...}
+               return {}
 
-2. Register it in ``src/license_normaliser/parsers/__init__.py``:
+           def load_urls(self) -> dict[str, str]:
+               # Return {"https://...": "version_key", ...}
+               return {}
 
-       .. continue: test_adding_new_parser
+2. Register it in ``src/license_normaliser/defaults.py``:
 
-       .. code-block:: python
-          :name: test_adding_new_parser_register
+   .. continue: test_adding_new_parser
 
-          def get_parsers() -> list[BaseParser]:
-              return [
-                  # All other parsers remain here
-                  MyParser(),  # <-- add here
-              ]
+   .. code-block:: python
+      :name: test_adding_new_parser_register
+
+      def _load_registry_plugins() -> list[type]:
+          from .parsers.spdx import SPDXParser
+          # ... other imports
+          return [
+              SPDXParser,
+              # ... other plugins
+              MyParser,
+          ]
 
 Extending Without Python Changes
 ================================
@@ -369,12 +390,12 @@ longer to avoid false positives on short strings.
 Caching
 =======
 
-The cache layer (``_cache.py``) sits between the public API and the
-pipeline.  It implements one LRU cache:
+The ``LicenseNormaliser`` class accepts ``cache`` and ``cache_maxsize``
+parameters.  When enabled (default), the resolution method is wrapped with
+LRU caching.  Default size: **8192 entries**.
 
-``_resolve()`` -- pipeline cache
-    Key: the fully cleaned input string.  Value: the resulting
-    ``LicenseVersion``.  Default size: **8192 entries**.
+The module-level API (``_cache.py``) delegates to ``LicenseNormaliser``
+with default plugins, providing a transparent caching layer.
 
 Input cleaning (``_clean()``)
 -----------------------------
@@ -412,28 +433,28 @@ Directory Structure
     src/license_normaliser/
     ├── __init__.py              # Public API exports
     ├── _models.py               # Frozen dataclass hierarchy
-    ├── _registry.py             # REGISTRY + URL_MAP + ALIASES + FAMILY_OVERRIDES
-    ├── _cache.py                # LRU caches + cleaning + strict mode
-    ├── _core.py                 # Internal resolve helpers
-    ├── _exceptions.py            # LicenseNormalisationError, LicenseNotFoundError
+    ├── _normaliser.py           # LicenseNormaliser class with plugin-based resolution
+    ├── _cache.py                # Module-level API delegating to LicenseNormaliser
+    ├── _core.py                 # Internal resolve helpers (deprecated, kept for compat)
+    ├── plugins.py               # Plugin interfaces (BasePlugin, RegistryPlugin, etc.)
+    ├── defaults.py              # Lazy-loading default plugin bundle
+    ├── _exceptions.py           # LicenseNormalisationError, LicenseNotFoundError
     ├── cli/
     │   ├── __init__.py
     │   └── _main.py             # CLI entry point
     ├── parsers/
-    │   ├── __init__.py          # Parser registry
-    │   ├── base.py              # BaseParser abstract class
+    │   ├── __init__.py          # Empty, for ruff
     │   ├── spdx.py              # SPDXParser
-    │   ├── opendefinition.py     # OpenDefinitionParser
+    │   ├── opendefinition.py    # OpenDefinitionParser
     │   ├── osi.py               # OSIParser
     │   ├── scancode_licensedb.py # ScanCodeLicenseDBParser
-    │   ├── creativecommons.py    # CreativeCommonsParser
+    │   ├── creativecommons.py   # CreativeCommonsParser
     │   ├── prose.py             # ProseParser
     │   ├── alias.py             # AliasParser
-    │   └── publisher.py          # PublisherParser
+    │   └── publisher.py         # PublisherParser
     └── tests/
         ├── conftest.py
         ├── test_aliases.py
-        ├── test_cache.py
         ├── test_cli.py
         ├── test_core.py
         ├── test_exceptions.py
@@ -444,7 +465,6 @@ Directory Structure
 
     data/
     ├── aliases/aliases.json
-    ├── urls/url_map.json
     ├── prose/prose_patterns.json
     ├── publishers/publishers.json
     ├── spdx/spdx.json             (full SPDX list — loaded at runtime)
