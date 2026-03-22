@@ -22,38 +22,42 @@ __license__ = "MIT"
 __all__ = ("normalise_license", "normalise_licenses", "get_registry_keys")
 
 
-_DEFAULT: LicenseNormaliser | None = None
-_DEFAULT_LOCK = Lock()
+class _DefaultNormaliser:
+    """Thread-safe lazy singleton for the default LicenseNormaliser instance."""
+
+    _instance: LicenseNormaliser | None = None
+    _lock: Lock = Lock()
+
+    def get(self) -> LicenseNormaliser:
+        if _DefaultNormaliser._instance is None:
+            with _DefaultNormaliser._lock:
+                if _DefaultNormaliser._instance is None:
+                    _DefaultNormaliser._instance = LicenseNormaliser(
+                        registry=get_default_registry(),
+                        url=get_default_url(),
+                        alias=get_default_alias(),
+                        family=get_default_family(),
+                        name=get_default_name(),
+                        prose=get_default_prose(),
+                    )
+        return _DefaultNormaliser._instance
 
 
-def _get_default() -> LicenseNormaliser:
-    global _DEFAULT
-    if _DEFAULT is None:
-        with _DEFAULT_LOCK:
-            if _DEFAULT is None:
-                _DEFAULT = LicenseNormaliser(
-                    registry=get_default_registry(),
-                    url=get_default_url(),
-                    alias=get_default_alias(),
-                    family=get_default_family(),
-                    name=get_default_name(),
-                    prose=get_default_prose(),
-                )
-    return _DEFAULT
+_default = _DefaultNormaliser()
 
 
 def normalise_license(raw: str, *, strict: bool = False) -> LicenseVersion:
     """Public API with optional strict mode."""
-    return _get_default().normalise_license(raw, strict=strict)
+    return _default.get().normalise_license(raw, strict=strict)
 
 
 def normalise_licenses(
     raws: Iterable[str], *, strict: bool = False
 ) -> list[LicenseVersion]:
     """Batch version."""
-    return _get_default().normalise_licenses(raws, strict=strict)
+    return _default.get().normalise_licenses(raws, strict=strict)
 
 
 def get_registry_keys() -> set[str]:
     """Return the set of all known registry keys from the runtime normaliser."""
-    return set(_get_default()._registry.keys())
+    return set(_default.get()._registry.keys())
