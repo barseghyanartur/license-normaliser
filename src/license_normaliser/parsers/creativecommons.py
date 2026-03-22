@@ -9,7 +9,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 from typing import Any
 
-from .base import BaseParser
+from license_normaliser.plugins import BasePlugin, RegistryPlugin, URLPlugin
 
 CC_LICENSE_RE = re.compile(
     r"^(by|by-nc|by-nc-nd|by-nc-sa|by-nd|by-sa|"
@@ -209,7 +209,8 @@ def _scrape() -> list[dict[str, str]]:
     return entries
 
 
-class CreativeCommonsParser(BaseParser):
+class CreativeCommonsParser(BasePlugin, RegistryPlugin, URLPlugin):
+    id = "creativecommons"
     url = "https://creativecommons.org/licenses/list.en"
     local_path = "data/creativecommons/creativecommons.json"
 
@@ -230,6 +231,38 @@ class CreativeCommonsParser(BaseParser):
             for entry in data
             if "license_key" in entry
         ]
+
+    def load_registry(self) -> dict[str, str]:
+        path = Path(__file__).parent.parent / self.local_path
+        if not path.exists():
+            return {}
+        data: list[dict[str, str]] = json.loads(path.read_text(encoding="utf-8"))
+        result: dict[str, str] = {}
+        for entry in data:
+            key = entry.get("license_key", "")
+            if key:
+                result[key.lower().strip()] = key.lower().strip()
+        return result
+
+    def load_urls(self) -> dict[str, str]:
+        path = Path(__file__).parent.parent / self.local_path
+        if not path.exists():
+            return {}
+        data: list[dict[str, str]] = json.loads(path.read_text(encoding="utf-8"))
+        result: dict[str, str] = {}
+        for entry in data:
+            key = entry.get("license_key", "")
+            if not key:
+                continue
+            canonical = key.lower().strip()
+            raw_url = entry.get("url", "")
+            if not raw_url:
+                continue
+            clean = raw_url.strip().lower().rstrip("/")
+            if clean.startswith("http://"):
+                clean = "https://" + clean[7:]
+            result[clean] = canonical
+        return result
 
     @classmethod
     def refresh(cls, force: bool = False) -> bool:

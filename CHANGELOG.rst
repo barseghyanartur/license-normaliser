@@ -19,6 +19,28 @@ are used for versioning (schema follows below):
   0.3.4 to 0.4).
 - All backwards incompatible changes are mentioned in this document.
 
+0.3
+---
+2026-03-22
+
+- **Plugin-based architecture** — `LicenseNormaliser` class accepts plugin
+  CLASSES (not instances) with lazy loading; replaces old module-level globals.
+- **6 plugin interfaces** — `BasePlugin`, `RegistryPlugin`, `URLPlugin`,
+  `AliasPlugin`, `FamilyPlugin`, `NamePlugin`, `ProsePlugin`.
+- **New `BasePlugin.refresh()`** — classmethod to fetch/refresh data from
+  upstream URLs; CLI uses parser IDs (`spdx`, `opendefinition`, etc.) instead
+  of class names.
+- **Thread-safe singleton** — `_DefaultNormaliser` class with double-checked
+  locking protects the shared `LicenseNormaliser` instance.
+- **Public `registry_keys()`** — `LicenseNormaliser.registry_keys()` exposes
+  known keys; `get_registry_keys()` in `_cache.py` uses it.
+- **URL population fix** — inverted URL map (`version_key → cleaned_url`)
+  ensures `LicenseVersion.url` is populated for resolved licenses.
+- **Removed dead code** — deleted `_registry.py`, `parsers/base.py`,
+  `parsers/__init__.py`, and empty `DEFAULT_*` module globals.
+- **Docs updated** — ARCHITECTURE.rst, AGENTS.md, README.rst rewritten to
+  reflect new plugin architecture.
+
 0.2
 ---
 2026-03-21

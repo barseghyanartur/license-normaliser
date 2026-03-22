@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from .base import BaseParser
+from license_normaliser.plugins import AliasPlugin, BasePlugin, FamilyPlugin, NamePlugin
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"
@@ -14,10 +14,9 @@ __license__ = "MIT"
 __all__ = ("AliasParser",)
 
 
-class AliasParser(BaseParser):
+class AliasParser(BasePlugin, AliasPlugin, FamilyPlugin, NamePlugin):
     url = None
     local_path = "data/aliases/aliases.json"
-    is_registry_entry = False
 
     def parse(self) -> list[tuple[str, dict[str, Any]]]:
         path = Path(__file__).parent.parent / self.local_path
@@ -33,10 +32,8 @@ class AliasParser(BaseParser):
                 results.append((alias_key, meta))
         return results
 
-    @staticmethod
-    def get_aliases() -> dict[str, str]:
-        """Return the full aliases dict: alias_key -> version_key."""
-        path = Path(__file__).parent.parent / AliasParser.local_path
+    def load_aliases(self) -> dict[str, str]:
+        path = Path(__file__).parent.parent / self.local_path
         data: dict[str, dict[str, str]] = json.loads(path.read_text(encoding="utf-8"))
         aliases: dict[str, str] = {}
         for alias_key, meta in data.items():
@@ -49,10 +46,8 @@ class AliasParser(BaseParser):
                 aliases[alias_key] = version_key
         return aliases
 
-    @staticmethod
-    def get_family_overrides() -> dict[str, str]:
-        """Return version_key -> family_key overrides from aliases."""
-        path = Path(__file__).parent.parent / AliasParser.local_path
+    def load_families(self) -> dict[str, str]:
+        path = Path(__file__).parent.parent / self.local_path
         data: dict[str, dict[str, str]] = json.loads(path.read_text(encoding="utf-8"))
         overrides: dict[str, str] = {}
         for meta in data.values():
@@ -63,3 +58,16 @@ class AliasParser(BaseParser):
             if vk and fk:
                 overrides[vk] = fk
         return overrides
+
+    def load_names(self) -> dict[str, str]:
+        path = Path(__file__).parent.parent / self.local_path
+        data: dict[str, dict[str, str]] = json.loads(path.read_text(encoding="utf-8"))
+        names: dict[str, str] = {}
+        for meta in data.values():
+            if not isinstance(meta, dict):
+                continue
+            vk = meta.get("version_key", "")
+            nk = meta.get("name_key", "")
+            if vk and nk:
+                names[vk] = nk
+        return names

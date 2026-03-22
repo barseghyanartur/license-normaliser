@@ -7,10 +7,11 @@ from ._core import (
     normalise_license,
     normalise_licenses,
 )
+from ._normaliser import LicenseNormaliser
 from .exceptions import LicenseNormalisationError, LicenseNotFoundError
 
 __title__ = "license-normaliser"
-__version__ = "0.2"
+__version__ = "0.3"
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"
 __license__ = "MIT"
@@ -19,6 +20,7 @@ __all__ = (
     "LicenseFamily",
     "LicenseName",
     "LicenseVersion",
+    "LicenseNormaliser",
     "LicenseNormalisationError",
     "LicenseNotFoundError",
     "normalise_license",
