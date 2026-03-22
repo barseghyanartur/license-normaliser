@@ -286,6 +286,30 @@ src/license_normaliser/tests/
     test_prose.py         - prose pattern matching
 ```
 
+### Documentation snippet conventions
+
+Code blocks in this file use two special attributes to support chained
+executable tests:
+
+- `name=<test_name>` — labels a snippet so it can be referenced later.
+- `<!-- continue: <test_name> -->` placed immediately before a code block
+  means that block **continues** the named snippet; all names, imports,
+  and variables defined in the named block are already in scope and must
+  **not** be re-imported or re-declared in the continuation block.
+
+Example:
+
+```python name=test_my_example
+class Foo:
+    pass
+```
+
+<!-- continue: test_my_example -->
+```python name=test_my_example_continued
+foo = Foo()  # Foo is in scope from the named block above
+assert isinstance(foo, Foo)
+```
+
 ---
 
 ## 9. Forbidden
