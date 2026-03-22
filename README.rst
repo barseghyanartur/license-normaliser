@@ -189,7 +189,15 @@ To use all defaults, import from ``defaults``:
 
 For caching, ``LicenseNormaliser`` wraps the resolution method
 with ``lru_cache``.
-Disable it by passing ``cache=False`` for debugging.
+Disable it by passing ``cache=False`` for debugging:
+
+.. code-block:: python
+    :name: test_cachnig
+
+    from license_normaliser import LicenseNormaliser
+
+    ln = LicenseNormaliser(cache=False)
+    result = ln.normalise_license("MIT")
 
 Update data sources (CLI)
 =========================
