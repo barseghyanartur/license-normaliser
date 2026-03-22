@@ -310,8 +310,9 @@ Adding a New Parser
    .. code-block:: python
       :name: test_adding_new_parser_register
 
+      from license_normaliser.parsers.spdx import SPDXParser
+
       def _load_registry_plugins() -> list[type]:
-          from .parsers.spdx import SPDXParser
           # ... other imports
           return [
               SPDXParser,
