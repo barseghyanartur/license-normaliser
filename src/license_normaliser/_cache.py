@@ -18,7 +18,7 @@ from .defaults import (
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"
 __license__ = "MIT"
-__all__ = ("normalise_license", "normalise_licenses")
+__all__ = ("normalise_license", "normalise_licenses", "get_registry_keys")
 
 
 # Lazy-loaded default normaliser instance
@@ -49,3 +49,8 @@ def normalise_licenses(
 ) -> list[LicenseVersion]:
     """Batch version."""
     return _get_default().normalise_licenses(raws, strict=strict)
+
+
+def get_registry_keys() -> set[str]:
+    """Return the set of all known registry keys from the runtime normaliser."""
+    return set(_get_default()._registry.keys())

@@ -98,9 +98,9 @@ def load_pub_aliases() -> dict[str, str]:
 
 
 def load_registry_keys() -> set[str]:
-    from license_normaliser._registry import REGISTRY
+    from license_normaliser._cache import get_registry_keys
 
-    return set(REGISTRY.keys())
+    return get_registry_keys()
 
 
 def load_merged_aliases() -> dict[str, str]:
