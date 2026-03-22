@@ -177,6 +177,10 @@ class LicenseNormaliser:
             results.append(v)
         return results
 
+    def registry_keys(self) -> set[str]:
+        """Return the set of all known registry keys."""
+        return set(self._registry.keys())
+
     def _make(self, key: str) -> LicenseVersion:
         """Factory: build a LicenseVersion from a resolved version_key."""
         from license_normaliser._models import (

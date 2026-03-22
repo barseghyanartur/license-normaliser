@@ -64,4 +64,4 @@ def normalise_licenses(
 
 def get_registry_keys() -> set[str]:
     """Return the set of all known registry keys from the runtime normaliser."""
-    return set(_default.get()._registry.keys())
+    return _default.get().registry_keys()
