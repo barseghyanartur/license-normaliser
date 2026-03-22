@@ -243,6 +243,7 @@ ignore = [
     "docs/package.rst",
     "docs/documentation.rst",
     "docs/index.rst",
+    "uv.lock",
 ]
 order = [
     "README.rst",
@@ -315,4 +316,5 @@ ignore = [
     "docs/package.rst",
     "docs/documentation.rst",
     "docs/index.rst",
+    "uv.lock",
 ]
