@@ -19,7 +19,11 @@ from .defaults import (
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"
 __license__ = "MIT"
-__all__ = ("normalise_license", "normalise_licenses", "get_registry_keys")
+__all__ = (
+    "get_registry_keys",
+    "normalise_license",
+    "normalise_licenses",
+)
 
 
 class _DefaultNormaliser:
