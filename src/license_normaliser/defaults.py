@@ -201,10 +201,10 @@ def get_default_prose() -> list[type]:
 
 # Single bundle for easy passing
 DEFAULT_PLUGINS = {
-    "registry": get_default_registry,
-    "url": get_default_url,
-    "alias": get_default_alias,
-    "family": get_default_family,
-    "name": get_default_name,
-    "prose": get_default_prose,
+    "registry": get_default_registry(),
+    "url": get_default_url(),
+    "alias": get_default_alias(),
+    "family": get_default_family(),
+    "name": get_default_name(),
+    "prose": get_default_prose(),
 }
