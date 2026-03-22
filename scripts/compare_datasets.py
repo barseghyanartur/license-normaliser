@@ -118,12 +118,12 @@ def would_resolve(alias_key: str, registry: set[str], aliases: dict[str, str]) -
     """Simulate _resolve() pipeline for orphan detection.
 
     1. If already in REGISTRY, covered.
-    2. If in ALIASES, get version_key and check if that's in REGISTRY.
+    2. If in ALIASES, get version_key - resolves regardless of registry presence.
     """
     if alias_key in registry:
         return True
     version_key = aliases.get(alias_key, "")
-    return bool(version_key and version_key in registry)
+    return bool(version_key)
 
 
 def section(title: str) -> None:
