@@ -15,6 +15,7 @@ from license_normaliser import (
 )
 
 LICENSE_MATRIX = [
+    # raw,expected_key,expected_license,expected_family
     # === OSI-approved licenses ===
     ("mit", "mit", "mit", "osi"),
     ("MIT", "mit", "mit", "osi"),

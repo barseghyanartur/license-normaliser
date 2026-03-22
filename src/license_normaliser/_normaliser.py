@@ -210,7 +210,7 @@ class LicenseNormaliser:
                 else self._infer_name(canonical)
             )
         else:
-            # Non-CC: always use canonical (no version stripping)
+            # Non-CC: always use canonical (no stripping)
             name_key = canonical
 
         # Infer family: use override only if it provides a different value
