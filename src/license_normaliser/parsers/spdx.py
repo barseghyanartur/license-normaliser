@@ -15,6 +15,7 @@ __all__ = ("SPDXParser",)
 
 
 class SPDXParser(BasePlugin, RegistryPlugin, URLPlugin):
+    id = "spdx"
     url = "https://raw.githubusercontent.com/spdx/license-list-data/main/json/licenses.json"
     local_path = "data/spdx/spdx.json"
 

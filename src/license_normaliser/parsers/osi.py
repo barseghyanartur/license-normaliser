@@ -15,6 +15,7 @@ __all__ = ("OSIParser",)
 
 
 class OSIParser(BasePlugin, RegistryPlugin, URLPlugin):
+    id = "osi"
     url = "https://opensource.org/api/license"
     local_path = "data/osi/osi.json"
 

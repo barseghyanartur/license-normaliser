@@ -210,6 +210,7 @@ def _scrape() -> list[dict[str, str]]:
 
 
 class CreativeCommonsParser(BasePlugin, RegistryPlugin, URLPlugin):
+    id = "creativecommons"
     url = "https://creativecommons.org/licenses/list.en"
     local_path = "data/creativecommons/creativecommons.json"
 

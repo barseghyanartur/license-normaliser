@@ -96,18 +96,22 @@ def _cmd_batch(args: argparse.Namespace) -> int:
 def _cmd_update_data(args: argparse.Namespace) -> int:
     parser_classes = get_all_refreshable_plugins()
     if args.parser_name:
-        parser_classes = [p for p in parser_classes if p.__name__ == args.parser_name]
+        parser_classes = [
+            p for p in parser_classes if getattr(p, "id", None) == args.parser_name
+        ]
         if not parser_classes:
+            available = [
+                getattr(p, "id", p.__name__) for p in get_all_refreshable_plugins()
+            ]
             print(
-                f"error: unknown parser {args.parser_name!r}. "
-                f"Available: {[p.__name__ for p in get_all_refreshable_plugins()]}",
+                f"error: unknown parser {args.parser_name!r}. Available: {available}",
                 file=sys.stderr,
             )
             return 1
 
     failed: list[str] = []
     for parser_cls in parser_classes:
-        name = parser_cls.__name__
+        name = getattr(parser_cls, "id", parser_cls.__name__)
         url = parser_cls.url
         target = parser_cls.local_path
         target_path = Path(__file__).parent.parent / target

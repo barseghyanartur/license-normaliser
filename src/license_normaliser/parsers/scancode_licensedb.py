@@ -15,6 +15,7 @@ __all__ = ("ScanCodeLicenseDBParser",)
 
 
 class ScanCodeLicenseDBParser(BasePlugin, RegistryPlugin):
+    id = "scancode-licensedb"
     url = "https://scancode-licensedb.aboutcode.org/index.json"
     local_path = "data/scancode_licensedb/scancode_licensedb.json"
 

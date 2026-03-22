@@ -64,6 +64,7 @@ class LicenseNormaliser:
     ) -> None:
         self._registry: dict[str, str] = {}
         self._url_map: dict[str, str] = {}
+        self._url_to_vkey: dict[str, str] = {}
         self._aliases: dict[str, str] = {}
         self._family_overrides: dict[str, str] = {}
         self._name_overrides: dict[str, str] = {}
@@ -81,6 +82,9 @@ class LicenseNormaliser:
             for plugin_cls in url:
                 data = plugin_cls().load_urls()
                 self._url_map.update(data)
+
+        # Build inverted URL map: version_key -> cleaned_url (for LicenseVersion.url)
+        self._url_to_vkey = {v: k for k, v in self._url_map.items()}
 
         if alias:
             for plugin_cls in alias:
@@ -186,8 +190,8 @@ class LicenseNormaliser:
         # Get canonical key from registry
         canonical = self._registry.get(k) or k
 
-        # Get URL
-        url = self._url_map.get(canonical) or self._url_map.get(k)
+        # Get URL via inverted map: version_key -> cleaned_url
+        url = self._url_to_vkey.get(canonical) or self._url_to_vkey.get(k)
 
         # Infer name:
         # - For CC licenses, use override only if it's different from canonical

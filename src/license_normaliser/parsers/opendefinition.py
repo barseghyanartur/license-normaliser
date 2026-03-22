@@ -15,6 +15,7 @@ __all__ = ("OpenDefinitionParser",)
 
 
 class OpenDefinitionParser(BasePlugin, RegistryPlugin, URLPlugin):
+    id = "opendefinition"
     url = "https://licenses.opendefinition.org/licenses/groups/all.json"
     local_path = "data/opendefinition/opendefinition.json"
 
