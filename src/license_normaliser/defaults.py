@@ -6,14 +6,20 @@ Pass them to LicenseNormaliser - they're instantiated lazily.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
+from typing import Iterator
+
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"
 __license__ = "MIT"
 
 __all__ = (
     "DEFAULT_PLUGINS",
+    "DEFAULT_PLUGIN_KEYS",
     "get_all_refreshable_plugins",
 )
+
+DEFAULT_PLUGIN_KEYS = ("registry", "url", "alias", "family", "name", "prose")
 
 
 def get_all_refreshable_plugins() -> list[type]:
@@ -202,14 +208,14 @@ class _LazyPluginsBundle:
 _DEFAULT_PLUGINS_BUNDLE = _LazyPluginsBundle()
 
 
-class _DefaultPlugins:
+class _DefaultPlugins(Mapping):
     """Lazy dict-like accessor for default plugins."""
 
     def __getitem__(self, key: str) -> list[type]:
         return _DEFAULT_PLUGINS_BUNDLE[key]
 
     def keys(self) -> tuple[str, ...]:
-        return ("registry", "url", "alias", "family", "name", "prose")
+        return DEFAULT_PLUGIN_KEYS
 
     def values(self) -> list[list[type]]:
         return [self[k] for k in self.keys()]
@@ -217,7 +223,7 @@ class _DefaultPlugins:
     def items(self) -> list[tuple[str, list[type]]]:
         return [(k, self[k]) for k in self.keys()]
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[str]:
         return iter(self.keys())
 
     def __len__(self) -> int:
@@ -225,6 +231,9 @@ class _DefaultPlugins:
 
     def __contains__(self, key: str) -> bool:
         return key in self.keys()
+
+    def copy(self) -> dict:
+        return dict(self.items())
 
 
 DEFAULT_PLUGINS = _DefaultPlugins()

@@ -216,7 +216,7 @@ class LicenseNormaliser:
         # - For non-CC (GPL, AGPL, OSI, etc.), always return canonical (no stripping)
         override_name = self._name_overrides.get(canonical)
         if canonical.startswith("cc-") or canonical.startswith("cc0"):
-            # CC licenses: use override if different, otherwise fallback
+            # CC licenses: use override if present, otherwise fallback to _infer_name
             name_key = override_name if override_name else self._infer_name(canonical)
         else:
             # Non-CC: use override if present and different, otherwise canonical
