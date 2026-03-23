@@ -212,9 +212,19 @@
     "name_key": "cc-by",
     "family_key": "cc"
   },
+  "creative commons by-sa": {
+    "version_key": "cc-by-sa",
+    "name_key": "cc-by-sa",
+    "family_key": "cc"
+  },
   "creative commons by-sa 4.0": {
     "version_key": "cc-by-sa-4.0",
     "name_key": "cc-by-sa",
+    "family_key": "cc"
+  },
+  "creative commons by-nc": {
+    "version_key": "cc-by-nc",
+    "name_key": "cc-by-nc",
     "family_key": "cc"
   },
   "creative commons by-nc 4.0": {
@@ -222,14 +232,29 @@
     "name_key": "cc-by-nc",
     "family_key": "cc"
   },
+  "creative commons by-nc-sa": {
+    "version_key": "cc-by-nc-sa",
+    "name_key": "cc-by-nc-sa",
+    "family_key": "cc"
+  },
   "creative commons by-nc-sa 4.0": {
     "version_key": "cc-by-nc-sa-4.0",
     "name_key": "cc-by-nc-sa",
     "family_key": "cc"
   },
+  "creative commons by-nc-nd": {
+    "version_key": "cc-by-nc-nd",
+    "name_key": "cc-by-nc-nd",
+    "family_key": "cc"
+  },
   "creative commons by-nc-nd 4.0": {
     "version_key": "cc-by-nc-nd-4.0",
     "name_key": "cc-by-nc-nd",
+    "family_key": "cc"
+  },
+  "creative commons by-nd": {
+    "version_key": "cc-by-nd",
+    "name_key": "cc-by-nd",
     "family_key": "cc"
   },
   "creative commons by-nd 4.0": {
@@ -278,6 +303,11 @@
     "family_key": "osi"
   },
   "bsd license": {
+    "version_key": "bsd-3-clause",
+    "name_key": "bsd-3-clause",
+    "family_key": "osi"
+  },
+  "BSD 3-Clause": {
     "version_key": "bsd-3-clause",
     "name_key": "bsd-3-clause",
     "family_key": "osi"
@@ -520,6 +550,11 @@
     "family_key": "osi"
   },
   "elsevier-oa": {
+    "version_key": "elsevier-oa",
+    "name_key": "elsevier-oa",
+    "family_key": "publisher-oa"
+  },
+  "elsevier oa": {
     "version_key": "elsevier-oa",
     "name_key": "elsevier-oa",
     "family_key": "publisher-oa"
