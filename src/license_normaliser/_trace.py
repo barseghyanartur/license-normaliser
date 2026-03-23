@@ -29,12 +29,20 @@ class LicenseTrace:
     raw_input: str
     cleaned_input: str
     stages: list[LicenseTraceStage] = field(default_factory=list)
+    version_key: str = ""
+    name_key: str = ""
+    family_key: str = ""
 
     def __str__(self) -> str:
         lines = [f"Input: {self.raw_input!r} → {self.cleaned_input!r}"]
         for s in self.stages:
             status = "✓" if s.matched else "-"
             lines.append(f"  [{status}] {s.stage}: {s.input!r} → {s.output!r}")
+        lines.append("")
+        lines.append("Result:")
+        lines.append(f"  version_key: {self.version_key!r}")
+        lines.append(f"  name_key: {self.name_key!r}")
+        lines.append(f"  family_key: {self.family_key!r}")
         return "\n".join(lines)
 
 

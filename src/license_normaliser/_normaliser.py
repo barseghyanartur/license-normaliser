@@ -152,7 +152,14 @@ class LicenseNormaliser:
                 LicenseTraceStage("alias", cleaned, self._aliases[cleaned], True)
             )
             v = self._make(self._aliases[cleaned])
-            trace = LicenseTrace(raw, cleaned, stages)
+            trace = LicenseTrace(
+                raw,
+                cleaned,
+                stages,
+                version_key=v.key,
+                name_key=v.license.key,
+                family_key=v.family.key,
+            )
             return self._make_with_trace(v, trace)
 
         stages.append(LicenseTraceStage("alias", cleaned, "", False))
@@ -162,7 +169,14 @@ class LicenseNormaliser:
             canonical = self._registry[cleaned]
             stages.append(LicenseTraceStage("registry", cleaned, canonical, True))
             v = self._make(canonical)
-            trace = LicenseTrace(raw, cleaned, stages)
+            trace = LicenseTrace(
+                raw,
+                cleaned,
+                stages,
+                version_key=v.key,
+                name_key=v.license.key,
+                family_key=v.family.key,
+            )
             return self._make_with_trace(v, trace)
 
         stages.append(LicenseTraceStage("registry", cleaned, "", False))
@@ -173,7 +187,14 @@ class LicenseNormaliser:
             resolved = self._url_map[url_key]
             stages.append(LicenseTraceStage("url", url_key, resolved, True))
             v = self._make(resolved)
-            trace = LicenseTrace(raw, cleaned, stages)
+            trace = LicenseTrace(
+                raw,
+                cleaned,
+                stages,
+                version_key=v.key,
+                name_key=v.license.key,
+                family_key=v.family.key,
+            )
             return self._make_with_trace(v, trace)
 
         stages.append(LicenseTraceStage("url", cleaned, "", False))
@@ -184,7 +205,14 @@ class LicenseNormaliser:
                 if pattern.search(cleaned):
                     stages.append(LicenseTraceStage("prose", cleaned, vkey, True))
                     v = self._make(vkey)
-                    trace = LicenseTrace(raw, cleaned, stages)
+                    trace = LicenseTrace(
+                        raw,
+                        cleaned,
+                        stages,
+                        version_key=v.key,
+                        name_key=v.license.key,
+                        family_key=v.family.key,
+                    )
                     return self._make_with_trace(v, trace)
 
         stages.append(LicenseTraceStage("prose", cleaned, "", False))
@@ -192,7 +220,14 @@ class LicenseNormaliser:
         # 5. Fallback to unknown
         stages.append(LicenseTraceStage("fallback", cleaned, cleaned, True))
         v = self._make_unknown(cleaned)
-        trace = LicenseTrace(raw, cleaned, stages)
+        trace = LicenseTrace(
+            raw,
+            cleaned,
+            stages,
+            version_key=v.key,
+            name_key=v.license.key,
+            family_key=v.family.key,
+        )
         return self._make_with_trace(v, trace)
 
     def _make_with_trace(
@@ -257,7 +292,14 @@ class LicenseNormaliser:
                 from license_normaliser._trace import LicenseTrace, LicenseTraceStage
 
                 stages = [LicenseTraceStage("fallback", cleaned, cleaned, True)]
-                trace_obj = LicenseTrace(raw, cleaned, stages)
+                trace_obj = LicenseTrace(
+                    raw,
+                    cleaned,
+                    stages,
+                    version_key=v.key,
+                    name_key=v.license.key,
+                    family_key=v.family.key,
+                )
                 v = self._make_with_trace(v, trace_obj)
         else:
             cleaned = self._clean(self._try_decode_mojibake(raw))
