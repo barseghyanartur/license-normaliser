@@ -167,12 +167,64 @@ def get_default_prose() -> list[type]:
     return _LAZY.prose
 
 
-# Single bundle for easy passing
-DEFAULT_PLUGINS = {
-    "registry": get_default_registry(),
-    "url": get_default_url(),
-    "alias": get_default_alias(),
-    "family": get_default_family(),
-    "name": get_default_name(),
-    "prose": get_default_prose(),
-}
+class _LazyPluginsBundle:
+    """Lazy-loading bundle - defers plugin loading until accessed."""
+
+    _cache: dict[str, list[type]] = {}
+
+    def _get_registry(self) -> list[type]:
+        return get_default_registry()
+
+    def _get_url(self) -> list[type]:
+        return get_default_url()
+
+    def _get_alias(self) -> list[type]:
+        return get_default_alias()
+
+    def _get_family(self) -> list[type]:
+        return get_default_family()
+
+    def _get_name(self) -> list[type]:
+        return get_default_name()
+
+    def _get_prose(self) -> list[type]:
+        return get_default_prose()
+
+    def __getitem__(self, key: str) -> list[type]:
+        if key not in self._cache:
+            fn = getattr(self, f"_get_{key}", None)
+            if fn is None:
+                raise KeyError(key)
+            self._cache[key] = fn()
+        return self._cache[key]
+
+
+_DEFAULT_PLUGINS_BUNDLE = _LazyPluginsBundle()
+
+
+class _DefaultPlugins:
+    """Lazy dict-like accessor for default plugins."""
+
+    def __getitem__(self, key: str) -> list[type]:
+        return _DEFAULT_PLUGINS_BUNDLE[key]
+
+    def keys(self) -> tuple[str, ...]:
+        return ("registry", "url", "alias", "family", "name", "prose")
+
+    def values(self) -> list[list[type]]:
+        return [self[k] for k in self.keys()]
+
+    def items(self) -> list[tuple[str, list[type]]]:
+        return [(k, self[k]) for k in self.keys()]
+
+    def __iter__(self):
+        return iter(self.keys())
+
+    def __len__(self) -> int:
+        return 6
+
+    def __contains__(self, key: str) -> bool:
+        return key in self.keys()
+
+
+DEFAULT_PLUGINS = _DefaultPlugins()
