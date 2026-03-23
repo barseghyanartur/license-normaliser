@@ -21,7 +21,7 @@ are used for versioning (schema follows below):
 
 0.3
 ---
-2026-03-22
+2026-03-23
 
 - **Plugin-based architecture** — `LicenseNormaliser` class accepts plugin
   CLASSES (not instances) with lazy loading; replaces old module-level globals.
