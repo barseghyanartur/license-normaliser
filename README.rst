@@ -189,7 +189,7 @@ To use all defaults, import from ``defaults``:
 
 .. note::
 
-    Explicit plugin passing is optional — :class:`LicenseNormaliser()`
+    Explicit plugin passing is optional — ``LicenseNormaliser()``
     automatically loads defaults. Use the pattern above only if you need
     custom plugins.
 
