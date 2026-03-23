@@ -13,8 +13,10 @@ the contents of each key file.
    │   └── full_llms.rst
    ├── scripts
    │   ├── __init__.py
+   │   ├── check_missing_aliases.py
    │   ├── compare_datasets.py
-   │   └── README.rst
+   │   ├── README.rst
+   │   └── test_name_inference.py
    ├── src
    │   └── license_normaliser
    │       ├── cli
@@ -151,12 +153,26 @@ scripts/__init__.py
    :language: python
    :caption: scripts/__init__.py
 
+scripts/check_missing_aliases.py
+--------------------------------
+
+.. literalinclude:: ../scripts/check_missing_aliases.py
+   :language: python
+   :caption: scripts/check_missing_aliases.py
+
 scripts/compare_datasets.py
 ---------------------------
 
 .. literalinclude:: ../scripts/compare_datasets.py
    :language: python
    :caption: scripts/compare_datasets.py
+
+scripts/test_name_inference.py
+------------------------------
+
+.. literalinclude:: ../scripts/test_name_inference.py
+   :language: python
+   :caption: scripts/test_name_inference.py
 
 src/license_normaliser/__init__.py
 ----------------------------------
