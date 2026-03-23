@@ -7,14 +7,6 @@ from typing import Iterable
 
 from ._models import LicenseVersion
 from ._normaliser import LicenseNormaliser
-from .defaults import (
-    get_default_alias,
-    get_default_family,
-    get_default_name,
-    get_default_prose,
-    get_default_registry,
-    get_default_url,
-)
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"
@@ -36,14 +28,7 @@ class _DefaultNormaliser:
         if _DefaultNormaliser._instance is None:
             with _DefaultNormaliser._lock:
                 if _DefaultNormaliser._instance is None:
-                    _DefaultNormaliser._instance = LicenseNormaliser(
-                        registry=get_default_registry(),
-                        url=get_default_url(),
-                        alias=get_default_alias(),
-                        family=get_default_family(),
-                        name=get_default_name(),
-                        prose=get_default_prose(),
-                    )
+                    _DefaultNormaliser._instance = LicenseNormaliser()
         return _DefaultNormaliser._instance
 
 

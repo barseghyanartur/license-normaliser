@@ -6,6 +6,15 @@ import re
 from functools import lru_cache
 from typing import TYPE_CHECKING, Iterable, Sequence
 
+from license_normaliser.defaults import (
+    get_default_alias,
+    get_default_family,
+    get_default_name,
+    get_default_prose,
+    get_default_registry,
+    get_default_url,
+)
+
 if TYPE_CHECKING:
     from license_normaliser._models import LicenseVersion
 
@@ -38,10 +47,12 @@ class LicenseNormaliser:
     Example::
 
         from license_normaliser import LicenseNormaliser
-        from license_normaliser.defaults import DEFAULT_PLUGINS
 
-        # Use all defaults
-        ln = LicenseNormaliser(**DEFAULT_PLUGINS)
+        # Uses all defaults automatically
+        ln = LicenseNormaliser()
+
+        # Disable caching for debugging
+        ln = LicenseNormaliser(cache=False)
 
         # Custom plugins
         ln = LicenseNormaliser(
@@ -72,39 +83,41 @@ class LicenseNormaliser:
         self._cache = cache
         self._cache_maxsize = cache_maxsize
 
-        # Instantiate plugins and load their data
-        if registry:
-            for plugin_cls in registry:
-                data = plugin_cls().load_registry()
-                self._registry.update(data)
+        # Load plugins - use defaults if not explicitly provided
+        registry = registry or get_default_registry()
+        url = url or get_default_url()
+        alias = alias or get_default_alias()
+        family = family or get_default_family()
+        name = name or get_default_name()
+        prose = prose or get_default_prose()
 
-        if url:
-            for plugin_cls in url:
-                data = plugin_cls().load_urls()
-                self._url_map.update(data)
+        # Instantiate plugins and load their data
+        for plugin_cls in registry:
+            data = plugin_cls().load_registry()
+            self._registry.update(data)
+
+        for plugin_cls in url:
+            data = plugin_cls().load_urls()
+            self._url_map.update(data)
 
         # Build inverted URL map: version_key -> cleaned_url (for LicenseVersion.url)
         self._url_to_vkey = {v: k for k, v in self._url_map.items()}
 
-        if alias:
-            for plugin_cls in alias:
-                data = plugin_cls().load_aliases()
-                self._aliases.update(data)
+        for plugin_cls in alias:
+            data = plugin_cls().load_aliases()
+            self._aliases.update(data)
 
-        if family:
-            for plugin_cls in family:
-                data = plugin_cls().load_families()
-                self._family_overrides.update(data)
+        for plugin_cls in family:
+            data = plugin_cls().load_families()
+            self._family_overrides.update(data)
 
-        if name:
-            for plugin_cls in name:
-                data = plugin_cls().load_names()
-                self._name_overrides.update(data)
+        for plugin_cls in name:
+            data = plugin_cls().load_names()
+            self._name_overrides.update(data)
 
-        if prose:
-            for plugin_cls in prose:
-                patterns = plugin_cls().load_prose()
-                self._prose_patterns.extend(patterns)
+        for plugin_cls in prose:
+            patterns = plugin_cls().load_prose()
+            self._prose_patterns.extend(patterns)
 
         # Set up cached resolution
         if self._cache:
