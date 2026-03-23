@@ -5,11 +5,16 @@ from __future__ import annotations
 import os
 from dataclasses import dataclass, field
 
-TRACE_STAGES = ("alias", "registry", "url", "prose", "fallback")
-
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"
 __license__ = "MIT"
+__all__ = (
+    "TRACE_STAGES",
+    "LicenseTrace",
+    "LicenseTraceStage",
+)
+
+TRACE_STAGES = ("alias", "registry", "url", "prose", "fallback")
 
 
 @dataclass
