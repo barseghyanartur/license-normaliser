@@ -2,7 +2,7 @@
 name = "license-normaliser"
 description = "Comprehensive license normalisation with a three-level hierarchy."
 readme = "README.rst"
-version = "0.3"
+version = "0.3.1"
 requires-python = ">=3.10"
 dependencies = []
 authors = [
