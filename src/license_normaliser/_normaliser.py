@@ -119,7 +119,8 @@ class LicenseNormaliser:
 
         # 2. Registry lookup
         if cleaned in self._registry:
-            return self._make(cleaned)
+            canonical = self._registry[cleaned]
+            return self._make(canonical)
 
         # 3. URL lookup
         url_key = self._normalise_url(cleaned)
@@ -127,7 +128,7 @@ class LicenseNormaliser:
             return self._make(self._url_map[url_key])
 
         # 4. Prose matching (only for longer strings)
-        if len(cleaned) > 20:
+        if len(cleaned) >= 20:
             for pattern, vkey in self._prose_patterns:
                 if pattern.search(cleaned):
                     return self._make(vkey)
@@ -209,7 +210,7 @@ class LicenseNormaliser:
                 else self._infer_name(canonical)
             )
         else:
-            # Non-CC: always use canonical (no version stripping)
+            # Non-CC: always use canonical (no stripping)
             name_key = canonical
 
         # Infer family: use override only if it provides a different value
