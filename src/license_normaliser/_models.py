@@ -95,6 +95,9 @@ class LicenseVersion:
         Set ENABLE_LICENSE_NORMALISER_TRACE=1 to enable tracing,
         or pass trace=True to normalise_license().
         """
+        if self._trace is not None:
+            return str(self._trace)
+
         from license_normaliser._cache import _default
         from license_normaliser._trace import _should_trace
 
