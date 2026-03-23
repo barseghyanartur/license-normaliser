@@ -187,6 +187,12 @@ To use all defaults, import from ``defaults``:
         cache_maxsize=8192,
     )
 
+.. note::
+
+    Explicit plugin passing is optional — :class:`LicenseNormaliser()`
+    automatically loads defaults. Use the pattern above only if you need
+    custom plugins.
+
 For caching, ``LicenseNormaliser`` wraps the resolution method
 with ``lru_cache``.
 Disable it by passing ``cache=False`` for debugging:

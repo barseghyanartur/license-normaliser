@@ -146,8 +146,11 @@ ln = LicenseNormaliser(
     prose=get_default_prose(),
     cache=True,
     cache_maxsize=8192,
-)
 ```
+
+> [!NOTE]
+> Explicit plugin passing is optional — `LicenseNormaliser()` automatically
+> loads defaults. Use the pattern above only if you need custom plugins.
 
 For caching, `LicenseNormaliser` wraps the resolution method with `lru_cache`.
 Disable it by passing `cache=False` for debugging:
