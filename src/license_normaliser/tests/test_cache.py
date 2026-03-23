@@ -48,16 +48,14 @@ class TestDefaultNormaliserSingleton:
 
     def test_concurrent_normalise_license(self) -> None:
         licenses = ["MIT", "Apache-2.0", "CC BY 4.0", "GPL-3.0", "BSD-3-Clause"]
-        results: list[str] = []
 
-        def normalise(lic: str) -> None:
+        def normalise(lic: str) -> str:
             v = normalise_license(lic)
-            results.append(v.key)
+            return v.key
 
         with ThreadPoolExecutor(max_workers=10) as executor:
             futures = [executor.submit(normalise, lic) for lic in licenses * 4]
-            for f in futures:
-                f.result(timeout=5)
+            results = [f.result(timeout=5) for f in futures]
 
         assert len(results) == len(licenses) * 4
         assert set(results) == {

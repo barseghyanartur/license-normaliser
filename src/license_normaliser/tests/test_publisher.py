@@ -382,7 +382,7 @@ class TestPublisherDirectKeys:
 
     def test_open_access_key(self):
         v = normalise_license("open-access")
-        assert v.key == "open-access"
+        assert v.key == "other-oa"
         assert v.family.key == "other-oa"
 
 

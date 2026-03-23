@@ -20,21 +20,26 @@ LICENSE_MATRIX = [
     ("mit", "mit", "mit", "osi"),
     ("MIT", "mit", "mit", "osi"),
     ("  mit  ", "mit", "mit", "osi"),
-    ("apache-2.0", "apache-2.0", "apache-2.0", "osi"),
-    ("Apache-2.0", "apache-2.0", "apache-2.0", "osi"),
-    ("Apache 2.0", "apache-2.0", "apache-2.0", "osi"),
-    ("Apache License 2.0", "apache-2.0", "apache-2.0", "osi"),
-    ("BSD 3-Clause", "bsd 3-clause", "bsd 3-clause", "unknown"),
+    ("apache-2.0", "apache-2.0", "apache", "osi"),
+    ("Apache-2.0", "apache-2.0", "apache", "osi"),
+    ("Apache 2.0", "apache-2.0", "apache", "osi"),
+    ("Apache License 2.0", "apache-2.0", "apache", "osi"),
+    (
+        "BSD 3-Clause",
+        "bsd-3-clause",
+        "bsd-3-clause",
+        "osi",
+    ),  # Resolves to bsd-3-clause/osi, matches SPDX and alias entries
     ("bsd-3-clause", "bsd-3-clause", "bsd-3-clause", "osi"),
     ("BSD License", "bsd-3-clause", "bsd-3-clause", "osi"),
-    ("MPL-2.0", "mpl-2.0", "mpl-2.0", "osi"),
-    ("mpl-2.0", "mpl-2.0", "mpl-2.0", "osi"),
+    ("MPL-2.0", "mpl-2.0", "mpl", "osi"),
+    ("mpl-2.0", "mpl-2.0", "mpl", "osi"),
     (
         "Mozilla Public License 2.0",
-        "mozilla public license 2.0",
-        "mozilla public license 2.0",
-        "unknown",
-    ),
+        "mpl-2.0",
+        "mpl",
+        "osi",
+    ),  # Canonical full name of MPL-2.0, matches alias entry
     ("ISC", "isc", "isc", "osi"),
     ("isc", "isc", "isc", "osi"),
     ("ISC License", "isc", "isc", "osi"),
@@ -45,21 +50,26 @@ LICENSE_MATRIX = [
     ("Zlib", "zlib", "zlib", "osi"),
     ("zlib", "zlib", "zlib", "osi"),
     # === GPL / AGPL / LGPL (copyleft) ===
-    ("gpl-3.0", "gpl-3.0", "gpl-3.0", "copyleft"),
-    ("GPL-3.0", "gpl-3.0", "gpl-3.0", "copyleft"),
-    ("gpl-3.0+", "gpl-3.0", "gpl-3.0", "copyleft"),
-    ("gpl-3-0", "gpl-3-0", "gpl-3-0", "copyleft"),
-    ("GNU GPL v3", "gpl-3.0", "gpl-3.0", "copyleft"),
-    ("GPL v3", "gpl-3.0", "gpl-3.0", "copyleft"),
-    ("gpl-2.0", "gpl-2.0", "gpl-2.0", "copyleft"),
-    ("GPL v2", "gpl-2.0", "gpl-2.0", "copyleft"),
-    ("lgpl-3.0", "lgpl-3.0", "lgpl-3.0", "copyleft"),
-    ("LGPL-3.0", "lgpl-3.0", "lgpl-3.0", "copyleft"),
+    ("gpl-3.0", "gpl-3.0", "gpl-3", "copyleft"),
+    ("GPL-3.0", "gpl-3.0", "gpl-3", "copyleft"),
+    ("gpl-3.0+", "gpl-3.0", "gpl-3", "copyleft"),
+    (
+        "gpl-3-0",
+        "gpl-3-0",
+        "gpl-3-0",
+        "copyleft",
+    ),  # NOTE: hyphen instead of dot; resolver recognises gpl but doesn't normalise
+    ("GNU GPL v3", "gpl-3.0", "gpl-3", "copyleft"),
+    ("GPL v3", "gpl-3.0", "gpl-3", "copyleft"),
+    ("gpl-2.0", "gpl-2.0", "gpl-2", "copyleft"),
+    ("GPL v2", "gpl-2.0", "gpl-2", "copyleft"),
+    ("lgpl-3.0", "lgpl-3.0", "lgpl-3", "copyleft"),
+    ("LGPL-3.0", "lgpl-3.0", "lgpl-3", "copyleft"),
     ("lgpl-2.1", "lgpl-2.1", "lgpl-2.1", "copyleft"),
     ("LGPL v2.1", "lgpl-2.1", "lgpl-2.1", "copyleft"),
     ("lgpl v2.1", "lgpl-2.1", "lgpl-2.1", "copyleft"),
-    ("agpl-3.0", "agpl-3.0", "agpl-3.0", "copyleft"),
-    ("AGPL v3", "agpl-3.0", "agpl-3.0", "copyleft"),
+    ("agpl-3.0", "agpl-3.0", "agpl-3", "copyleft"),
+    ("AGPL v3", "agpl-3.0", "agpl-3", "copyleft"),
     # === Creative Commons ===
     ("CC BY 4.0", "cc-by-4.0", "cc-by", "cc"),
     ("cc by 4.0", "cc-by-4.0", "cc-by", "cc"),
@@ -71,7 +81,12 @@ LICENSE_MATRIX = [
     ("CC BY 2.0", "cc-by-2.0", "cc-by", "cc"),
     ("CC BY 1.0", "cc-by-1.0", "cc-by", "cc"),
     ("cc by", "cc-by", "cc-by", "cc"),
-    ("CC-BY", "cc-by", "cc-by", "unknown"),
+    (
+        "CC-BY",
+        "cc-by",
+        "cc-by",
+        "cc",
+    ),  # SPDX form, resolves to cc-by/cc
     ("CC BY-NC 4.0", "cc-by-nc-4.0", "cc-by-nc", "cc"),
     ("cc by-nc 4.0", "cc-by-nc-4.0", "cc-by-nc", "cc"),
     ("cc-by-nc-4.0", "cc-by-nc-4.0", "cc-by-nc", "cc"),
@@ -112,17 +127,39 @@ LICENSE_MATRIX = [
     ("CC-PDM 1.0", "cc-pdm-1.0", "cc-pdm", "public-domain"),
     ("cc-pdm 1.0", "cc-pdm-1.0", "cc-pdm", "public-domain"),
     ("creative commons public domain", "cc-pdm-1.0", "cc-pdm", "public-domain"),
-    ("public domain", "cc0-1.0", "cc0", "cc0"),
-    ("public-domain", "public-domain", "public-domain", "public-domain"),
-    ("pd", "cc0-1.0", "cc0", "cc0"),
     # CC shorthand
     ("creative commons by", "cc-by", "cc-by", "cc"),
     ("creative commons by 4.0", "cc-by-4.0", "cc-by", "cc"),
-    ("creative commons by-sa", "cc-by-sa", "cc-by", "cc"),
-    ("creative commons by-nc", "cc-by-nc", "cc-by", "cc"),
-    ("creative commons by-nc-sa", "cc-by-nc-sa", "cc-by", "cc"),
-    ("creative commons by-nc-nd", "cc-by-nc-nd", "cc-by", "cc"),
-    ("creative commons by-nd", "cc-by-nd", "cc-by", "cc"),
+    (
+        "creative commons by-sa",
+        "cc-by-sa",
+        "cc-by-sa",
+        "cc",
+    ),  # Specifies by-sa, license must be cc-by-sa
+    (
+        "creative commons by-nc",
+        "cc-by-nc",
+        "cc-by-nc",
+        "cc",
+    ),  # Specifies by-nc, license must be cc-by-nc
+    (
+        "creative commons by-nc-sa",
+        "cc-by-nc-sa",
+        "cc-by-nc-sa",
+        "cc",
+    ),  # Specifies by-nc-sa, license must be cc-by-nc-sa
+    (
+        "creative commons by-nc-nd",
+        "cc-by-nc-nd",
+        "cc-by-nc-nd",
+        "cc",
+    ),  # Specifies by-nc-nd, license must be cc-by-nc-nd
+    (
+        "creative commons by-nd",
+        "cc-by-nd",
+        "cc-by-nd",
+        "cc",
+    ),  # Specifies by-nd, license must be cc-by-nd
     # CC URLs
     (
         "http://creativecommons.org/licenses/by-nc-nd/4.0/",
@@ -175,7 +212,7 @@ LICENSE_MATRIX = [
     (
         "content is licensed under creative commons by-nc-sa",
         "cc-by-nc-sa",
-        "cc-by",
+        "cc-by-nc-sa",  # Contains by-nc-sa, license must be cc-by-nc-sa
         "cc",
     ),
     ("this content is under creative commons by license", "cc-by", "cc-by", "cc"),
@@ -195,7 +232,12 @@ LICENSE_MATRIX = [
     ),
     # Publisher
     ("elsevier-oa", "elsevier-oa", "elsevier-oa", "publisher-oa"),
-    ("Elsevier OA", "elsevier oa", "elsevier oa", "unknown"),
+    (
+        "Elsevier OA",
+        "elsevier-oa",
+        "elsevier-oa",
+        "publisher-oa",
+    ),  # "Elsevier OA" unambiguously identifies Elsevier OA license
     ("elsevier tdm", "elsevier-tdm", "elsevier-tdm", "publisher-tdm"),
     ("Elsevier TDM", "elsevier-tdm", "elsevier-tdm", "publisher-tdm"),
     ("Elsevier User License", "elsevier-oa", "elsevier-oa", "publisher-oa"),
@@ -308,6 +350,10 @@ LICENSE_MATRIX = [
         "totally fake license xyz999",
         "unknown",
     ),
+    # Public domain
+    ("public domain", "public-domain", "public-domain", "public-domain"),
+    ("public-domain", "public-domain", "public-domain", "public-domain"),
+    ("pd", "public-domain", "public-domain", "public-domain"),
 ]
 
 

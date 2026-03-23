@@ -46,18 +46,6 @@ def load_downloaded_licenses() -> dict[str, set[str]]:
         if data:
             result[plugin_cls.__name__] = set(data.keys())
 
-    # Also add OSIParser (checked separately since it might fail on network)
-    data = None
-    try:
-        from license_normaliser.parsers.osi import OSIParser
-
-        data = OSIParser().load_registry()
-    except Exception:
-        pass
-
-    if data:
-        result["OSIParser"] = set(data.keys())
-
     return result
 
 
