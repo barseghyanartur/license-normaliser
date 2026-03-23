@@ -144,8 +144,8 @@ specialised use cases:
     :name: test_custom_plugins
 
     from license_normaliser import LicenseNormaliser
-    from license_normaliser.parsers.spdx import SPDXParser
     from license_normaliser.parsers.alias import AliasParser
+    from license_normaliser.parsers.spdx import SPDXParser
 
     # Use only SPDX + Alias plugins (no CC, no publisher URLs)
     ln = LicenseNormaliser(
@@ -153,6 +153,8 @@ specialised use cases:
         alias=[AliasParser],
         family=[AliasParser],
         name=[AliasParser],
+        cache=True,
+        cache_maxsize=8192,
     )
 
     # MIT resolves via SPDX parser
@@ -161,37 +163,11 @@ specialised use cases:
     # CC BY resolves via Alias
     assert str(ln.normalise_license("CC BY-NC-ND 4.0")) == "cc-by-nc-nd-4.0"
 
-To use all defaults, import from ``defaults``:
-
-.. code-block:: python
-    :name: test_defaults_usage
-
-    from license_normaliser import LicenseNormaliser
-    from license_normaliser.defaults import (
-        get_default_registry,
-        get_default_url,
-        get_default_alias,
-        get_default_family,
-        get_default_name,
-        get_default_prose,
-    )
-
-    ln = LicenseNormaliser(
-        registry=get_default_registry(),
-        url=get_default_url(),
-        alias=get_default_alias(),
-        family=get_default_family(),
-        name=get_default_name(),
-        prose=get_default_prose(),
-        cache=True,
-        cache_maxsize=8192,
-    )
-
 .. note::
 
     Explicit plugin passing is optional — ``LicenseNormaliser()``
     automatically loads defaults. Use the pattern above only if you need
-    custom plugins.
+    custom plugins or reduce number of plugins loaded.
 
 For caching, ``LicenseNormaliser`` wraps the resolution method
 with ``lru_cache``.
