@@ -20,6 +20,8 @@ class LicenseTraceStage:
     input: str
     output: str
     matched: bool
+    source_line: int | None = None
+    source_file: str | None = None
 
 
 @dataclass
@@ -37,7 +39,15 @@ class LicenseTrace:
         lines = [f"Input: {self.raw_input!r} → {self.cleaned_input!r}"]
         for s in self.stages:
             status = "✓" if s.matched else "-"
-            lines.append(f"  [{status}] {s.stage}: {s.input!r} → {s.output!r}")
+            source_info = ""
+            if s.source_line is not None:
+                source_info = f" (line {s.source_line}"
+                if s.source_file:
+                    source_info += f" in {s.source_file}"
+                source_info += ")"
+            lines.append(
+                f"  [{status}] {s.stage}: {s.input!r} → {s.output!r}{source_info}"
+            )
         lines.append("")
         lines.append("Result:")
         lines.append(f"  version_key: {self.version_key!r}")

@@ -79,6 +79,8 @@ class LicenseNormaliser:
         self._url_map: dict[str, str] = {}
         self._url_to_vkey: dict[str, str] = {}
         self._aliases: dict[str, str] = {}
+        self._alias_lines: dict[str, tuple[str, int]] = {}
+        self._alias_lines_loaded: bool = False
         self._family_overrides: dict[str, str] = {}
         self._name_overrides: dict[str, str] = {}
         self._prose_patterns: list[tuple[re.Pattern[str], str]] = []
@@ -138,20 +140,44 @@ class LicenseNormaliser:
             return self._trace_default
         return _should_trace()
 
+    def _load_alias_lines(self):
+        """Lazy load alias line numbers on first trace request."""
+        from license_normaliser.defaults import get_default_alias
+
+        for plugin_cls in get_default_alias():
+            if hasattr(plugin_cls, "load_aliases_with_lines"):
+                lines_data = plugin_cls().load_aliases_with_lines()
+                for alias_key, (version_key, line_num) in lines_data.items():
+                    if version_key == self._aliases.get(alias_key):
+                        self._alias_lines[alias_key] = (version_key, line_num)
+
     def _resolve_with_trace(
         self, raw: str, cleaned: str, strict: bool
     ) -> LicenseVersion:
         """Resolve with full pipeline tracing."""
         from license_normaliser._trace import LicenseTrace, LicenseTraceStage
 
+        # Lazy load alias lines on first trace call
+        if not self._alias_lines_loaded:
+            self._load_alias_lines()
+            self._alias_lines_loaded = True
+
         stages: list[LicenseTraceStage] = []
 
         # 1. Alias lookup
         if cleaned in self._aliases:
+            output = self._aliases[cleaned]
+            source_line = None
+            source_file = None
+            if cleaned in self._alias_lines:
+                _, source_line = self._alias_lines[cleaned]
+                source_file = "aliases.json"
             stages.append(
-                LicenseTraceStage("alias", cleaned, self._aliases[cleaned], True)
+                LicenseTraceStage(
+                    "alias", cleaned, output, True, source_line, source_file
+                )
             )
-            v = self._make(self._aliases[cleaned])
+            v = self._make(output)
             trace = LicenseTrace(
                 raw,
                 cleaned,

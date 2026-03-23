@@ -46,6 +46,32 @@ class AliasParser(BasePlugin, AliasPlugin, FamilyPlugin, NamePlugin):
                 aliases[alias_key] = version_key
         return aliases
 
+    def load_aliases_with_lines(
+        self,
+    ) -> dict[str, tuple[str, int]]:
+        """Load aliases with their source line numbers.
+
+        Returns:
+            dict mapping alias_key -> (version_key, line_number)
+        """
+        path = Path(__file__).parent.parent / self.local_path
+        content = path.read_text(encoding="utf-8")
+        data: dict[str, dict[str, str]] = json.loads(content)
+        lines = content.splitlines()
+        result: dict[str, tuple[str, int]] = {}
+        for alias_key, meta in data.items():
+            if alias_key.startswith("_"):
+                continue
+            if not isinstance(meta, dict):
+                continue
+            version_key = meta.get("version_key", "")
+            if version_key:
+                for i, line in enumerate(lines, start=1):
+                    if f'"{alias_key}"' in line:
+                        result[alias_key] = (version_key, i)
+                        break
+        return result
+
     def load_families(self) -> dict[str, str]:
         path = Path(__file__).parent.parent / self.local_path
         data: dict[str, dict[str, str]] = json.loads(path.read_text(encoding="utf-8"))
