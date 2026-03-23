@@ -5,11 +5,11 @@ import sys
 from pathlib import Path
 
 from license_normaliser import __version__, normalise_license
+from license_normaliser.defaults import get_all_refreshable_plugins
 from license_normaliser.exceptions import (
     LicenseNormalisationError,
     LicenseNotFoundError,
 )
-from license_normaliser.parsers import get_parsers
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"
@@ -94,20 +94,24 @@ def _cmd_batch(args: argparse.Namespace) -> int:
 
 
 def _cmd_update_data(args: argparse.Namespace) -> int:
-    parsers = get_parsers()
+    parser_classes = get_all_refreshable_plugins()
     if args.parser_name:
-        parsers = [p for p in parsers if p.__class__.__name__ == args.parser_name]
-        if not parsers:
+        parser_classes = [
+            p for p in parser_classes if getattr(p, "id", None) == args.parser_name
+        ]
+        if not parser_classes:
+            available = [
+                getattr(p, "id", p.__name__) for p in get_all_refreshable_plugins()
+            ]
             print(
-                f"error: unknown parser {args.parser_name!r}. "
-                f"Available: {[p.__class__.__name__ for p in get_parsers()]}",
+                f"error: unknown parser {args.parser_name!r}. Available: {available}",
                 file=sys.stderr,
             )
             return 1
 
     failed: list[str] = []
-    for parser_cls in parsers:
-        name = parser_cls.__class__.__name__
+    for parser_cls in parser_classes:
+        name = getattr(parser_cls, "id", parser_cls.__name__)
         url = parser_cls.url
         target = parser_cls.local_path
         target_path = Path(__file__).parent.parent / target

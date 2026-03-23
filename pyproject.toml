@@ -2,7 +2,7 @@
 name = "license-normaliser"
 description = "Comprehensive license normalisation with a three-level hierarchy."
 readme = "README.rst"
-version = "0.2"
+version = "0.3"
 requires-python = ">=3.10"
 dependencies = []
 authors = [
@@ -243,6 +243,7 @@ ignore = [
     "docs/package.rst",
     "docs/documentation.rst",
     "docs/index.rst",
+    "uv.lock",
 ]
 order = [
     "README.rst",
@@ -315,4 +316,11 @@ ignore = [
     "docs/package.rst",
     "docs/documentation.rst",
     "docs/index.rst",
+    "uv.lock",
+    "codebin",
+    "src/license_normaliser/data/creativecommons",
+    "src/license_normaliser/data/opendefinition",
+    "src/license_normaliser/data/osi",
+    "src/license_normaliser/data/scancode_licensedb",
+    "src/license_normaliser/data/spdx",
 ]

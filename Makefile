@@ -1,7 +1,7 @@
 .PHONY: build test test-env shell shell-env \
         doc8 ruff mypy clean-dev clean-test clean pre-commit
 
-VERSION := 0.2
+VERSION := 0.3
 SHELL := /bin/bash
 # Makefile for project
 VENV := .venv/bin/activate
@@ -48,13 +48,13 @@ ipython:
 # -----------------------------------------------------------------------
 
 doc8:
-	doc8
+	uv run doc8
 
 ruff:
-	ruff check src/ --fix
+	uv run ruff check src/ --fix
 
 mypy:
-	mypy src/
+	uv run mypy src/
 
 # ----------------------------------------------------------------------------
 # Documentation
@@ -62,13 +62,13 @@ mypy:
 
 # Build documentation using Sphinx and zip it
 build-docs:
-	source $(VENV) && sphinx-source-tree
-	source $(VENV) && sphinx-build -n -b text docs builddocs
-	source $(VENV) && sphinx-build -n -a -b html docs builddocs
+	uv run sphinx-source-tree
+	uv run sphinx-build -n -b text docs builddocs
+	uv run sphinx-build -n -a -b html docs builddocs
 	cd builddocs && zip -r ../builddocs.zip . -x ".*" && cd ..
 
 rebuild-docs:
-	source $(VENV) && sphinx-apidoc . --full -o docs -H 'license-normaliser' -A 'Artur Barseghyan <artur.barseghyan@gmail.com>' -f -d 20
+	uv run sphinx-apidoc . --full -o docs -H 'license-normaliser' -A 'Artur Barseghyan <artur.barseghyan@gmail.com>' -f -d 20
 	cp docs/conf.py.distrib docs/conf.py
 	cp docs/index.rst.distrib docs/index.rst
 
@@ -79,7 +79,7 @@ build-docs-pdf:
 	$(MAKE) -C docs/ latexpdf
 
 auto-build-docs:
-	source $(VENV) && sphinx-autobuild docs docs/_build/html --port 5001
+	uv run sphinx-autobuild docs docs/_build/html --port 5001
 
 # Serve the built docs on port 5001
 serve-docs:
@@ -117,10 +117,10 @@ install: create-venv
 # ----------------------------------------------------------------------------
 
 create-secrets:
-	source $(VENV) && detect-secrets scan > .secrets.baseline
+	uv run detect-secrets scan > .secrets.baseline
 
 detect-secrets:
-	source $(VENV) && detect-secrets scan --baseline .secrets.baseline
+	uv run detect-secrets scan --baseline .secrets.baseline
 
 # -----------------------------------------------------------------------
 # Housekeeping
@@ -154,16 +154,16 @@ update-version:
 # ----------------------------------------------------------------------------
 
 package-build:
-	source $(VENV) && python -m build .
+	uv run python -m build .
 
 check-package-build:
-	source $(VENV) && twine check dist/*
+	uv run twine check dist/*
 
 release:
-	source $(VENV) && twine upload dist/* --verbose
+	uv run twine upload dist/* --verbose
 
 test-release:
-	source $(VENV) && twine upload --repository testpypi dist/* --verbose
+	uv run twine upload --repository testpypi dist/* --verbose
 
 # ----------------------------------------------------------------------------
 # Other

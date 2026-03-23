@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
@@ -63,6 +63,7 @@ class LicenseVersion:
     key: str
     url: Optional[str]
     license: LicenseName
+    _trace: Optional[object] = field(default=None, repr=False)
 
     @property
     def family(self) -> LicenseFamily:
@@ -87,3 +88,24 @@ class LicenseVersion:
 
     def __hash__(self) -> int:
         return hash(self.key)
+
+    def explain(self) -> str:
+        """Return explanation of how this license was resolved.
+
+        Set ENABLE_LICENSE_NORMALISER_TRACE=1 to enable tracing,
+        or pass trace=True to normalise_license().
+        """
+        if self._trace is not None:
+            return str(self._trace)
+
+        from license_normaliser._cache import _default
+        from license_normaliser._trace import _should_trace
+
+        if not _should_trace():
+            return "Trace disabled. Set ENABLE_LICENSE_NORMALISER_TRACE=1 to enable."
+
+        ln = _default.get()
+        cleaned = ln._clean(ln._try_decode_mojibake(self.key))
+        result = ln._resolve_with_trace(self.key, cleaned, strict=False)
+        trace = result._trace
+        return str(trace) if trace else "No trace available."

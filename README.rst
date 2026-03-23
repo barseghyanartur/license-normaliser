@@ -134,6 +134,77 @@ Batch normalisation
     # Strict batch - raises on first unresolvable
     results = normalise_licenses(["MIT", "Apache-2.0"], strict=True)
 
+Custom plugins
+==============
+
+The ``LicenseNormaliser`` class lets you inject custom plugin classes for
+specialised use cases:
+
+.. code-block:: python
+    :name: test_custom_plugins
+
+    from license_normaliser import LicenseNormaliser
+    from license_normaliser.parsers.spdx import SPDXParser
+    from license_normaliser.parsers.alias import AliasParser
+
+    # Use only SPDX + Alias plugins (no CC, no publisher URLs)
+    ln = LicenseNormaliser(
+        registry=[SPDXParser],
+        alias=[AliasParser],
+        family=[AliasParser],
+        name=[AliasParser],
+    )
+
+    # MIT resolves via SPDX parser
+    assert str(ln.normalise_license("MIT")) == "mit"
+
+    # CC BY resolves via Alias
+    assert str(ln.normalise_license("CC BY-NC-ND 4.0")) == "cc-by-nc-nd-4.0"
+
+To use all defaults, import from ``defaults``:
+
+.. code-block:: python
+    :name: test_defaults_usage
+
+    from license_normaliser import LicenseNormaliser
+    from license_normaliser.defaults import (
+        get_default_registry,
+        get_default_url,
+        get_default_alias,
+        get_default_family,
+        get_default_name,
+        get_default_prose,
+    )
+
+    ln = LicenseNormaliser(
+        registry=get_default_registry(),
+        url=get_default_url(),
+        alias=get_default_alias(),
+        family=get_default_family(),
+        name=get_default_name(),
+        prose=get_default_prose(),
+        cache=True,
+        cache_maxsize=8192,
+    )
+
+.. note::
+
+    Explicit plugin passing is optional — :class:`LicenseNormaliser()`
+    automatically loads defaults. Use the pattern above only if you need
+    custom plugins.
+
+For caching, ``LicenseNormaliser`` wraps the resolution method
+with ``lru_cache``.
+Disable it by passing ``cache=False`` for debugging:
+
+.. code-block:: python
+    :name: test_caching
+
+    from license_normaliser import LicenseNormaliser
+
+    ln = LicenseNormaliser(cache=False)
+    result = ln.normalise_license("MIT")
+
 Update data sources (CLI)
 =========================
 

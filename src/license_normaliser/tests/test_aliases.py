@@ -126,10 +126,10 @@ class TestNonCCAliases:
 
     def test_public_domain(self):
         v = normalise_license("public domain")
-        assert v.key == "cc0-1.0"
-        assert v.family.key == "cc0"
+        assert v.key == "public-domain"
+        assert v.family.key == "public-domain"
 
     def test_pd_alias(self):
         v = normalise_license("pd")
-        assert v.key == "cc0-1.0"
-        assert v.family.key == "cc0"
+        assert v.key == "public-domain"
+        assert v.family.key == "public-domain"

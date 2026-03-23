@@ -8,6 +8,12 @@ the contents of each key file.
    :caption: Project directory layout
 
    license-normaliser/
+   ├── scripts
+   │   ├── __init__.py
+   │   ├── check_missing_aliases.py
+   │   ├── compare_datasets.py
+   │   ├── README.rst
+   │   └── test_name_inference.py
    ├── src
    │   └── license_normaliser
    │       ├── cli
@@ -16,27 +22,16 @@ the contents of each key file.
    │       ├── data
    │       │   ├── aliases
    │       │   │   └── aliases.json
-   │       │   ├── creativecommons
-   │       │   │   └── creativecommons.json
-   │       │   ├── opendefinition
-   │       │   │   └── opendefinition.json
-   │       │   ├── osi
-   │       │   │   └── osi.json
    │       │   ├── prose
    │       │   │   └── prose_patterns.json
    │       │   ├── publishers
    │       │   │   └── publishers.json
-   │       │   ├── scancode_licensedb
-   │       │   │   └── scancode_licensedb.json
-   │       │   ├── spdx
-   │       │   │   └── spdx.json
    │       │   ├── urls
    │       │   │   └── url_map.json
    │       │   └── README.rst
    │       ├── parsers
    │       │   ├── __init__.py
    │       │   ├── alias.py
-   │       │   ├── base.py
    │       │   ├── creativecommons.py
    │       │   ├── opendefinition.py
    │       │   ├── osi.py
@@ -48,6 +43,7 @@ the contents of each key file.
    │       │   ├── __init__.py
    │       │   ├── conftest.py
    │       │   ├── test_aliases.py
+   │       │   ├── test_cache.py
    │       │   ├── test_cli.py
    │       │   ├── test_core.py
    │       │   ├── test_exceptions.py
@@ -58,10 +54,11 @@ the contents of each key file.
    │       ├── __init__.py
    │       ├── _cache.py
    │       ├── _core.py
-   │       ├── _exceptions.py
    │       ├── _models.py
-   │       ├── _registry.py
+   │       ├── _normaliser.py
+   │       ├── defaults.py
    │       ├── exceptions.py
+   │       ├── plugins.py
    │       └── py.typed
    ├── AGENTS.md
    ├── conftest.py
@@ -71,8 +68,7 @@ the contents of each key file.
    ├── Makefile
    ├── pyproject.toml
    ├── README.rst
-   ├── tox.ini
-   └── uv.lock
+   └── tox.ini
 
 README.rst
 ----------
@@ -116,6 +112,41 @@ pyproject.toml
    :language: toml
    :caption: pyproject.toml
 
+scripts/README.rst
+------------------
+
+.. literalinclude:: ../scripts/README.rst
+   :language: rst
+   :caption: scripts/README.rst
+
+scripts/__init__.py
+-------------------
+
+.. literalinclude:: ../scripts/__init__.py
+   :language: python
+   :caption: scripts/__init__.py
+
+scripts/check_missing_aliases.py
+--------------------------------
+
+.. literalinclude:: ../scripts/check_missing_aliases.py
+   :language: python
+   :caption: scripts/check_missing_aliases.py
+
+scripts/compare_datasets.py
+---------------------------
+
+.. literalinclude:: ../scripts/compare_datasets.py
+   :language: python
+   :caption: scripts/compare_datasets.py
+
+scripts/test_name_inference.py
+------------------------------
+
+.. literalinclude:: ../scripts/test_name_inference.py
+   :language: python
+   :caption: scripts/test_name_inference.py
+
 src/license_normaliser/__init__.py
 ----------------------------------
 
@@ -137,13 +168,6 @@ src/license_normaliser/_core.py
    :language: python
    :caption: src/license_normaliser/_core.py
 
-src/license_normaliser/_exceptions.py
--------------------------------------
-
-.. literalinclude:: ../src/license_normaliser/_exceptions.py
-   :language: python
-   :caption: src/license_normaliser/_exceptions.py
-
 src/license_normaliser/_models.py
 ---------------------------------
 
@@ -151,12 +175,12 @@ src/license_normaliser/_models.py
    :language: python
    :caption: src/license_normaliser/_models.py
 
-src/license_normaliser/_registry.py
------------------------------------
+src/license_normaliser/_normaliser.py
+-------------------------------------
 
-.. literalinclude:: ../src/license_normaliser/_registry.py
+.. literalinclude:: ../src/license_normaliser/_normaliser.py
    :language: python
-   :caption: src/license_normaliser/_registry.py
+   :caption: src/license_normaliser/_normaliser.py
 
 src/license_normaliser/cli/__init__.py
 --------------------------------------
@@ -242,6 +266,13 @@ src/license_normaliser/data/urls/url_map.json
    :language: json
    :caption: src/license_normaliser/data/urls/url_map.json
 
+src/license_normaliser/defaults.py
+----------------------------------
+
+.. literalinclude:: ../src/license_normaliser/defaults.py
+   :language: python
+   :caption: src/license_normaliser/defaults.py
+
 src/license_normaliser/exceptions.py
 ------------------------------------
 
@@ -262,13 +293,6 @@ src/license_normaliser/parsers/alias.py
 .. literalinclude:: ../src/license_normaliser/parsers/alias.py
    :language: python
    :caption: src/license_normaliser/parsers/alias.py
-
-src/license_normaliser/parsers/base.py
---------------------------------------
-
-.. literalinclude:: ../src/license_normaliser/parsers/base.py
-   :language: python
-   :caption: src/license_normaliser/parsers/base.py
 
 src/license_normaliser/parsers/creativecommons.py
 -------------------------------------------------
@@ -319,6 +343,13 @@ src/license_normaliser/parsers/spdx.py
    :language: python
    :caption: src/license_normaliser/parsers/spdx.py
 
+src/license_normaliser/plugins.py
+---------------------------------
+
+.. literalinclude:: ../src/license_normaliser/plugins.py
+   :language: python
+   :caption: src/license_normaliser/plugins.py
+
 src/license_normaliser/tests/__init__.py
 ----------------------------------------
 
@@ -339,6 +370,13 @@ src/license_normaliser/tests/test_aliases.py
 .. literalinclude:: ../src/license_normaliser/tests/test_aliases.py
    :language: python
    :caption: src/license_normaliser/tests/test_aliases.py
+
+src/license_normaliser/tests/test_cache.py
+------------------------------------------
+
+.. literalinclude:: ../src/license_normaliser/tests/test_cache.py
+   :language: python
+   :caption: src/license_normaliser/tests/test_cache.py
 
 src/license_normaliser/tests/test_cli.py
 ----------------------------------------

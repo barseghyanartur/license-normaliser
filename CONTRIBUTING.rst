@@ -44,6 +44,27 @@ To run checks manually:
     make doc8
     make ruff
 
+Import conventions
+~~~~~~~~~~~~~~~~~~
+
+**Import statements belong at module level.** Avoid placing imports inside
+functions or methods unless absolutely necessary:
+
+- **Acceptable exceptions:**
+
+  - Breaking circular dependencies
+  - Optional runtime dependencies (e.g., CLI-only imports)
+  - Heavy imports that are rarely used
+
+- **Why this matters:**
+
+  - Improves code readability
+  - Makes dependencies explicit and discoverable
+  - Enables static analysis tools to work correctly
+  - Follows Python community best practices (PEP 8)
+
+When in doubt, place imports at the top of the file.
+
 Virtual environment
 -------------------
 
@@ -132,7 +153,7 @@ For a **brand-new license key** (SPDX, OpenDefinition, OSI, CC, or ScanCode):
 For a **new parser** (new upstream data source):
 
 1. Create ``src/license_normaliser/parsers/my_parser.py`` implementing
-   ``BaseParser``.
+   ``BasePlugin``.
 2. Register it in ``src/license_normaliser/parsers/__init__.py``.
 3. Set ``is_registry_entry = False`` if the parser only contributes
    aliases/URLs/patterns (not new license keys).
