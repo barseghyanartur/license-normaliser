@@ -86,7 +86,7 @@ class TestDirectLookup:
     def test_odbl_1_0(self):
         v = normalise_license("odbl-1.0")
         assert v.key == "odbl-1.0"
-        assert v.family.key == "data"
+        assert v.family.key == "open-data"
 
     def test_pddl_1_0(self):
         v = normalise_license("pddl-1.0")
@@ -96,7 +96,7 @@ class TestDirectLookup:
     def test_odc_by_1_0(self):
         v = normalise_license("odc-by-1.0")
         assert v.key == "odc-by-1.0"
-        assert v.family.key == "data"
+        assert v.family.key == "open-data"
 
     def test_unknown(self):
         v = normalise_license("unknown")
@@ -168,9 +168,7 @@ class TestFamilyInference:
         assert normalise_license("bsd-3-clause").family.key == "osi"
 
     def test_data_family(self):
-        assert normalise_license("odbl-1.0").family.key == "data"
         assert normalise_license("pddl-1.0").family.key == "data"
-        assert normalise_license("odc-by-1.0").family.key == "data"
 
 
 class TestNameInference:

@@ -441,7 +441,9 @@ class LicenseNormaliser:
             return "cc"
         if k.startswith(("gpl-", "agpl-", "lgpl-")):
             return "copyleft"
-        if k.startswith(("odbl-", "pddl-", "odc-")):
+        if k.startswith(("odbl", "odc-by")):
+            return "open-data"
+        if k.startswith(("pddl-", "odc-")):
             return "data"
         if k.startswith(
             (

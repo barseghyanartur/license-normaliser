@@ -48,7 +48,7 @@
 | `src/license_normaliser/_cache.py` | Module-level API delegating to `LicenseNormaliser` |
 | `src/license_normaliser/parsers/` | Parser classes implementing plugin interfaces |
 | `src/license_normaliser/cli/_main.py` | CLI with normalise, batch, update-data |
-| `src/license_normaliser/_exceptions.py` | LicenseNormalisationError |
+| `src/license_normaliser/exceptions.py` | LicenseNormalisationError |
 | `src/license_normaliser/data/spdx/spdx.json` | Full SPDX license list (loaded at runtime) |
 | `src/license_normaliser/data/opendefinition/opendefinition.json` | Full OpenDefinition list (loaded at runtime) |
 | `src/license_normaliser/data/aliases/aliases.json` | Curated aliases with rich metadata |
