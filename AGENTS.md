@@ -228,6 +228,7 @@ def _load_registry_plugins() -> list[type]:
 - Always chain exceptions: `raise X(...) from exc`
 - Type annotations on all public functions
 - Target: `py310`
+- **Import statements belong at module level** - avoid imports inside functions/methods unless absolutely necessary (e.g., breaking circular dependencies or optional runtime dependencies). Lazy imports harm readability and make dependencies unclear.
 
 Run linting: `make ruff` or `make pre-commit`
 

@@ -44,6 +44,27 @@ To run checks manually:
     make doc8
     make ruff
 
+Import conventions
+~~~~~~~~~~~~~~~~~~
+
+**Import statements belong at module level.** Avoid placing imports inside
+functions or methods unless absolutely necessary:
+
+- **Acceptable exceptions:**
+
+  - Breaking circular dependencies
+  - Optional runtime dependencies (e.g., CLI-only imports)
+  - Heavy imports that are rarely used
+
+- **Why this matters:**
+
+  - Improves code readability
+  - Makes dependencies explicit and discoverable
+  - Enables static analysis tools to work correctly
+  - Follows Python community best practices (PEP 8)
+
+When in doubt, place imports at the top of the file.
+
 Virtual environment
 -------------------
 

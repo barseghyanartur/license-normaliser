@@ -8,6 +8,7 @@ from ._core import (
     normalise_licenses,
 )
 from ._normaliser import LicenseNormaliser
+from ._trace import LicenseTrace, LicenseTraceStage
 from .exceptions import LicenseNormalisationError, LicenseNotFoundError
 
 __title__ = "license-normaliser"
@@ -23,6 +24,8 @@ __all__ = (
     "LicenseNormaliser",
     "LicenseNormalisationError",
     "LicenseNotFoundError",
+    "LicenseTrace",
+    "LicenseTraceStage",
     "normalise_license",
     "normalise_licenses",
 )
