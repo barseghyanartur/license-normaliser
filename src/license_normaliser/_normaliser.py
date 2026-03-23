@@ -265,30 +265,6 @@ class LicenseNormaliser:
             return "data"
         if k.startswith(
             (
-                "elsevier-",
-                "wiley-",
-                "springer-",
-                "springernature-",
-                "acs-",
-                "rsc-",
-                "iop-",
-                "bmj-",
-                "aaas-",
-                "pnas-",
-                "aps-",
-                "cup-",
-                "aip-",
-                "jama-",
-                "degruyter-",
-                "oup-",
-                "sage-",
-                "tandf-",
-                "thieme-",
-            )
-        ):
-            return "publisher-proprietary"
-        if k.startswith(
-            (
                 "elsevier-oa",
                 "acs-authorchoice",
                 "acs-authorchoice-ccby",
@@ -315,6 +291,30 @@ class LicenseNormaliser:
             )
         ):
             return "publisher-tdm"
+        if k.startswith(
+            (
+                "elsevier-",
+                "wiley-",
+                "springer-",
+                "springernature-",
+                "acs-",
+                "rsc-",
+                "iop-",
+                "bmj-",
+                "aaas-",
+                "pnas-",
+                "aps-",
+                "cup-",
+                "aip-",
+                "jama-",
+                "degruyter-",
+                "oup-",
+                "sage-",
+                "tandf-",
+                "thieme-",
+            )
+        ):
+            return "publisher-proprietary"
         if k in ("public-domain", "other-oa", "open-access"):
             return "public-domain" if k == "public-domain" else "other-oa"
         return "unknown"
