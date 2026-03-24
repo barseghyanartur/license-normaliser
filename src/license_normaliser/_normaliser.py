@@ -199,7 +199,7 @@ class LicenseNormaliser:
         for plugin_cls in get_default_prose():
             if hasattr(plugin_cls, "load_prose_with_lines"):
                 lines_data = plugin_cls().load_prose_with_lines()
-                self._prose_lines = lines_data
+                self._prose_lines.extend(lines_data)
 
     def _resolve_with_trace(
         self, raw: str, cleaned: str, strict: bool
