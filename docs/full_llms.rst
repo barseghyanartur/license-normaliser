@@ -25,20 +25,10 @@ the contents of each key file.
    │       ├── data
    │       │   ├── aliases
    │       │   │   └── aliases.json
-   │       │   ├── creativecommons
-   │       │   │   └── creativecommons.json
-   │       │   ├── opendefinition
-   │       │   │   └── opendefinition.json
-   │       │   ├── osi
-   │       │   │   └── osi.json
    │       │   ├── prose
    │       │   │   └── prose_patterns.json
    │       │   ├── publishers
    │       │   │   └── publishers.json
-   │       │   ├── scancode_licensedb
-   │       │   │   └── scancode_licensedb.json
-   │       │   ├── spdx
-   │       │   │   └── spdx.json
    │       │   ├── urls
    │       │   │   └── url_map.json
    │       │   └── README.rst
@@ -69,6 +59,7 @@ the contents of each key file.
    │       ├── _core.py
    │       ├── _models.py
    │       ├── _normaliser.py
+   │       ├── _trace.py
    │       ├── defaults.py
    │       ├── exceptions.py
    │       ├── plugins.py
@@ -209,6 +200,13 @@ src/license_normaliser/_normaliser.py
    :language: python
    :caption: src/license_normaliser/_normaliser.py
 
+src/license_normaliser/_trace.py
+--------------------------------
+
+.. literalinclude:: ../src/license_normaliser/_trace.py
+   :language: python
+   :caption: src/license_normaliser/_trace.py
+
 src/license_normaliser/cli/__init__.py
 --------------------------------------
 
@@ -237,27 +235,6 @@ src/license_normaliser/data/aliases/aliases.json
    :language: json
    :caption: src/license_normaliser/data/aliases/aliases.json
 
-src/license_normaliser/data/creativecommons/creativecommons.json
-----------------------------------------------------------------
-
-.. literalinclude:: ../src/license_normaliser/data/creativecommons/creativecommons.json
-   :language: json
-   :caption: src/license_normaliser/data/creativecommons/creativecommons.json
-
-src/license_normaliser/data/opendefinition/opendefinition.json
---------------------------------------------------------------
-
-.. literalinclude:: ../src/license_normaliser/data/opendefinition/opendefinition.json
-   :language: json
-   :caption: src/license_normaliser/data/opendefinition/opendefinition.json
-
-src/license_normaliser/data/osi/osi.json
-----------------------------------------
-
-.. literalinclude:: ../src/license_normaliser/data/osi/osi.json
-   :language: json
-   :caption: src/license_normaliser/data/osi/osi.json
-
 src/license_normaliser/data/prose/prose_patterns.json
 -----------------------------------------------------
 
@@ -271,20 +248,6 @@ src/license_normaliser/data/publishers/publishers.json
 .. literalinclude:: ../src/license_normaliser/data/publishers/publishers.json
    :language: json
    :caption: src/license_normaliser/data/publishers/publishers.json
-
-src/license_normaliser/data/scancode_licensedb/scancode_licensedb.json
-----------------------------------------------------------------------
-
-.. literalinclude:: ../src/license_normaliser/data/scancode_licensedb/scancode_licensedb.json
-   :language: json
-   :caption: src/license_normaliser/data/scancode_licensedb/scancode_licensedb.json
-
-src/license_normaliser/data/spdx/spdx.json
-------------------------------------------
-
-.. literalinclude:: ../src/license_normaliser/data/spdx/spdx.json
-   :language: json
-   :caption: src/license_normaliser/data/spdx/spdx.json
 
 src/license_normaliser/data/urls/url_map.json
 ---------------------------------------------
