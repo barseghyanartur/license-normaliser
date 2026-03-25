@@ -71,6 +71,24 @@ class TestNormaliseCommand:
             assert exc_info.value.code == 1
         assert capsys.readouterr().err  # error message on stderr
 
+    def test_normalise_with_trace_flag(self, capsys):
+        with patch("sys.argv", ["licence-normaliser", "normalise", "--trace", "MIT"]):
+            with pytest.raises(SystemExit) as exc_info:
+                main()
+            assert exc_info.value.code == 0
+        out = capsys.readouterr().out
+        assert "Input:" in out
+        assert "[✓]" in out
+
+    def test_normalise_env_var_trace(self, capsys, monkeypatch):
+        monkeypatch.setenv("ENABLE_LICENCE_NORMALISER_TRACE", "1")
+        with patch("sys.argv", ["licence-normaliser", "normalise", "MIT"]):
+            with pytest.raises(SystemExit) as exc_info:
+                main()
+            assert exc_info.value.code == 0
+        out = capsys.readouterr().out
+        assert "Input:" in out
+
 
 class TestBatchCommand:
     def test_batch_basic(self, capsys):
@@ -102,6 +120,31 @@ class TestBatchCommand:
             with pytest.raises(SystemExit) as exc_info:
                 main()
             assert exc_info.value.code == 1
+
+    def test_batch_with_trace_flag(self, capsys):
+        with patch(
+            "sys.argv",
+            ["licence-normaliser", "batch", "--trace", "MIT", "Apache-2.0"],
+        ):
+            with pytest.raises(SystemExit) as exc_info:
+                main()
+            assert exc_info.value.code == 0
+        out = capsys.readouterr().out
+        assert "MIT:" in out
+        assert "Input:" in out or "[✓]" in out
+        assert "Apache-2.0:" in out
+
+    def test_batch_env_var_trace(self, capsys, monkeypatch):
+        monkeypatch.setenv("ENABLE_LICENCE_NORMALISER_TRACE", "1")
+        with patch(
+            "sys.argv",
+            ["licence-normaliser", "batch", "MIT", "Apache-2.0"],
+        ):
+            with pytest.raises(SystemExit) as exc_info:
+                main()
+            assert exc_info.value.code == 0
+        out = capsys.readouterr().out
+        assert "Input:" in out
 
 
 class TestVersionFlag:
