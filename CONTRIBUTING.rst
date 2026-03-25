@@ -121,7 +121,7 @@ Tests run on Python 3.10–3.15 (all non-EOL versions).  See the
 Adding new normalisation rules
 ------------------------------
 
-For a new **alias** or **family override** for an *existing* license:
+For a new **alias** or **family override** for an *existing* licence:
 
 1. Add an entry to ``src/licence_normaliser/data/aliases/aliases.json``.
 2. Optionally, add an ``aliases`` array to define additional lookup variants
@@ -155,7 +155,7 @@ For a new **URL mapping**:
 2. Add a test in ``src/licence_normaliser/tests/test_publisher.py``.
 3. No Python changes needed.
 
-For a **brand-new license key** (SPDX, OpenDefinition, OSI, CC, or ScanCode):
+For a **brand-new licence key** (SPDX, OpenDefinition, OSI, CC, or ScanCode):
 
 1. The upstream data source must be updated first
    (``licence-normaliser update-data --force`` for SPDX/OpenDefinition, or
@@ -171,7 +171,7 @@ For a **new parser** (new upstream data source):
    ``BasePlugin``.
 2. Register it in ``src/licence_normaliser/parsers/__init__.py``.
 3. Set ``is_registry_entry = False`` if the parser only contributes
-   aliases/URLs/patterns (not new license keys).
+   aliases/URLs/patterns (not new licence keys).
 4. Add tests.
 
 
@@ -226,7 +226,7 @@ Examples of welcome contributions:
 
 - Fixing documentation typos or improving explanations.
 - Adding test cases for new edge cases.
-- Extending support for additional license formats.
+- Extending support for additional licence formats.
 - Improving error messages.
 
 General checklist

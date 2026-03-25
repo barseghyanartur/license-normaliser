@@ -49,7 +49,7 @@ are used for versioning (schema follows below):
 - **Public `registry_keys()`** — `LicenceNormaliser.registry_keys()` exposes
   known keys; `get_registry_keys()` in `_cache.py` uses it.
 - **URL population fix** — inverted URL map (`version_key → cleaned_url`)
-  ensures `LicenceVersion.url` is populated for resolved licenses.
+  ensures `LicenceVersion.url` is populated for resolved licences.
 - **Removed dead code** — deleted `_registry.py`, `parsers/base.py`,
   `parsers/__init__.py`, and empty `DEFAULT_*` module globals.
 - **Docs updated** — ARCHITECTURE.rst, AGENTS.md, README.rst rewritten to
@@ -66,7 +66,7 @@ are used for versioning (schema follows below):
 - **New data files** — 170+ aliases, 41 prose patterns, 50+ publisher
   URLs (Elsevier, Wiley, Springer, ACS, etc.).
 - **Strict mode** — `strict=True` raises `LicenceNotFoundError` on unknown
-  licenses.
+  licences.
 - **Bug fixes** — `cc-pdm`/`cc0` family inference, `gpl-3.0+` `+`-suffix
   stripping, false-positive prose pattern removed, ALIASES-before-REGISTRY
   lookup order.

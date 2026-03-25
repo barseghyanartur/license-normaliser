@@ -278,7 +278,7 @@ Run linting: `make ruff` or `make pre-commit`
 
 1. **Check the mission** - does the change preserve the no-dependencies policy and three-level hierarchy?
 2. **Identify the correct location**:
-   - New SPDX/OD license → update SPDX/OpenDefinition JSON files (run `update-data`)
+   - New SPDX/OD licence → update SPDX/OpenDefinition JSON files (run `update-data`)
    - New alias or family override → add to `data/aliases/aliases.json`
    - **Use `--trace` to find the exact line that defines an alias**
    - New URL mapping → add to `data/publishers/publishers.json`

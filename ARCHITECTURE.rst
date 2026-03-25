@@ -60,9 +60,9 @@ three objects that form a chain.
 Class relationships
 -------------------
 
-- ``LicenceVersion`` holds a ``LicenceName`` via its ``license`` attribute.
+- ``LicenceVersion`` holds a ``LicenceName`` via its ``licence`` attribute.
 - ``LicenceName`` holds a ``LicenceFamily`` via its ``family`` attribute.
-- ``LicenceVersion.family`` delegates to ``license.family``.
+- ``LicenceVersion.family`` delegates to ``licence.family``.
 - All three classes are **immutable** (frozen dataclasses), implement
   ``__str__``, ``__eq__``, and ``__hash__``.
 
@@ -128,7 +128,7 @@ Step 2 -- Direct registry lookup
 --------------------------------
 
 ``REGISTRY`` is built from all registered parsers that set
-``is_registry_entry = True`` (the default).  Parsers contribute license
+``is_registry_entry = True`` (the default).  Parsers contribute licence
 keys from SPDX, OpenDefinition, OSI, ScanCode, and Creative Commons
 data sources.
 
@@ -384,8 +384,8 @@ Edit ``data/publishers/publishers.json`` under ``urls``:
     {
       "urls": {
         "https://example.com/license/": {
-          "version_key": "my-license",
-          "name_key": "my-license",
+          "version_key": "my-licence",
+          "name_key": "my-licence",
           "family_key": "osi"
         }
       }
@@ -400,7 +400,7 @@ Edit ``data/publishers/publishers.json`` under ``shorthand_aliases``:
 
     {
       "shorthand_aliases": {
-        "my shorthand alias": "my-license"
+        "my shorthand alias": "my-licence"
       }
     }
 
@@ -467,27 +467,27 @@ Directory Structure
 ::
 
     src/licence_normaliser/
-    ├── __init__.py              # Public API exports
-    ├── _models.py               # Frozen dataclass hierarchy
-    ├── _normaliser.py           # LicenceNormaliser class with plugin-based resolution
-    ├── _cache.py                # Module-level API delegating to LicenceNormaliser
-    ├── _core.py                 # Internal resolve helpers (deprecated, kept for compat)
-    ├── plugins.py               # Plugin interfaces (BasePlugin, RegistryPlugin, etc.)
-    ├── defaults.py              # Lazy-loading default plugin bundle
-    ├── _exceptions.py           # LicenceNormalisationError, LicenceNotFoundError
+    ├── __init__.py               # Public API exports
+    ├── _models.py                # Frozen dataclass hierarchy
+    ├── _normaliser.py            # LicenceNormaliser class with plugin-based resolution
+    ├── _cache.py                 # Module-level API delegating to LicenceNormaliser
+    ├── _core.py                  # Internal resolve helpers (deprecated, kept for compat)
+    ├── plugins.py                # Plugin interfaces (BasePlugin, RegistryPlugin, etc.)
+    ├── defaults.py               # Lazy-loading default plugin bundle
+    ├── _exceptions.py            # LicenceNormalisationError, LicenceNotFoundError
     ├── cli/
     │   ├── __init__.py
-    │   └── _main.py             # CLI entry point
+    │   └── _main.py              # CLI entry point
     ├── parsers/
-    │   ├── __init__.py          # Empty, for ruff
-    │   ├── spdx.py              # SPDXParser
-    │   ├── opendefinition.py    # OpenDefinitionParser
-    │   ├── osi.py               # OSIParser
+    │   ├── __init__.py           # Empty, for ruff
+    │   ├── spdx.py               # SPDXParser
+    │   ├── opendefinition.py     # OpenDefinitionParser
+    │   ├── osi.py                # OSIParser
     │   ├── scancode_licensedb.py # ScanCodeLicenseDBParser
-    │   ├── creativecommons.py   # CreativeCommonsParser
-    │   ├── prose.py             # ProseParser
-    │   ├── alias.py             # AliasParser
-    │   └── publisher.py         # PublisherParser
+    │   ├── creativecommons.py    # CreativeCommonsParser
+    │   ├── prose.py              # ProseParser
+    │   ├── alias.py              # AliasParser
+    │   └── publisher.py          # PublisherParser
     └── tests/
         ├── conftest.py
         ├── test_aliases.py

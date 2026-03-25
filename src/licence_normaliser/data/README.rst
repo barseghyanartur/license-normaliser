@@ -20,15 +20,15 @@ Structure
     ├── publishers/
     │   └── publishers.json          # Publisher URLs and shorthand aliases
     ├── spdx/
-    │   └── spdx.json                # SPDX license list (auto-refreshed)
+    │   └── spdx.json                # SPDX licence list (auto-refreshed)
     ├── opendefinition/
     │   └── opendefinition.json      # Open Definition list (auto-refreshed)
     ├── osi/
-    │   └── osi.json                 # OSI license list (auto-refreshed)
+    │   └── osi.json                 # OSI licence list (auto-refreshed)
     ├── creativecommons/
-    │   └── creativecommons.json     # CC licenses (scraped from creativecommons.org)
+    │   └── creativecommons.json     # CC licences (scraped from creativecommons.org)
     └── scancode_licensedb/
-        └── scancode_licensedb.json  # ScanCode license DB (auto-refreshed)
+        └── scancode_licensedb.json  # ScanCode licence DB (auto-refreshed)
 
 Entry Format
 ------------
@@ -44,7 +44,7 @@ to a metadata dict with three required fields:
 
 URLs are stored separately in the ``url`` field of the metadata dict.
 
-How to Add a New License Alias
+How to add a new licence alias
 ------------------------------
 
 Edit ``aliases/aliases.json``:
@@ -70,14 +70,14 @@ Edit ``publishers/publishers.json``:
 
    {
      "urls": {
-       "https://example.com/my-license/": {
-         "version_key": "my-license",
-         "name_key": "my-license",
+       "https://example.com/my-licence/": {
+         "version_key": "my-licence",
+         "name_key": "my-licence",
          "family_key": "publisher-oa"
        }
      },
      "shorthand_aliases": {
-       "my shorthand alias": "my-license"
+       "my shorthand alias": "my-licence"
      }
    }
 
@@ -92,9 +92,9 @@ Edit ``urls/url_map.json``:
 .. code:: json
 
    {
-     "https://example.com/my-license/": {
-       "version_key": "my-license",
-       "name_key": "my-license",
+     "https://example.com/my-licence/": {
+       "version_key": "my-licence",
+       "name_key": "my-licence",
        "family_key": "publisher-oa"
      }
    }
@@ -109,8 +109,8 @@ pattern it should take priority over:
 
    [
      {"pattern": "my very specific phrase",
-      "version_key": "my-license",
-      "name_key": "my-license",
+      "version_key": "my-licence",
+      "name_key": "my-licence",
       "family_key": "publisher-oa"},
      ...
    ]
@@ -118,7 +118,7 @@ pattern it should take priority over:
 Patterns are Python regular expressions matched case-insensitively.
 More-specific patterns must come first.
 
-How to Add a Brand-New License
+How to add a brand-new licence
 ------------------------------
 
 1. Add entries to one or more JSON data files (``aliases/aliases.json``,
@@ -143,11 +143,11 @@ The ``licence-normaliser update-data`` CLI command fetches fresh upstream data:
 
 This updates:
 
-- ``spdx/spdx.json`` — full `SPDX license list <https://spdx.org/licenses/>`_
+- ``spdx/spdx.json`` — full `SPDX licence list <https://spdx.org/licenses/>`_
 - ``opendefinition/opendefinition.json`` — full `Open Definition list <https://opendefinition.org/>`_
-- ``osi/osi.json`` — `OSI license list <https://opensource.org/licenses>`_
+- ``osi/osi.json`` — `OSI licence list <https://opensource.org/licenses>`_
 - ``creativecommons/creativecommons.json`` — scraped from creativecommons.org
-- ``scancode_licensedb/scancode_licensedb.json`` — `ScanCode license DB <https://scancode-licensedb.aboutcode.org/>`_
+- ``scancode_licensedb/scancode_licensedb.json`` — `ScanCode licence DB <https://scancode-licensedb.aboutcode.org/>`_
 
 Family Override Files
 ---------------------

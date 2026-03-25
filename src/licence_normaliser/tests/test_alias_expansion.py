@@ -114,7 +114,7 @@ class TestCCHyphenForms:
     ):
         v = normalise_licence(raw, strict=True)
         assert v.key == expected_key, f"{raw!r}: key {v.key!r} != {expected_key!r}"
-        assert v.license.key == expected_name
+        assert v.licence.key == expected_name
         assert v.family.key == expected_family
 
     def test_cc_by_nc_strict_does_not_raise(self):
@@ -179,7 +179,7 @@ class TestGPLShorthands:
     ):
         v = normalise_licence(raw, strict=True)
         assert v.key == expected_key, f"{raw!r}: key {v.key!r} != {expected_key!r}"
-        assert v.license.key == expected_name
+        assert v.licence.key == expected_name
         assert v.family.key == expected_family
 
     def test_gpl_2_strict_no_raise(self):
@@ -231,8 +231,8 @@ def test_script_inputs_all_resolve(raw, expected_key, expected_name, expected_fa
     """Every input from the bug-report script should now resolve in strict mode."""
     v = normalise_licence(raw, strict=True)
     assert v.key == expected_key, f"{raw!r}: key {v.key!r} != {expected_key!r}"
-    assert v.license.key == expected_name, (
-        f"{raw!r}: name {v.license.key!r} != {expected_name!r}"
+    assert v.licence.key == expected_name, (
+        f"{raw!r}: name {v.licence.key!r} != {expected_name!r}"
     )
     assert v.family.key == expected_family, (
         f"{raw!r}: family {v.family.key!r} != {expected_family!r}"
@@ -240,7 +240,7 @@ def test_script_inputs_all_resolve(raw, expected_key, expected_name, expected_fa
 
 
 def test_false_still_fails():
-    """'false' is not a license and must remain unresolvable in strict mode."""
+    """'false' is not a licence and must remain unresolvable in strict mode."""
     with pytest.raises(LicenceNotFoundError):
         normalise_licence("false", strict=True)
 

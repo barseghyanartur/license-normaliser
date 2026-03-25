@@ -173,36 +173,36 @@ class TestFamilyInference:
 
 class TestNameInference:
     def test_cc_name_strips_version(self):
-        assert normalise_licence("cc-by-4.0").license.key == "cc-by"
-        assert normalise_licence("cc-by-nc-nd-4.0").license.key == "cc-by-nc-nd"
-        assert normalise_licence("cc-by-sa-3.0").license.key == "cc-by-sa"
-        assert normalise_licence("cc0-1.0").license.key == "cc0"
-        assert normalise_licence("cc-by-nc-sa-4.0").license.key == "cc-by-nc-sa"
+        assert normalise_licence("cc-by-4.0").licence.key == "cc-by"
+        assert normalise_licence("cc-by-nc-nd-4.0").licence.key == "cc-by-nc-nd"
+        assert normalise_licence("cc-by-sa-3.0").licence.key == "cc-by-sa"
+        assert normalise_licence("cc0-1.0").licence.key == "cc0"
+        assert normalise_licence("cc-by-nc-sa-4.0").licence.key == "cc-by-nc-sa"
 
     def test_non_cc_keeps_key(self):
-        assert normalise_licence("mit").license.key == "mit"
-        assert normalise_licence("gpl-3.0").license.key == "gpl-3"
+        assert normalise_licence("mit").licence.key == "mit"
+        assert normalise_licence("gpl-3.0").licence.key == "gpl-3"
 
 
 class TestHierarchyNavigation:
-    def test_version_license_family_chain(self):
+    def test_version_licence_family_chain(self):
         v = normalise_licence("CC BY-NC-ND 4.0")
         assert v.key == "cc-by-nc-nd-4.0"
-        assert v.license.key == "cc-by-nc-nd"
-        assert v.license.family.key == "cc"
+        assert v.licence.key == "cc-by-nc-nd"
+        assert v.licence.family.key == "cc"
         assert v.family.key == "cc"
 
     def test_str_representations(self):
         v = normalise_licence("CC BY-NC-ND 4.0")
         assert str(v) == "cc-by-nc-nd-4.0"
-        assert str(v.license) == "cc-by-nc-nd"
+        assert str(v.licence) == "cc-by-nc-nd"
         assert str(v.family) == "cc"
 
 
 class TestFallback:
     def test_unknown_string(self):
-        v = normalise_licence("some-totally-unknown-license-xyz")
-        assert v.key == "some-totally-unknown-license-xyz"
+        v = normalise_licence("some-totally-unknown-licence-xyz")
+        assert v.key == "some-totally-unknown-licence-xyz"
         assert v.family.key == "unknown"
 
     def test_empty_string(self):

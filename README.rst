@@ -6,7 +6,7 @@ licence-normaliser
    :alt: licence-normaliser logo
    :align: center
 
-Comprehensive license normalsation with a three-level hierarchy.
+Comprehensive licence normalsation with a three-level hierarchy.
 
 .. image:: https://img.shields.io/pypi/v/licence-normaliser.svg
    :target: https://pypi.python.org/pypi/licence-normaliser
@@ -29,15 +29,15 @@ Comprehensive license normalsation with a three-level hierarchy.
     :alt: llms.txt - documentation for LLMs
 
 .. image:: https://img.shields.io/badge/license-MIT-blue.svg
-   :target: https://github.com/barseghyanartur/licence-normaliser/#License
+   :target: https://github.com/barseghyanartur/licence-normaliser/#Licence
    :alt: MIT
 
 .. image:: https://coveralls.io/repos/github/barseghyanartur/licence-normaliser/badge.svg?branch=main&service=github
     :target: https://coveralls.io/github/barseghyanartur/licence-normaliser?branch=main
     :alt: Coverage
 
-``licence-normaliser`` is a comprehensive license normalisation library that
-maps any license representation (SPDX tokens, URLs, prose descriptions) to a
+``licence-normaliser`` is a comprehensive licence normalisation library that
+maps any licence representation (SPDX tokens, URLs, prose descriptions) to a
 canonical three-level hierarchy.
 
 Features
@@ -46,12 +46,12 @@ Features
 - **Three-level hierarchy** - LicenceFamily → LicenceName → LicenceVersion.
 - **Wide format support** - SPDX tokens, URLs, prose descriptions.
 - **Creative Commons support** - Full CC family with versions and IGO variants.
-- **Publisher-specific licenses** - Springer, Nature, Elsevier, Wiley, ACS,
+- **Publisher-specific licences** - Springer, Nature, Elsevier, Wiley, ACS,
   and more.
 - **File-driven data** - Add aliases, URLs, and patterns by editing JSON files.
   No Python code changes required for new synonyms.
 - **Pluggable parsers** - Drop in a new parser class to ingest
-  any external license registry. Parsers implement plugin interfaces
+  any external licence registry. Parsers implement plugin interfaces
   (``RegistryPlugin``, ``URLPlugin``, etc.).
 - **Strict mode** - Raise ``LicenceNotFoundError`` instead of silently
   returning ``"unknown"``.
@@ -94,8 +94,8 @@ Quick start
 
     v = normalise_licence("CC BY-NC-ND 4.0")
     str(v)                  # "cc-by-nc-nd-4.0"   ← LicenceVersion
-    str(v.license)          # "cc-by-nc-nd"       ← LicenceName
-    str(v.license.family)   # "cc"                ← LicenceFamily
+    str(v.licence)          # "cc-by-nc-nd"       ← LicenceName
+    str(v.licence.family)   # "cc"                ← LicenceFamily
 
 Strict mode
 ===========
@@ -124,7 +124,7 @@ Trace / Explain
 ===============
 
 Set ``ENABLE_LICENCE_NORMALISER_TRACE=1`` or pass ``trace=True`` to get
-resolution traces showing how the license was matched:
+resolution traces showing how the licence was matched:
 
 .. code-block:: python
     :name: test_trace
@@ -236,7 +236,7 @@ and only import the public API.
 CLI usage
 =========
 
-Normalise a single license:
+Normalise a single licence:
 
 .. code-block:: sh
 
@@ -247,7 +247,7 @@ Normalise a single license:
     # Output:
     # Key: cc-by-4.0
     # URL: https://creativecommons.org/licenses/by/4.0/
-    # License: cc-by
+    # Licence: cc-by
     # Family: cc
 
     licence-normaliser normalise --strict "totally-unknown"
@@ -286,7 +286,7 @@ To test a specific Python version:
 
     make test-env ENV=py312
 
-License
+Licence
 =======
 
 MIT
