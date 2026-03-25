@@ -46,7 +46,7 @@ class TestProsePatternMatching:
         assert v.key == "elsevier-tdm"
         assert v.family.key == "publisher-tdm"
 
-    def test_elsevier_user_license_prose(self):
+    def test_elsevier_user_licence_prose(self):
         v = normalise_licence(
             "elsevier user license applies to this open access article"
         )

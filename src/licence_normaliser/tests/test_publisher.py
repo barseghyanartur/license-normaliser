@@ -153,7 +153,7 @@ class TestPublisherUrls:
 
 
 class TestPublisherShorthand:
-    def test_elsevier_user_license(self):
+    def test_elsevier_user_licence(self):
         v = normalise_licence("elsevier user license")
         assert v.key == "elsevier-oa"
         assert v.family.key == "publisher-oa"
@@ -228,7 +228,7 @@ class TestPublisherShorthand:
         assert v.key == "aaas-author-reuse"
         assert v.family.key == "publisher-proprietary"
 
-    def test_pnas_licenses_shorthand(self):
+    def test_pnas_licences_shorthand(self):
         v = normalise_licence("pnas licenses")
         assert v.key == "pnas-licenses"
         assert v.family.key == "publisher-proprietary"

@@ -28,7 +28,7 @@ class TestNormaliseCommand:
             assert exc_info.value.code == 0
         out = capsys.readouterr().out
         assert "Key: cc-by-4.0" in out
-        assert "License: cc-by" in out
+        assert "Licence: cc-by" in out
         assert "Family: cc" in out
 
     def test_normalise_cc_url(self, capsys):

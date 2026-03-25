@@ -25,7 +25,7 @@ def _mit_version():
     return LicenceVersion(
         key="mit",
         url="https://opensource.org/licenses/MIT",
-        license=LicenceName(key="mit", family=_osi_fam()),
+        licence=LicenceName(key="mit", family=_osi_fam()),
     )
 
 
@@ -87,6 +87,6 @@ class TestLicenceVersion:
         v = LicenceVersion(
             key="unknown",
             url=None,
-            license=LicenceName(key="unknown", family=LicenceFamily(key="unknown")),
+            licence=LicenceName(key="unknown", family=LicenceFamily(key="unknown")),
         )
         assert v.url is None
