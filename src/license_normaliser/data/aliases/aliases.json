@@ -380,11 +380,10 @@
     ]
   },
   "cc-pdm": {
-    "version_key": "cc-pdm-1.0",
+    "version_key": "cc-pdm",
     "name_key": "cc-pdm",
     "family_key": "public-domain",
     "aliases": [
-      "cc-pdm",
       "cc pdm",
       "creative commons public domain"
     ]
@@ -392,10 +391,15 @@
   "cc-pdm 1.0": {
     "version_key": "cc-pdm-1.0",
     "name_key": "cc-pdm",
-    "family_key": "public-domain"
+    "family_key": "public-domain",
+    "aliases": [
+      "cc-pdm-1.0",
+      "cc pdm 1.0",
+      "cc pdm-1.0"
+    ]
   },
   "cc0": {
-    "version_key": "cc0-1.0",
+    "version_key": "cc0",
     "name_key": "cc0",
     "family_key": "cc0",
     "aliases": [
@@ -411,8 +415,8 @@
     "family_key": "cc0",
     "aliases": [
       "cc0-1.0",
-      "cc zero",
-      "cc-zero",
+      "cc zero 1.0",
+      "cc-zero 1.0",
       "cc zero 1.0",
       "creative commons zero 1.0"
     ]
