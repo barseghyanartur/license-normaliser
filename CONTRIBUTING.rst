@@ -26,8 +26,8 @@ TL;DR:
 .. code-block:: sh
 
     curl -LsSf https://astral.sh/uv/install.sh | sh  # Install uv
-    uv tool install pre-commit                        # Install pre-commit
-    pre-commit install                                # Install hooks
+    uv tool install pre-commit                       # Install pre-commit
+    pre-commit install                               # Install hooks
 
 Installing `pre-commit`_ ensures all contributions adhere to the project's
 code quality standards.
@@ -173,7 +173,6 @@ For a **new parser** (new upstream data source):
 3. Set ``is_registry_entry = False`` if the parser only contributes
    aliases/URLs/patterns (not new licence keys).
 4. Add tests.
-
 
 Releases
 --------
