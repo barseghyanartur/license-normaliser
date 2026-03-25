@@ -21,9 +21,10 @@ are used for versioning (schema follows below):
 
 0.4
 ---
-2026-03-25
+2026-03-26
 
 - Renamed project from `license-normaliser` to `licence-normaliser`.
+- Cleanup.
 
 0.3.2
 -----
