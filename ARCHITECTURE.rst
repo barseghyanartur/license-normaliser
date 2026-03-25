@@ -1,8 +1,8 @@
 ===================
- Architecture Guide
+ Architecture guide
 ===================
 
-:Version: 0.3.2
+:Version: 0.4
 :Author: Artur Barseghyan <artur.barseghyan@gmail.com>
 :Repository: https://github.com/barseghyanartur/licence-normaliser
 
@@ -18,7 +18,7 @@ canonical three-level hierarchy.  The package has **zero runtime
 dependencies** and is extensible through data files without touching
 Python code.
 
-Design Goals
+Design goals
 ------------
 
 1. **Three-level hierarchy** -- every licence maps to exactly one
@@ -33,7 +33,7 @@ Design Goals
    instead of falling back to ``"unknown"``.
 
 
-Three-Level Hierarchy
+Three-level hierarchy
 =====================
 
 The core data model lives in ``_models.py`` and is built on frozen
@@ -48,25 +48,25 @@ three objects that form a chain.
      - Class
      - Example
    * - Family
-     - ``LicenseFamily``
+     - ``LicenceFamily``
      - ``"cc"``, ``"osi"``, ``"copyleft"``, ``"publisher-tdm"``
    * - Name
-     - ``LicenseName``
+     - ``LicenceName``
      - ``"cc-by"``, ``"mit"``, ``"wiley-tdm"``
    * - Version
-     - ``LicenseVersion``
+     - ``LicenceVersion``
      - ``"cc-by-4.0"``, ``"mit"``, ``"wiley-tdm-1.1"``
 
 Class relationships
 -------------------
 
-- ``LicenseVersion`` holds a ``LicenseName`` via its ``license`` attribute.
-- ``LicenseName`` holds a ``LicenseFamily`` via its ``family`` attribute.
-- ``LicenseVersion.family`` delegates to ``license.family``.
+- ``LicenceVersion`` holds a ``LicenceName`` via its ``licence`` attribute.
+- ``LicenceName`` holds a ``LicenceFamily`` via its ``family`` attribute.
+- ``LicenceVersion.family`` delegates to ``licence.family``.
 - All three classes are **immutable** (frozen dataclasses), implement
   ``__str__``, ``__eq__``, and ``__hash__``.
 
-Resolution Pipeline
+Resolution pipeline
 ===================
 
 Normalisation happens through a **five-step pipeline** (``_normaliser.py``)
@@ -128,7 +128,7 @@ Step 2 -- Direct registry lookup
 --------------------------------
 
 ``REGISTRY`` is built from all registered parsers that set
-``is_registry_entry = True`` (the default).  Parsers contribute license
+``is_registry_entry = True`` (the default).  Parsers contribute licence
 keys from SPDX, OpenDefinition, OSI, ScanCode, and Creative Commons
 data sources.
 
@@ -163,17 +163,17 @@ Step 5 -- Fallback
 
 Always matches.  Returns the ``"unknown"`` version key with family
 ``"unknown"``.  When strict mode is disabled this is the final result;
-in strict mode a ``LicenseNotFoundError`` is raised instead.
+in strict mode a ``LicenceNotFoundError`` is raised instead.
 
 
-Plugin Architecture
+Plugin architecture
 ===================
 
-The normalisation logic lives in ``LicenseNormaliser`` (``_normaliser.py``),
+The normalisation logic lives in ``LicenceNormaliser`` (``_normaliser.py``),
 which is configured with plugin CLASSES (not instances).  Plugins are
 instantiated lazily when their data is first accessed.
 
-Plugin Interfaces
+Plugin interfaces
 -----------------
 
 Six plugin types are supported (defined in ``plugins.py``):
@@ -206,11 +206,11 @@ Six plugin types are supported (defined in ``plugins.py``):
      - ``load_prose()``
      - ``list[tuple[Pattern, str]]``: compiled patterns → version_key
 
-Parser Classes
+Parser classes
 --------------
 
 Each parser class inherits from ``BasePlugin`` plus one or more plugin
-interfaces.  Parsers contribute data to ``LicenseNormaliser``:
+interfaces.  Parsers contribute data to ``LicenceNormaliser``:
 
 .. list-table::
    :header-rows: 1
@@ -243,7 +243,7 @@ interfaces.  Parsers contribute data to ``LicenseNormaliser``:
      - Prose + BasePlugin
      - ``data/prose/prose_patterns.json`` (local-only)
 
-Default Plugins
+Default plugins
 ---------------
 
 The default plugin bundle is defined in ``defaults.py`` using lazy loading
@@ -282,18 +282,18 @@ all other publisher prefixes (``wiley-*``, ``rsc-*``, ``bmj-*``,
 ``public-domain`` → ``public-domain``, ``other-oa``, ``open-access`` →
 ``other-oa``, everything else → ``unknown``.
 
-Factory Methods
+Factory methods
 ---------------
 
-``LicenseNormaliser`` provides these factory methods:
+``LicenceNormaliser`` provides these factory methods:
 
-* ``_make(version_key)`` -- creates ``LicenseVersion`` from resolved key.
-* ``_make_unknown(raw_key)`` -- creates ``"unknown"`` ``LicenseVersion``.
+* ``_make(version_key)`` -- creates ``LicenceVersion`` from resolved key.
+* ``_make_unknown(raw_key)`` -- creates ``"unknown"`` ``LicenceVersion``.
 * ``_infer_name(key)`` -- for CC keys returns name without version (e.g.
   ``cc-by-4.0`` → ``cc-by``); non-CC keys are unchanged.
 
 
-Adding a New Parser
+Adding a new parser
 ===================
 
 1. Create ``src/licence_normaliser/parsers/my_parser.py`` implementing
@@ -335,7 +335,7 @@ Adding a New Parser
               MyParser,
           ]
 
-Extending Without Python Changes
+Extending without Python changes
 ================================
 
 Adding a new alias
@@ -384,8 +384,8 @@ Edit ``data/publishers/publishers.json`` under ``urls``:
     {
       "urls": {
         "https://example.com/license/": {
-          "version_key": "my-license",
-          "name_key": "my-license",
+          "version_key": "my-licence",
+          "name_key": "my-licence",
           "family_key": "osi"
         }
       }
@@ -400,7 +400,7 @@ Edit ``data/publishers/publishers.json`` under ``shorthand_aliases``:
 
     {
       "shorthand_aliases": {
-        "my shorthand alias": "my-license"
+        "my shorthand alias": "my-licence"
       }
     }
 
@@ -426,11 +426,11 @@ longer to avoid false positives on short strings.
 Caching
 =======
 
-The ``LicenseNormaliser`` class accepts ``cache`` and ``cache_maxsize``
+The ``LicenceNormaliser`` class accepts ``cache`` and ``cache_maxsize``
 parameters.  When enabled (default), the resolution method is wrapped with
 LRU caching.  Default size: **8192 entries**.
 
-The module-level API (``_cache.py``) delegates to ``LicenseNormaliser``
+The module-level API (``_cache.py``) delegates to ``LicenceNormaliser``
 with default plugins, providing a transparent caching layer.
 
 Input cleaning (``_clean()``)
@@ -456,38 +456,38 @@ Strict mode
 -----------
 
 * ``strict=False`` (default) -- unknown input returns ``"unknown"``
-  ``LicenseVersion``.
-* ``strict=True`` -- raises ``LicenseNotFoundError`` with ``raw`` and
+  ``LicenceVersion``.
+* ``strict=True`` -- raises ``LicenceNotFoundError`` with ``raw`` and
   ``cleaned`` attributes.
 
 
-Directory Structure
+Directory structure
 ===================
 
 ::
 
     src/licence_normaliser/
-    ├── __init__.py              # Public API exports
-    ├── _models.py               # Frozen dataclass hierarchy
-    ├── _normaliser.py           # LicenseNormaliser class with plugin-based resolution
-    ├── _cache.py                # Module-level API delegating to LicenseNormaliser
-    ├── _core.py                 # Internal resolve helpers (deprecated, kept for compat)
-    ├── plugins.py               # Plugin interfaces (BasePlugin, RegistryPlugin, etc.)
-    ├── defaults.py              # Lazy-loading default plugin bundle
-    ├── _exceptions.py           # LicenseNormalisationError, LicenseNotFoundError
+    ├── __init__.py               # Public API exports
+    ├── _models.py                # Frozen dataclass hierarchy
+    ├── _normaliser.py            # LicenceNormaliser class with plugin-based resolution
+    ├── _cache.py                 # Module-level API delegating to LicenceNormaliser
+    ├── _core.py                  # Internal resolve helpers (deprecated, kept for compat)
+    ├── plugins.py                # Plugin interfaces (BasePlugin, RegistryPlugin, etc.)
+    ├── defaults.py               # Lazy-loading default plugin bundle
+    ├── exceptions.py             # LicenceNormalisationError, LicenceNotFoundError
     ├── cli/
     │   ├── __init__.py
-    │   └── _main.py             # CLI entry point
+    │   └── _main.py              # CLI entry point
     ├── parsers/
-    │   ├── __init__.py          # Empty, for ruff
-    │   ├── spdx.py              # SPDXParser
-    │   ├── opendefinition.py    # OpenDefinitionParser
-    │   ├── osi.py               # OSIParser
+    │   ├── __init__.py           # Empty, for ruff
+    │   ├── spdx.py               # SPDXParser
+    │   ├── opendefinition.py     # OpenDefinitionParser
+    │   ├── osi.py                # OSIParser
     │   ├── scancode_licensedb.py # ScanCodeLicenseDBParser
-    │   ├── creativecommons.py   # CreativeCommonsParser
-    │   ├── prose.py             # ProseParser
-    │   ├── alias.py             # AliasParser
-    │   └── publisher.py         # PublisherParser
+    │   ├── creativecommons.py    # CreativeCommonsParser
+    │   ├── prose.py              # ProseParser
+    │   ├── alias.py              # AliasParser
+    │   └── publisher.py          # PublisherParser
     └── tests/
         ├── conftest.py
         ├── test_aliases.py
@@ -511,7 +511,7 @@ Directory Structure
     └── original/                  **DO NOT MODIFY** — upstream originals
 
 
-Coding Conventions
+Coding conventions
 ==================
 
 * Line length: **88 characters** (ruff).

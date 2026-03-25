@@ -70,9 +70,6 @@ class AliasParser(BasePlugin, AliasPlugin, FamilyPlugin, NamePlugin):
         path = Path(__file__).parent.parent / self.local_path
         return json.loads(path.read_text(encoding="utf-8"))
 
-    def parse(self) -> list[tuple[str, dict[str, Any]]]:
-        return _iter_entries(self._load_data())
-
     def load_aliases(self) -> dict[str, str]:
         aliases: dict[str, str] = {}
         for alias_key, meta in _iter_entries(self._load_data()):

@@ -1,32 +1,34 @@
-"""License data models - frozen dataclasses for the three-level hierarchy."""
+"""Licence data models - frozen dataclasses for the three-level hierarchy."""
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
 from typing import Optional
 
+from licence_normaliser._trace import _should_trace
+
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"
 __license__ = "MIT"
 __all__ = (
-    "LicenseFamily",
-    "LicenseName",
-    "LicenseVersion",
+    "LicenceFamily",
+    "LicenceName",
+    "LicenceVersion",
 )
 
 
 @dataclass(frozen=True, slots=True)
-class LicenseFamily:
+class LicenceFamily:
     key: str
 
     def __str__(self) -> str:
         return self.key
 
     def __repr__(self) -> str:
-        return f"LicenseFamily({self.key!r})"
+        return f"LicenceFamily({self.key!r})"
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, LicenseFamily):
+        if isinstance(other, LicenceFamily):
             return self.key == other.key
         if isinstance(other, str):
             return self.key == other
@@ -37,18 +39,18 @@ class LicenseFamily:
 
 
 @dataclass(frozen=True, slots=True)
-class LicenseName:
+class LicenceName:
     key: str
-    family: LicenseFamily
+    family: LicenceFamily
 
     def __str__(self) -> str:
         return self.key
 
     def __repr__(self) -> str:
-        return f"LicenseName({self.key!r}, family={self.family.key!r})"
+        return f"LicenceName({self.key!r}, family={self.family.key!r})"
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, LicenseName):
+        if isinstance(other, LicenceName):
             return self.key == other.key
         if isinstance(other, str):
             return self.key == other
@@ -59,28 +61,28 @@ class LicenseName:
 
 
 @dataclass(frozen=True, slots=True)
-class LicenseVersion:
+class LicenceVersion:
     key: str
     url: Optional[str]
-    license: LicenseName
+    licence: LicenceName
     _trace: Optional[object] = field(default=None, repr=False)
 
     @property
-    def family(self) -> LicenseFamily:
-        return self.license.family
+    def family(self) -> LicenceFamily:
+        return self.licence.family
 
     def __str__(self) -> str:
         return self.key
 
     def __repr__(self) -> str:
         return (
-            f"LicenseVersion(key={self.key!r}, "
-            f"license={self.license.key!r}, "
-            f"family={self.license.family.key!r})"
+            f"LicenceVersion(key={self.key!r}, "
+            f"licence={self.licence.key!r}, "
+            f"family={self.licence.family.key!r})"
         )
 
     def __eq__(self, other: object) -> bool:
-        if isinstance(other, LicenseVersion):
+        if isinstance(other, LicenceVersion):
             return self.key == other.key
         if isinstance(other, str):
             return self.key == other
@@ -90,16 +92,16 @@ class LicenseVersion:
         return hash(self.key)
 
     def explain(self) -> str:
-        """Return explanation of how this license was resolved.
+        """Return explanation of how this licence was resolved.
 
         Set ENABLE_LICENCE_NORMALISER_TRACE=1 to enable tracing,
-        or pass trace=True to normalise_license().
+        or pass trace=True to normalise_licence().
         """
         if self._trace is not None:
             return str(self._trace)
 
+        # Lazy import to avoid circular import: _models -> _cache -> _models
         from licence_normaliser._cache import _default
-        from licence_normaliser._trace import _should_trace
 
         if not _should_trace():
             return "Trace disabled. Set ENABLE_LICENCE_NORMALISER_TRACE=1 to enable."

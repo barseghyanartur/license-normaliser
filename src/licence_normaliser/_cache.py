@@ -1,12 +1,12 @@
-"""Caching layer + strict mode - delegates to LicenseNormaliser with defaults."""
+"""Caching layer + strict mode - delegates to LicenceNormaliser with defaults."""
 
 from __future__ import annotations
 
 from threading import Lock
 from typing import Iterable
 
-from ._models import LicenseVersion
-from ._normaliser import LicenseNormaliser
+from ._models import LicenceVersion
+from ._normaliser import LicenceNormaliser
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"
@@ -14,40 +14,40 @@ __license__ = "MIT"
 __all__ = (
     "_default",
     "get_registry_keys",
-    "normalise_license",
-    "normalise_licenses",
+    "normalise_licence",
+    "normalise_licences",
 )
 
 
 class _DefaultNormaliser:
-    """Thread-safe lazy singleton for the default LicenseNormaliser instance."""
+    """Thread-safe lazy singleton for the default LicenceNormaliser instance."""
 
-    _instance: LicenseNormaliser | None = None
+    _instance: LicenceNormaliser | None = None
     _lock: Lock = Lock()
 
-    def get(self) -> LicenseNormaliser:
+    def get(self) -> LicenceNormaliser:
         if _DefaultNormaliser._instance is None:
             with _DefaultNormaliser._lock:
                 if _DefaultNormaliser._instance is None:
-                    _DefaultNormaliser._instance = LicenseNormaliser()
+                    _DefaultNormaliser._instance = LicenceNormaliser()
         return _DefaultNormaliser._instance
 
 
 _default = _DefaultNormaliser()
 
 
-def normalise_license(
+def normalise_licence(
     raw: str, *, strict: bool = False, trace: bool | None = None
-) -> LicenseVersion:
+) -> LicenceVersion:
     """Public API with optional strict mode and trace."""
-    return _default.get().normalise_license(raw, strict=strict, trace=trace)
+    return _default.get().normalise_licence(raw, strict=strict, trace=trace)
 
 
-def normalise_licenses(
+def normalise_licences(
     raws: Iterable[str], *, strict: bool = False, trace: bool | None = None
-) -> list[LicenseVersion]:
+) -> list[LicenceVersion]:
     """Batch version with optional trace."""
-    return _default.get().normalise_licenses(raws, strict=strict, trace=trace)
+    return _default.get().normalise_licences(raws, strict=strict, trace=trace)
 
 
 def get_registry_keys() -> set[str]:

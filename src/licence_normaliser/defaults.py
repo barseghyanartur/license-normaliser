@@ -1,20 +1,16 @@
 """Default plugin configuration.
 
 These are the plugin CLASSES (not instances) that form the sane defaults.
-Pass them to LicenseNormaliser - they're instantiated lazily.
+Pass them to LicenceNormaliser - they're instantiated lazily.
 """
 
 from __future__ import annotations
-
-from collections.abc import Mapping
-from typing import Iterator
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"
 __license__ = "MIT"
 
 __all__ = (
-    "DEFAULT_PLUGINS",
     "DEFAULT_PLUGIN_KEYS",
     "get_all_refreshable_plugins",
 )
@@ -171,69 +167,3 @@ def get_default_name() -> list[type]:
 
 def get_default_prose() -> list[type]:
     return _LAZY.prose
-
-
-class _LazyPluginsBundle:
-    """Lazy-loading bundle - defers plugin loading until accessed."""
-
-    _cache: dict[str, list[type]] = {}
-
-    def _get_registry(self) -> list[type]:
-        return get_default_registry()
-
-    def _get_url(self) -> list[type]:
-        return get_default_url()
-
-    def _get_alias(self) -> list[type]:
-        return get_default_alias()
-
-    def _get_family(self) -> list[type]:
-        return get_default_family()
-
-    def _get_name(self) -> list[type]:
-        return get_default_name()
-
-    def _get_prose(self) -> list[type]:
-        return get_default_prose()
-
-    def __getitem__(self, key: str) -> list[type]:
-        if key not in self._cache:
-            fn = getattr(self, f"_get_{key}", None)
-            if fn is None:
-                raise KeyError(key)
-            self._cache[key] = fn()
-        return self._cache[key]
-
-
-_DEFAULT_PLUGINS_BUNDLE = _LazyPluginsBundle()
-
-
-class _DefaultPlugins(Mapping):
-    """Lazy dict-like accessor for default plugins."""
-
-    def __getitem__(self, key: str) -> list[type]:
-        return _DEFAULT_PLUGINS_BUNDLE[key]
-
-    def keys(self) -> tuple[str, ...]:
-        return DEFAULT_PLUGIN_KEYS
-
-    def values(self) -> list[list[type]]:
-        return [self[k] for k in self.keys()]
-
-    def items(self) -> list[tuple[str, list[type]]]:
-        return [(k, self[k]) for k in self.keys()]
-
-    def __iter__(self) -> Iterator[str]:
-        return iter(self.keys())
-
-    def __len__(self) -> int:
-        return 6
-
-    def __contains__(self, key: str) -> bool:
-        return key in self.keys()
-
-    def copy(self) -> dict:
-        return dict(self.items())
-
-
-DEFAULT_PLUGINS = _DefaultPlugins()

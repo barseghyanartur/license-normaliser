@@ -4,10 +4,10 @@ Compares SPDX, OpenDefinition, OSI, CreativeCommons, ScanCode, and
 curated data files (aliases, url_map, prose, publishers) for:
   - Dataset sizes
   - Cross-dataset overlaps
-  - Licenses present in OSI but missing from SPDX
+  - Licences present in OSI but missing from SPDX
   - Orphan alias/URL targets (don't resolve to REGISTRY entries)
   - REGISTRY entries without curated aliases
-  - Most-aliased license targets
+  - Most-aliased licence targets
 """
 
 from __future__ import annotations
@@ -151,7 +151,7 @@ def main() -> None:
 
     # --- 1. Dataset sizes ---
     section("Dataset Sizes")
-    print(f"  SPDX licenses:          {len(spdx):>6}")
+    print(f"  SPDX licences:          {len(spdx):>6}")
     print(f"  OpenDefinition entries: {len(od):>6}")
     print(f"  OSI-approved (SPDX):   {len(osi):>6}")
     print(f"  CreativeCommons:        {len(cc):>6}")
@@ -191,11 +191,11 @@ def main() -> None:
     print(f"  Unique to CC:    {len(cc - spdx - od):>6}")
     print(f"  Unique to ScanCode: {len(sc - spdx - osi - od - cc):>6}")
 
-    # --- 3. OSI licenses not in SPDX (reference integrity) ---
-    section("OSI Licenses Missing from SPDX")
+    # --- 3. OSI licences not in SPDX (reference integrity) ---
+    section("OSI Licences Missing from SPDX")
     osi_only = sorted(osi - spdx)
     if osi_only:
-        print(f"  {len(osi_only)} OSI-licensed IDs have no SPDX entry:")
+        print(f"  {len(osi_only)} OSI-licenced IDs have no SPDX entry:")
         for lid in osi_only[:20]:
             print(f"    {lid}")
         if len(osi_only) > 20:
@@ -265,7 +265,7 @@ def main() -> None:
             print(f"    {k!r}: aliases={alias_tgt[k]!r}, url_map={url_tgt[k]!r}")
 
     # --- 7. Alias target frequency (which targets have the most aliases) ---
-    section("Most-Aliased License Targets")
+    section("Most-Aliased Licence Targets")
     alias_counts = Counter(alias_tgt.values())
     url_counts = Counter(url_tgt.values())
     pub_counts = Counter(pub_aliases.values())
@@ -284,7 +284,7 @@ def main() -> None:
     section("Summary")
     distinct = len(spdx | od | osi | cc | sc)
     orphans = len(orphan_alias) + len(orphan_url) + len(orphan_pub)
-    print(f"  Distinct license IDs:          {distinct}")
+    print(f"  Distinct licence IDs:          {distinct}")
     print(f"  Curated alias entries:        {len(alias_keys)}")
     print(f"  Curated URL mappings:         {len(url_keys)}")
     print(f"  Orphan curated targets:       {orphans}")

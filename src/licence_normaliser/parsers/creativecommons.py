@@ -7,11 +7,10 @@ import re
 import urllib.request
 from html.parser import HTMLParser
 from pathlib import Path
-from typing import Any
 
 from licence_normaliser.plugins import BasePlugin, RegistryPlugin, URLPlugin
 
-CC_LICENSE_RE = re.compile(
+CC_LICENCE_RE = re.compile(
     r"^(by|by-nc|by-nc-nd|by-nc-sa|by-nd|by-sa|"
     r"zero|pdmark|devnations|"
     r"nc|nd|sa|sampling|nc-sa|sampling\+|nc-sampling\+|nd-nc)"
@@ -22,8 +21,8 @@ CC_LICENSE_RE = re.compile(
 VERSION_RE = re.compile(r"^[\d.]+$")
 
 
-def _path_to_license_key(path: str) -> str | None:
-    m = CC_LICENSE_RE.match(path)
+def _path_to_licence_key(path: str) -> str | None:
+    m = CC_LICENCE_RE.match(path)
     if not m:
         return None
     lic_type, version, igo = m.group(1), m.group(2), m.group(3)
@@ -196,7 +195,7 @@ def _scrape() -> list[dict[str, str]]:
     entries: list[dict[str, str]] = []
     seen_keys: set[str] = set()
     for href in sorted(all_deeds):
-        lic_key = _path_to_license_key(href)
+        lic_key = _path_to_licence_key(href)
         if not lic_key:
             continue
         url_path = href.rsplit("/deed.", 1)[0]
@@ -213,24 +212,6 @@ class CreativeCommonsParser(BasePlugin, RegistryPlugin, URLPlugin):
     id = "creativecommons"
     url = "https://creativecommons.org/licenses/list.en"
     local_path = "data/creativecommons/creativecommons.json"
-
-    def parse(self) -> list[tuple[str, dict[str, Any]]]:
-        path = Path(__file__).parent.parent / self.local_path
-        if not path.exists():
-            return []
-        data: list[dict[str, str]] = json.loads(path.read_text(encoding="utf-8"))
-        return [
-            (
-                entry["license_key"],
-                {
-                    "url": entry["url"],
-                    "name": entry["license_key"],
-                    "path": entry["path"],
-                },
-            )
-            for entry in data
-            if "license_key" in entry
-        ]
 
     def load_registry(self) -> dict[str, str]:
         path = Path(__file__).parent.parent / self.local_path

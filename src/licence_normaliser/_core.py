@@ -1,17 +1,17 @@
-"""License Normaliser - public orchestration shim."""
+"""Licence Normaliser - public orchestration shim."""
 
 from __future__ import annotations
 
-from ._cache import normalise_license, normalise_licenses
-from ._models import LicenseFamily, LicenseName, LicenseVersion
+from ._cache import normalise_licence, normalise_licences
+from ._models import LicenceFamily, LicenceName, LicenceVersion
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"
 __license__ = "MIT"
 __all__ = (
-    "LicenseFamily",
-    "LicenseName",
-    "LicenseVersion",
-    "normalise_license",
-    "normalise_licenses",
+    "LicenceFamily",
+    "LicenceName",
+    "LicenceVersion",
+    "normalise_licence",
+    "normalise_licences",
 )

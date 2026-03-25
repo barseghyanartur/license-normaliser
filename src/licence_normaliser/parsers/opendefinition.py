@@ -1,10 +1,9 @@
-"""OpenDefinition parser - loads opendefinition_licenses_all.json from package data."""
+"""OpenDefinition parser - loads `data/opendefinition/opendefinition.json`."""
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
 
 from licence_normaliser.plugins import BasePlugin, RegistryPlugin, URLPlugin
 
@@ -18,18 +17,6 @@ class OpenDefinitionParser(BasePlugin, RegistryPlugin, URLPlugin):
     id = "opendefinition"
     url = "https://licenses.opendefinition.org/licenses/groups/all.json"
     local_path = "data/opendefinition/opendefinition.json"
-
-    def parse(self) -> list[tuple[str, dict[str, Any]]]:
-        path = Path(__file__).parent.parent / self.local_path
-        data = json.loads(path.read_text(encoding="utf-8"))
-        results: list[tuple[str, dict[str, Any]]] = []
-        for entry in data.values():
-            if not isinstance(entry, dict):
-                continue
-            lid = entry.get("id", "")
-            url = entry.get("url", "")
-            results.append((lid, {"url": url, "title": entry.get("title", "")}))
-        return results
 
     def load_registry(self) -> dict[str, str]:
         path = Path(__file__).parent.parent / self.local_path

@@ -1,7 +1,7 @@
-"""Check which downloaded licenses are missing from curated aliases.
+"""Check which downloaded licences are missing from curated aliases.
 
 Compares all refreshable plugin registries against aliases.json to identify
-licenses that have no corresponding curated alias entry.
+licences that have no corresponding curated alias entry.
 
 Usage:
     uv run python scripts/check_missing_aliases.py
@@ -32,8 +32,8 @@ def load_alias_targets() -> set[str]:
     return targets
 
 
-def load_downloaded_licenses() -> dict[str, set[str]]:
-    """Load licenses from all refreshable plugins."""
+def load_downloaded_licences() -> dict[str, set[str]]:
+    """Load licences from all refreshable plugins."""
     from licence_normaliser.defaults import get_all_refreshable_plugins
 
     result: dict[str, set[str]] = {}
@@ -50,13 +50,13 @@ def load_downloaded_licenses() -> dict[str, set[str]]:
 
 
 def check_coverage() -> dict:
-    """Check which downloaded licenses have alias entries."""
+    """Check which downloaded licences have alias entries."""
     alias_targets = load_alias_targets()
-    downloaded = load_downloaded_licenses()
+    downloaded = load_downloaded_licences()
 
     all_downloaded: set[str] = set()
-    for licenses in downloaded.values():
-        all_downloaded.update(licenses)
+    for licences in downloaded.values():
+        all_downloaded.update(licences)
 
     # Categorize
     with_alias = all_downloaded & alias_targets
@@ -72,22 +72,22 @@ def check_coverage() -> dict:
         else 0,
         "by_source": {
             name: {
-                "total": len(licenses),
-                "with_alias": len(licenses & alias_targets),
-                "without_alias": sorted(licenses - alias_targets),
+                "total": len(licences),
+                "with_alias": len(licences & alias_targets),
+                "without_alias": sorted(licences - alias_targets),
                 "coverage": round(
-                    len(licenses & alias_targets) / len(licenses) * 100, 1
+                    len(licences & alias_targets) / len(licences) * 100, 1
                 )
-                if licenses
+                if licences
                 else 0,
             }
-            for name, licenses in downloaded.items()
+            for name, licences in downloaded.items()
         },
     }
 
 
-def group_by_prefix(licenses: list[str]) -> dict[str, list[str]]:
-    """Group licenses by common prefixes."""
+def group_by_prefix(licences: list[str]) -> dict[str, list[str]]:
+    """Group licences by common prefixes."""
     groups: dict[str, list[str]] = {}
     prefixes = [
         "gpl-",
@@ -103,13 +103,13 @@ def group_by_prefix(licenses: list[str]) -> dict[str, list[str]]:
         "isc",
     ]
     for prefix in prefixes:
-        matches = sorted([lic for lic in licenses if lic.startswith(prefix)])
+        matches = sorted([lic for lic in licences if lic.startswith(prefix)])
         if matches:
             groups[prefix.rstrip("-") or "mit"] = matches
-            licenses = [lic for lic in licenses if not lic.startswith(prefix)]
+            licences = [lic for lic in licences if not lic.startswith(prefix)]
 
-    if licenses:
-        groups["other"] = sorted(licenses)
+    if licences:
+        groups["other"] = sorted(licences)
 
     return groups
 
@@ -117,7 +117,7 @@ def group_by_prefix(licenses: list[str]) -> dict[str, list[str]]:
 def print_report(data: dict) -> None:
     """Print text table report."""
     print("=" * 70)
-    print("Coverage Report: Downloaded Licenses vs Curated Aliases")
+    print("Coverage Report: Downloaded Licences vs Curated Aliases")
     print("=" * 70)
     print()
     print(f"Total downloaded: {data['total_downloaded']}")
@@ -140,20 +140,20 @@ def print_report(data: dict) -> None:
 
     print()
     print("=" * 70)
-    print(f"Missing Aliases ({len(data['without_alias'])} licenses)")
+    print(f"Missing Aliases ({len(data['without_alias'])} licences)")
     print("=" * 70)
 
     groups = group_by_prefix(data["without_alias"].copy())
 
-    for group_name, licenses in groups.items():
+    for group_name, licences in groups.items():
         if group_name == "other":
             print()
-            print(f"All other licenses ({len(licenses)}):")
+            print(f"All other licences ({len(licences)}):")
         else:
             print()
-            print(f"{group_name.upper()} ({len(licenses)}):")
+            print(f"{group_name.upper()} ({len(licences)}):")
 
-        for lic in licenses:
+        for lic in licences:
             print(f"  {lic}")
 
     print()

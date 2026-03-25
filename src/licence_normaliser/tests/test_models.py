@@ -2,7 +2,7 @@
 
 import pytest
 
-from licence_normaliser._models import LicenseFamily, LicenseName, LicenseVersion
+from licence_normaliser._models import LicenceFamily, LicenceName, LicenceVersion
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"
@@ -10,52 +10,52 @@ __license__ = "MIT"
 
 
 def _cc_fam():
-    return LicenseFamily(key="cc")
+    return LicenceFamily(key="cc")
 
 
 def _osi_fam():
-    return LicenseFamily(key="osi")
+    return LicenceFamily(key="osi")
 
 
 def _cc_by_name():
-    return LicenseName(key="cc-by", family=_cc_fam())
+    return LicenceName(key="cc-by", family=_cc_fam())
 
 
 def _mit_version():
-    return LicenseVersion(
+    return LicenceVersion(
         key="mit",
         url="https://opensource.org/licenses/MIT",
-        license=LicenseName(key="mit", family=_osi_fam()),
+        licence=LicenceName(key="mit", family=_osi_fam()),
     )
 
 
-class TestLicenseFamily:
+class TestLicenceFamily:
     def test_str(self):
-        assert str(LicenseFamily(key="cc")) == "cc"
+        assert str(LicenceFamily(key="cc")) == "cc"
 
     def test_repr(self):
-        assert repr(LicenseFamily(key="osi")) == "LicenseFamily('osi')"
+        assert repr(LicenceFamily(key="osi")) == "LicenceFamily('osi')"
 
     def test_eq_same_type(self):
-        assert LicenseFamily(key="cc") == LicenseFamily(key="cc")
+        assert LicenceFamily(key="cc") == LicenceFamily(key="cc")
 
     def test_eq_str(self):
-        assert LicenseFamily(key="cc") == "cc"
+        assert LicenceFamily(key="cc") == "cc"
 
     def test_neq(self):
-        assert LicenseFamily(key="cc") != LicenseFamily(key="osi")
+        assert LicenceFamily(key="cc") != LicenceFamily(key="osi")
 
     def test_hash_usable_in_set(self):
-        s = {LicenseFamily(key="cc"), LicenseFamily(key="cc"), LicenseFamily(key="osi")}
+        s = {LicenceFamily(key="cc"), LicenceFamily(key="cc"), LicenceFamily(key="osi")}
         assert len(s) == 2
 
     def test_frozen_prevents_mutation(self):
-        fam = LicenseFamily(key="cc")
+        fam = LicenceFamily(key="cc")
         with pytest.raises((AttributeError, TypeError)):
             fam.key = "other"  # type: ignore
 
 
-class TestLicenseName:
+class TestLicenceName:
     def test_str(self):
         assert str(_cc_by_name()) == "cc-by"
 
@@ -68,7 +68,7 @@ class TestLicenseName:
         assert _cc_by_name().family.key == "cc"
 
 
-class TestLicenseVersion:
+class TestLicenceVersion:
     def test_str(self):
         assert str(_mit_version()) == "mit"
 
@@ -84,9 +84,57 @@ class TestLicenseVersion:
         assert _mit_version().url == "https://opensource.org/licenses/MIT"
 
     def test_url_none(self):
-        v = LicenseVersion(
+        v = LicenceVersion(
             key="unknown",
             url=None,
-            license=LicenseName(key="unknown", family=LicenseFamily(key="unknown")),
+            licence=LicenceName(key="unknown", family=LicenceFamily(key="unknown")),
         )
         assert v.url is None
+
+
+class TestLicenceVersionEquality:
+    def test_eq_same_key(self):
+        v1 = _mit_version()
+        v2 = LicenceVersion(
+            key="mit",
+            url=None,
+            licence=LicenceName(key="mit", family=LicenceFamily(key="osi")),
+        )
+        assert v1 == v2
+
+    def test_eq_string(self):
+        v = _mit_version()
+        assert v == "mit"
+
+    def test_neq_different_key(self):
+        v1 = _mit_version()
+        v2 = LicenceVersion(
+            key="apache-2.0",
+            url=None,
+            licence=LicenceName(key="apache", family=LicenceFamily(key="osi")),
+        )
+        assert v1 != v2
+
+    def test_eq_other_type_returns_notimplemented(self):
+        v = _mit_version()
+        result = v.__eq__(123)
+        assert result == NotImplemented
+
+    def test_hash_same_key(self):
+        v1 = _mit_version()
+        v2 = LicenceVersion(
+            key="mit",
+            url="different-url",
+            licence=LicenceName(key="mit", family=LicenceFamily(key="osi")),
+        )
+        assert hash(v1) == hash(v2)
+
+    def test_hash_usable_in_set(self):
+        v1 = _mit_version()
+        v2 = LicenceVersion(
+            key="mit",
+            url=None,
+            licence=LicenceName(key="mit", family=LicenceFamily(key="osi")),
+        )
+        s = {v1, v2}
+        assert len(s) == 1

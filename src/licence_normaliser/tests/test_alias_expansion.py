@@ -12,8 +12,8 @@ from __future__ import annotations
 
 import pytest
 
-from licence_normaliser import normalise_license
-from licence_normaliser.exceptions import LicenseNotFoundError
+from licence_normaliser import normalise_licence
+from licence_normaliser.exceptions import LicenceNotFoundError
 from licence_normaliser.parsers.alias import _iter_entries
 
 # ---------------------------------------------------------------------------
@@ -112,17 +112,17 @@ class TestCCHyphenForms:
     def test_hyphen_form_resolves(
         self, raw, expected_key, expected_name, expected_family
     ):
-        v = normalise_license(raw, strict=True)
+        v = normalise_licence(raw, strict=True)
         assert v.key == expected_key, f"{raw!r}: key {v.key!r} != {expected_key!r}"
-        assert v.license.key == expected_name
+        assert v.licence.key == expected_name
         assert v.family.key == expected_family
 
     def test_cc_by_nc_strict_does_not_raise(self):
-        v = normalise_license("cc-by-nc", strict=True)
+        v = normalise_licence("cc-by-nc", strict=True)
         assert v.key == "cc-by-nc"
 
     def test_cc_by_nc_nd_strict_does_not_raise(self):
-        v = normalise_license("cc-by-nc-nd", strict=True)
+        v = normalise_licence("cc-by-nc-nd", strict=True)
         assert v.key == "cc-by-nc-nd"
 
 
@@ -150,7 +150,7 @@ class TestCCSpaceVariants:
         ],
     )
     def test_space_variant_resolves(self, raw, expected_key):
-        v = normalise_license(raw, strict=True)
+        v = normalise_licence(raw, strict=True)
         assert v.key == expected_key, f"{raw!r}: got {v.key!r}, want {expected_key!r}"
 
 
@@ -177,21 +177,21 @@ class TestGPLShorthands:
     def test_gpl_shorthand_resolves(
         self, raw, expected_key, expected_name, expected_family
     ):
-        v = normalise_license(raw, strict=True)
+        v = normalise_licence(raw, strict=True)
         assert v.key == expected_key, f"{raw!r}: key {v.key!r} != {expected_key!r}"
-        assert v.license.key == expected_name
+        assert v.licence.key == expected_name
         assert v.family.key == expected_family
 
     def test_gpl_2_strict_no_raise(self):
-        v = normalise_license("gpl-2", strict=True)
+        v = normalise_licence("gpl-2", strict=True)
         assert v.key == "gpl-2.0"
 
     def test_gpl_3_strict_no_raise(self):
-        v = normalise_license("gpl-3", strict=True)
+        v = normalise_licence("gpl-3", strict=True)
         assert v.key == "gpl-3.0"
 
     def test_gpl_v3_strict_no_raise(self):
-        v = normalise_license("gpl-v3", strict=True)
+        v = normalise_licence("gpl-v3", strict=True)
         assert v.key == "gpl-3.0"
 
 
@@ -229,10 +229,10 @@ SCRIPT_INPUTS = [
 )
 def test_script_inputs_all_resolve(raw, expected_key, expected_name, expected_family):
     """Every input from the bug-report script should now resolve in strict mode."""
-    v = normalise_license(raw, strict=True)
+    v = normalise_licence(raw, strict=True)
     assert v.key == expected_key, f"{raw!r}: key {v.key!r} != {expected_key!r}"
-    assert v.license.key == expected_name, (
-        f"{raw!r}: name {v.license.key!r} != {expected_name!r}"
+    assert v.licence.key == expected_name, (
+        f"{raw!r}: name {v.licence.key!r} != {expected_name!r}"
     )
     assert v.family.key == expected_family, (
         f"{raw!r}: family {v.family.key!r} != {expected_family!r}"
@@ -240,9 +240,9 @@ def test_script_inputs_all_resolve(raw, expected_key, expected_name, expected_fa
 
 
 def test_false_still_fails():
-    """'false' is not a license and must remain unresolvable in strict mode."""
-    with pytest.raises(LicenseNotFoundError):
-        normalise_license("false", strict=True)
+    """'false' is not a licence and must remain unresolvable in strict mode."""
+    with pytest.raises(LicenceNotFoundError):
+        normalise_licence("false", strict=True)
 
 
 # ---------------------------------------------------------------------------
@@ -252,25 +252,25 @@ def test_false_still_fails():
 
 class TestExistingAliasesNotBroken:
     def test_cc_by_4_0(self):
-        assert normalise_license("CC BY 4.0").key == "cc-by-4.0"
+        assert normalise_licence("CC BY 4.0").key == "cc-by-4.0"
 
     def test_cc_by_nc_4_0(self):
-        assert normalise_license("CC BY-NC 4.0").key == "cc-by-nc-4.0"
+        assert normalise_licence("CC BY-NC 4.0").key == "cc-by-nc-4.0"
 
     def test_cc_by_nc_nd_4_0(self):
-        assert normalise_license("CC BY-NC-ND 4.0").key == "cc-by-nc-nd-4.0"
+        assert normalise_licence("CC BY-NC-ND 4.0").key == "cc-by-nc-nd-4.0"
 
     def test_gpl_3_0(self):
-        assert normalise_license("gpl-3.0").key == "gpl-3.0"
+        assert normalise_licence("gpl-3.0").key == "gpl-3.0"
 
     def test_gpl_2_0(self):
-        assert normalise_license("gpl-2.0").key == "gpl-2.0"
+        assert normalise_licence("gpl-2.0").key == "gpl-2.0"
 
     def test_mit(self):
-        assert normalise_license("MIT").key == "mit"
+        assert normalise_licence("MIT").key == "mit"
 
     def test_apache(self):
-        assert normalise_license("Apache-2.0").key == "apache-2.0"
+        assert normalise_licence("Apache-2.0").key == "apache-2.0"
 
     def test_public_domain(self):
-        assert normalise_license("public domain").key == "public-domain"
+        assert normalise_licence("public domain").key == "public-domain"

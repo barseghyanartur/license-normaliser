@@ -1,4 +1,4 @@
-"""Plugin-based LicenseNormaliser class with configurable constructor injection."""
+"""Plugin-based LicenceNormaliser class with configurable constructor injection."""
 
 from __future__ import annotations
 
@@ -16,20 +16,24 @@ from licence_normaliser.defaults import (
 )
 
 if TYPE_CHECKING:
-    from licence_normaliser._models import LicenseVersion
-    from licence_normaliser._trace import LicenseTrace
+    from licence_normaliser._models import LicenceVersion
+    from licence_normaliser._trace import LicenceTrace
+
+from licence_normaliser._models import LicenceFamily, LicenceName, LicenceVersion
+from licence_normaliser._trace import LicenceTrace, LicenceTraceStage, _should_trace
+from licence_normaliser.exceptions import LicenceNotFoundError
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"
 __license__ = "MIT"
-__all__ = ("LicenseNormaliser",)
+__all__ = ("LicenceNormaliser",)
 
 _WHITESPACE_RE = re.compile(r"\s+")
 _MAX_INPUT = 4096
 
 
-class LicenseNormaliser:
-    """Configurable license normalisation with plugin-based data sources.
+class LicenceNormaliser:
+    """Configurable licence normalisation with plugin-based data sources.
 
     Plugins are passed as CLASSES (not instances). They're instantiated lazily
     when their load_* method is called.
@@ -53,27 +57,27 @@ class LicenseNormaliser:
         Trace can be enabled at three levels (precedence: method >
         constructor > env var):
 
-        - **Constructor**: ``LicenseNormaliser(trace=True)`` - all calls get trace
-        - **Method**: ``ln.normalise_license("MIT", trace=True)`` - this call only
+        - **Constructor**: ``LicenceNormaliser(trace=True)`` - all calls get trace
+        - **Method**: ``ln.normalise_licence("MIT", trace=True)`` - this call only
         - **Environment**: ``ENABLE_LICENCE_NORMALISER_TRACE=1`` - applies globally
 
     Example::
 
-        from licence_normaliser import LicenseNormaliser
+        from licence_normaliser import LicenceNormaliser
 
         # Uses all defaults automatically
-        ln = LicenseNormaliser()
+        ln = LicenceNormaliser()
 
         # Disable caching for debugging
-        ln = LicenseNormaliser(cache=False)
+        ln = LicenceNormaliser(cache=False)
 
         # Enable trace for all calls on this instance
-        ln = LicenseNormaliser(trace=True)
-        v = ln.normalise_license("MIT")
+        ln = LicenceNormaliser(trace=True)
+        v = ln.normalise_licence("MIT")
         print(v.explain())  # Shows resolution path with source lines
 
         # Or enable trace for a single call
-        v = ln.normalise_license("MIT", trace=True)
+        v = ln.normalise_licence("MIT", trace=True)
     """
 
     def __init__(
@@ -127,7 +131,7 @@ class LicenseNormaliser:
             data = plugin_cls().load_urls()
             self._url_map.update(data)
 
-        # Build inverted URL map: version_key -> cleaned_url (for LicenseVersion.url)
+        # Build inverted URL map: version_key -> cleaned_url (for LicenceVersion.url)
         self._url_to_vkey = {v: k for k, v in self._url_map.items()}
 
         for plugin_cls in alias:
@@ -154,8 +158,6 @@ class LicenseNormaliser:
 
     def _get_trace_mode(self, trace: bool | None) -> bool:
         """Determine if tracing is enabled: explicit > env var > default."""
-        from licence_normaliser._trace import _should_trace
-
         if trace is not None:
             return trace
         if self._trace_default is not None:
@@ -202,16 +204,15 @@ class LicenseNormaliser:
 
     def _resolve_with_trace(
         self, raw: str, cleaned: str, strict: bool
-    ) -> LicenseVersion:
+    ) -> LicenceVersion:
         """Resolve with full pipeline tracing."""
-        from licence_normaliser._trace import LicenseTrace, LicenseTraceStage
 
         # Lazy load alias lines on first trace call
         if not self._alias_lines_loaded:
             self._load_alias_lines()
             self._alias_lines_loaded = True
 
-        stages: list[LicenseTraceStage] = []
+        stages: list[LicenceTraceStage] = []
 
         # 1. Alias lookup
         if cleaned in self._aliases:
@@ -222,39 +223,39 @@ class LicenseNormaliser:
                 _, source_line = self._alias_lines[cleaned]
                 source_file = "aliases.json"
             stages.append(
-                LicenseTraceStage(
+                LicenceTraceStage(
                     "alias", cleaned, output, True, source_line, source_file
                 )
             )
             v = self._make(output)
-            trace = LicenseTrace(
+            trace = LicenceTrace(
                 raw,
                 cleaned,
                 stages,
                 version_key=v.key,
-                name_key=v.license.key,
+                name_key=v.licence.key,
                 family_key=v.family.key,
             )
             return self._make_with_trace(v, trace)
 
-        stages.append(LicenseTraceStage("alias", cleaned, "", False))
+        stages.append(LicenceTraceStage("alias", cleaned, "", False))
 
         # 2. Registry lookup
         if cleaned in self._registry:
             canonical = self._registry[cleaned]
-            stages.append(LicenseTraceStage("registry", cleaned, canonical, True))
+            stages.append(LicenceTraceStage("registry", cleaned, canonical, True))
             v = self._make(canonical)
-            trace = LicenseTrace(
+            trace = LicenceTrace(
                 raw,
                 cleaned,
                 stages,
                 version_key=v.key,
-                name_key=v.license.key,
+                name_key=v.licence.key,
                 family_key=v.family.key,
             )
             return self._make_with_trace(v, trace)
 
-        stages.append(LicenseTraceStage("registry", cleaned, "", False))
+        stages.append(LicenceTraceStage("registry", cleaned, "", False))
 
         # 3. URL lookup
         url_key = self._normalise_url(cleaned)
@@ -266,22 +267,22 @@ class LicenseNormaliser:
                 _, source_line = self._publisher_url_lines[url_key]
                 source_file = "publishers.json"
             stages.append(
-                LicenseTraceStage(
+                LicenceTraceStage(
                     "url", url_key, resolved, True, source_line, source_file
                 )
             )
             v = self._make(resolved)
-            trace = LicenseTrace(
+            trace = LicenceTrace(
                 raw,
                 cleaned,
                 stages,
                 version_key=v.key,
-                name_key=v.license.key,
+                name_key=v.licence.key,
                 family_key=v.family.key,
             )
             return self._make_with_trace(v, trace)
 
-        stages.append(LicenseTraceStage("url", cleaned, "", False))
+        stages.append(LicenceTraceStage("url", cleaned, "", False))
 
         # 4. Prose matching (only for longer strings)
         if len(cleaned) >= 20:
@@ -292,46 +293,46 @@ class LicenseNormaliser:
                     if self._prose_lines and i < len(self._prose_lines):
                         _, _, source_line = self._prose_lines[i]
                     stages.append(
-                        LicenseTraceStage(
+                        LicenceTraceStage(
                             "prose", cleaned, vkey, True, source_line, source_file
                         )
                     )
                     v = self._make(vkey)
-                    trace = LicenseTrace(
+                    trace = LicenceTrace(
                         raw,
                         cleaned,
                         stages,
                         version_key=v.key,
-                        name_key=v.license.key,
+                        name_key=v.licence.key,
                         family_key=v.family.key,
                     )
                     return self._make_with_trace(v, trace)
 
-        stages.append(LicenseTraceStage("prose", cleaned, "", False))
+        stages.append(LicenceTraceStage("prose", cleaned, "", False))
 
         # 5. Fallback to unknown
-        stages.append(LicenseTraceStage("fallback", cleaned, cleaned, True))
+        stages.append(LicenceTraceStage("fallback", cleaned, cleaned, True))
         v = self._make_unknown(cleaned)
-        trace = LicenseTrace(
+        trace = LicenceTrace(
             raw,
             cleaned,
             stages,
             version_key=v.key,
-            name_key=v.license.key,
+            name_key=v.licence.key,
             family_key=v.family.key,
         )
         return self._make_with_trace(v, trace)
 
     def _make_with_trace(
-        self, v: LicenseVersion, trace: LicenseTrace
-    ) -> LicenseVersion:
-        """Create a LicenseVersion with trace attached."""
+        self, v: LicenceVersion, trace: LicenceTrace
+    ) -> LicenceVersion:
+        """Create a LicenceVersion with trace attached."""
 
         # Reconstruct with trace using object.__setattr__ (frozen dataclass)
         object.__setattr__(v, "_trace", trace)
         return v
 
-    def _resolve_impl(self, cleaned: str) -> LicenseVersion:
+    def _resolve_impl(self, cleaned: str) -> LicenceVersion:
         # 1. Alias lookup
         if cleaned in self._aliases:
             return self._make(self._aliases[cleaned])
@@ -355,43 +356,39 @@ class LicenseNormaliser:
         # 5. Fallback to unknown
         return self._make_unknown(cleaned)
 
-    def normalise_license(
+    def normalise_licence(
         self, raw: str, *, strict: bool = False, trace: bool | None = None
-    ) -> LicenseVersion:
-        """Normalise a single license string.
+    ) -> LicenceVersion:
+        """Normalise a single licence string.
 
         Args:
-            raw: The raw license string, SPDX ID, URL, or prose description.
-            strict: If True, raises ``LicenseNotFoundError`` when the input
-                cannot be resolved to a known license.
+            raw: The raw licence string, SPDX ID, URL, or prose description.
+            strict: If True, raises ``LicenceNotFoundError`` when the input
+                cannot be resolved to a known licence.
             trace: If True, include resolution trace showing which pipeline
                 stage matched and source file/line. If None, uses the instance
                 default (``trace`` param from constructor) or falls back to
                 ``ENABLE_LICENCE_NORMALISER_TRACE`` env var.
 
         Returns:
-            A ``LicenseVersion`` with the resolved key, license name, and family.
+            A ``LicenceVersion`` with the resolved key, licence name, and family.
 
         Raises:
-            LicenseNotFoundError: When ``strict=True`` and resolution fails.
+            LicenceNotFoundError: When ``strict=True`` and resolution fails.
         """
-        from licence_normaliser.exceptions import LicenseNotFoundError
-
         do_trace = self._get_trace_mode(trace)
 
         if not raw or not raw.strip():
             cleaned = "unknown"
             v = self._make_unknown(cleaned)
             if do_trace:
-                from licence_normaliser._trace import LicenseTrace, LicenseTraceStage
-
-                stages = [LicenseTraceStage("fallback", cleaned, cleaned, True)]
-                trace_obj = LicenseTrace(
+                stages = [LicenceTraceStage("fallback", cleaned, cleaned, True)]
+                trace_obj = LicenceTrace(
                     raw,
                     cleaned,
                     stages,
                     version_key=v.key,
-                    name_key=v.license.key,
+                    name_key=v.licence.key,
                     family_key=v.family.key,
                 )
                 v = self._make_with_trace(v, trace_obj)
@@ -403,23 +400,21 @@ class LicenseNormaliser:
                 v = self._resolve_impl(cleaned)
 
         if strict and v.family.key == "unknown":
-            raise LicenseNotFoundError(raw, v.key) from None
+            raise LicenceNotFoundError(raw, v.key) from None
         return v
 
-    def normalise_licenses(
+    def normalise_licences(
         self, raws: Iterable[str], *, strict: bool = False, trace: bool | None = None
-    ) -> list[LicenseVersion]:
+    ) -> list[LicenceVersion]:
         """Batch normalisation.
 
         When ``strict=True``, raises on the first failure.
         """
-        from licence_normaliser.exceptions import LicenseNotFoundError
-
-        results: list[LicenseVersion] = []
+        results: list[LicenceVersion] = []
         for raw in raws:
-            v = self.normalise_license(raw, strict=False, trace=trace)
+            v = self.normalise_licence(raw, strict=False, trace=trace)
             if strict and v.family.key == "unknown":
-                raise LicenseNotFoundError(raw, v.key) from None
+                raise LicenceNotFoundError(raw, v.key) from None
             results.append(v)
         return results
 
@@ -427,14 +422,8 @@ class LicenseNormaliser:
         """Return the set of all known registry keys."""
         return set(self._registry.keys())
 
-    def _make(self, key: str) -> LicenseVersion:
-        """Factory: build a LicenseVersion from a resolved version_key."""
-        from licence_normaliser._models import (
-            LicenseFamily,
-            LicenseName,
-            LicenseVersion,
-        )
-
+    def _make(self, key: str) -> LicenceVersion:
+        """Factory: build a LicenceVersion from a resolved version_key."""
         k = key.lower().strip()
 
         # Get canonical key from registry
@@ -444,11 +433,11 @@ class LicenseNormaliser:
         url = self._url_to_vkey.get(canonical) or self._url_to_vkey.get(k)
 
         # Infer name:
-        # - For CC licenses, use override only if it's different from canonical
+        # - For CC licences, use override only if it's different from canonical
         # - For non-CC (GPL, AGPL, OSI, etc.), always return canonical (no stripping)
         override_name = self._name_overrides.get(canonical)
         if canonical.startswith("cc-") or canonical.startswith("cc0"):
-            # CC licenses: use override if present, otherwise fallback to _infer_name
+            # CC licences: use override if present, otherwise fallback to _infer_name
             name_key = override_name if override_name else self._infer_name(canonical)
         else:
             # Non-CC: use override if present and different, otherwise canonical
@@ -466,21 +455,15 @@ class LicenseNormaliser:
             else self._infer_family(canonical)
         )
 
-        family = LicenseFamily(key=family_key)
-        name = LicenseName(key=name_key, family=family)
-        return LicenseVersion(key=canonical, url=url, license=name)
+        family = LicenceFamily(key=family_key)
+        name = LicenceName(key=name_key, family=family)
+        return LicenceVersion(key=canonical, url=url, licence=name)
 
-    def _make_unknown(self, key: str) -> LicenseVersion:
-        """Factory: build an unknown LicenseVersion for unresolved input."""
-        from licence_normaliser._models import (
-            LicenseFamily,
-            LicenseName,
-            LicenseVersion,
-        )
-
-        family = LicenseFamily(key="unknown")
-        name = LicenseName(key=key, family=family)
-        return LicenseVersion(key=key, url=None, license=name)
+    def _make_unknown(self, key: str) -> LicenceVersion:
+        """Factory: build an unknown LicenceVersion for unresolved input."""
+        family = LicenceFamily(key="unknown")
+        name = LicenceName(key=key, family=family)
+        return LicenceVersion(key=key, url=None, licence=name)
 
     def _infer_family(self, key: str) -> str:
         """Fallback family inference - only used if no plugin provides it."""
@@ -564,7 +547,7 @@ class LicenseNormaliser:
                 if part.replace(".", "").isdigit():
                     return "-".join(parts[:i])
             return "-".join(parts[:2])
-        # For all other licenses (GPL, AGPL, OSI, etc.), keep the key as-is
+        # For all other licences (GPL, AGPL, OSI, etc.), keep the key as-is
         return k
 
     @staticmethod

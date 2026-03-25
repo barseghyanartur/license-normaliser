@@ -1,15 +1,15 @@
-"""licence-normaliser CLI - license normalisation from the command line."""
+"""licence-normaliser CLI - licence normalisation from the command line."""
 
 import argparse
 import sys
 from pathlib import Path
 
-from licence_normaliser import __version__, normalise_license
+from licence_normaliser import __version__, normalise_licence
 from licence_normaliser._trace import _should_trace
 from licence_normaliser.defaults import get_all_refreshable_plugins
 from licence_normaliser.exceptions import (
-    LicenseNormalisationError,
-    LicenseNotFoundError,
+    LicenceNormalisationError,
+    LicenceNotFoundError,
 )
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
@@ -21,7 +21,7 @@ __all__ = ("main",)
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="licence-normaliser",
-        description="Comprehensive license normalisation - three-level hierarchy.",
+        description="Comprehensive licence normalisation - three-level hierarchy.",
     )
     parser.add_argument(
         "--version",
@@ -31,14 +31,14 @@ def _build_parser() -> argparse.ArgumentParser:
 
     sub = parser.add_subparsers(dest="command", required=True)
 
-    norm = sub.add_parser("normalise", help="Normalise a license string.")
-    norm.add_argument("license", help="License string to normalise.")
+    norm = sub.add_parser("normalise", help="Normalise a licence string.")
+    norm.add_argument("licence", help="Licence string to normalise.")
     norm.add_argument("--full", action="store_true")
     norm.add_argument("--strict", action="store_true")
     norm.add_argument("--trace", action="store_true", help="Show resolution trace.")
 
-    batch = sub.add_parser("batch", help="Normalise multiple license strings.")
-    batch.add_argument("licenses", nargs="+")
+    batch = sub.add_parser("batch", help="Normalise multiple licence strings.")
+    batch.add_argument("licences", nargs="+")
     batch.add_argument("--strict", action="store_true")
     batch.add_argument(
         "--trace", action="store_true", help="Show resolution trace for each."
@@ -66,20 +66,20 @@ def _build_parser() -> argparse.ArgumentParser:
 def _cmd_normalise(args: argparse.Namespace) -> int:
     try:
         trace = args.trace or _should_trace()
-        result = normalise_license(args.license, strict=args.strict, trace=trace)
+        result = normalise_licence(args.licence, strict=args.strict, trace=trace)
         if trace:
             print(result.explain())
         elif args.full:
             print(f"Key: {result.key}")
             print(f"URL: {result.url or '(none)'}")
-            print(f"License: {result.license}")
+            print(f"Licence: {result.licence}")
             print(f"Family: {result.family}")
         else:
             print(result.key)
-    except LicenseNotFoundError as exc:
+    except LicenceNotFoundError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
-    except LicenseNormalisationError as exc:
+    except LicenceNormalisationError as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 1
     return 0
@@ -89,24 +89,24 @@ def _cmd_batch(args: argparse.Namespace) -> int:
     trace = args.trace or _should_trace()
     if args.strict:
         try:
-            for license_str in args.licenses:
-                result = normalise_license(license_str, strict=True, trace=trace)
+            for licence_str in args.licences:
+                result = normalise_licence(licence_str, strict=True, trace=trace)
                 if trace:
-                    print(f"{license_str}:")
+                    print(f"{licence_str}:")
                     print(result.explain())
                 else:
-                    print(f"{license_str}: {result.key}")
-        except LicenseNotFoundError as exc:
+                    print(f"{licence_str}: {result.key}")
+        except LicenceNotFoundError as exc:
             print(f"error: {exc}", file=sys.stderr)
             return 1
     else:
-        for license_str in args.licenses:
-            result = normalise_license(license_str, strict=False, trace=trace)
+        for licence_str in args.licences:
+            result = normalise_licence(licence_str, strict=False, trace=trace)
             if trace:
-                print(f"{license_str}:")
+                print(f"{licence_str}:")
                 print(result.explain())
             else:
-                print(f"{license_str}: {result.key}")
+                print(f"{licence_str}: {result.key}")
     return 0
 
 

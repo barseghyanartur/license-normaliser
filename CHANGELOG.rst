@@ -19,6 +19,13 @@ are used for versioning (schema follows below):
   0.3.4 to 0.4).
 - All backwards incompatible changes are mentioned in this document.
 
+0.4
+---
+2026-03-26
+
+- Renamed project from `license-normaliser` to `licence-normaliser`.
+- Cleanup.
+
 0.3.2
 -----
 2026-03-25
@@ -37,7 +44,7 @@ are used for versioning (schema follows below):
 ---
 2026-03-23
 
-- **Plugin-based architecture** — `LicenseNormaliser` class accepts plugin
+- **Plugin-based architecture** — `LicenceNormaliser` class accepts plugin
   CLASSES (not instances) with lazy loading; replaces old module-level globals.
 - **6 plugin interfaces** — `BasePlugin`, `RegistryPlugin`, `URLPlugin`,
   `AliasPlugin`, `FamilyPlugin`, `NamePlugin`, `ProsePlugin`.
@@ -45,11 +52,11 @@ are used for versioning (schema follows below):
   upstream URLs; CLI uses parser IDs (`spdx`, `opendefinition`, etc.) instead
   of class names.
 - **Thread-safe singleton** — `_DefaultNormaliser` class with double-checked
-  locking protects the shared `LicenseNormaliser` instance.
-- **Public `registry_keys()`** — `LicenseNormaliser.registry_keys()` exposes
+  locking protects the shared `LicenceNormaliser` instance.
+- **Public `registry_keys()`** — `LicenceNormaliser.registry_keys()` exposes
   known keys; `get_registry_keys()` in `_cache.py` uses it.
 - **URL population fix** — inverted URL map (`version_key → cleaned_url`)
-  ensures `LicenseVersion.url` is populated for resolved licenses.
+  ensures `LicenceVersion.url` is populated for resolved licences.
 - **Removed dead code** — deleted `_registry.py`, `parsers/base.py`,
   `parsers/__init__.py`, and empty `DEFAULT_*` module globals.
 - **Docs updated** — ARCHITECTURE.rst, AGENTS.md, README.rst rewritten to
@@ -61,12 +68,12 @@ are used for versioning (schema follows below):
 
 - **Architecture rewrite** — parser-based pluggable system with 8 parsers
   loading from JSON data files.
-- **3-level hierarchy** — `LicenseFamily → LicenseName → LicenseVersion`
+- **3-level hierarchy** — `LicenceFamily → LicenceName → LicenceVersion`
   with 11 families including publisher OA/TDM.
 - **New data files** — 170+ aliases, 41 prose patterns, 50+ publisher
   URLs (Elsevier, Wiley, Springer, ACS, etc.).
-- **Strict mode** — `strict=True` raises `LicenseNotFoundError` on unknown
-  licenses.
+- **Strict mode** — `strict=True` raises `LicenceNotFoundError` on unknown
+  licences.
 - **Bug fixes** — `cc-pdm`/`cc0` family inference, `gpl-3.0+` `+`-suffix
   stripping, false-positive prose pattern removed, ALIASES-before-REGISTRY
   lookup order.

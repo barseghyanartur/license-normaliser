@@ -18,16 +18,6 @@ class PublisherParser(BasePlugin, AliasPlugin, URLPlugin):
     url = None
     local_path = "data/publishers/publishers.json"
 
-    def parse(self) -> list[tuple[str, dict[str, Any]]]:
-        path = Path(__file__).parent.parent / self.local_path
-        data: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))
-        results: list[tuple[str, dict[str, Any]]] = []
-        urls: dict[str, dict[str, str]] = data.get("urls", {})
-        for url, meta in urls.items():
-            if isinstance(meta, dict):
-                results.append((url, meta))
-        return results
-
     def load_aliases(self) -> dict[str, str]:
         path = Path(__file__).parent.parent / self.local_path
         data: dict[str, Any] = json.loads(path.read_text(encoding="utf-8"))

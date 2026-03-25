@@ -1,4 +1,4 @@
-"""License trace and explanation support."""
+"""Licence trace and explanation support."""
 
 from __future__ import annotations
 
@@ -9,17 +9,14 @@ __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"
 __license__ = "MIT"
 __all__ = (
-    "TRACE_STAGES",
-    "LicenseTrace",
-    "LicenseTraceStage",
+    "LicenceTrace",
+    "LicenceTraceStage",
 )
-
-TRACE_STAGES = ("alias", "registry", "url", "prose", "fallback")
 
 
 @dataclass
-class LicenseTraceStage:
-    """Single stage in the license resolution pipeline."""
+class LicenceTraceStage:
+    """Single stage in the licence resolution pipeline."""
 
     stage: str
     input: str
@@ -30,12 +27,12 @@ class LicenseTraceStage:
 
 
 @dataclass
-class LicenseTrace:
-    """Complete trace of license resolution pipeline."""
+class LicenceTrace:
+    """Complete trace of licence resolution pipeline."""
 
     raw_input: str
     cleaned_input: str
-    stages: list[LicenseTraceStage] = field(default_factory=list)
+    stages: list[LicenceTraceStage] = field(default_factory=list)
     version_key: str = ""
     name_key: str = ""
     family_key: str = ""

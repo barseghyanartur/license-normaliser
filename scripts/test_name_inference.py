@@ -16,12 +16,12 @@ import json
 import sys
 from pathlib import Path
 
-from licence_normaliser import LicenseNormaliser
+from licence_normaliser import LicenceNormaliser
 
 DATA_DIR = Path(__file__).parent.parent / "src" / "licence_normaliser" / "data"
 SCRIPTS_DIR = Path(__file__).parent
 
-_normaliser = LicenseNormaliser()
+_normaliser = LicenceNormaliser()
 
 
 def load_name_mappings() -> dict[str, str]:
@@ -39,12 +39,12 @@ def load_name_mappings() -> dict[str, str]:
 
 
 def infer_name_heuristic(version_key: str) -> str:
-    """Delegate to the core LicenseNormaliser's _infer_name method."""
+    """Delegate to the core LicenceNormaliser's _infer_name method."""
     return _normaliser._infer_name(version_key)
 
 
 def categorize_by_family(mappings: dict[str, str]) -> dict[str, dict[str, str]]:
-    """Categorize licenses by inferred family."""
+    """Categorize licences by inferred family."""
     categories: dict[str, dict[str, str]] = {
         "cc": {},  # Creative Commons
         "copyleft": {},  # GPL/AGPL/LGPL

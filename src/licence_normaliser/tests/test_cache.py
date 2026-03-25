@@ -8,10 +8,10 @@ from concurrent.futures import ThreadPoolExecutor
 from licence_normaliser._cache import (
     _DefaultNormaliser,
     get_registry_keys,
-    normalise_license,
-    normalise_licenses,
+    normalise_licence,
+    normalise_licences,
 )
-from licence_normaliser._normaliser import LicenseNormaliser
+from licence_normaliser._normaliser import LicenceNormaliser
 
 
 class TestDefaultNormaliserSingleton:
@@ -23,7 +23,7 @@ class TestDefaultNormaliserSingleton:
     def test_get_returns_licence_normaliser(self) -> None:
         d = _DefaultNormaliser()
         instance = d.get()
-        assert isinstance(instance, LicenseNormaliser)
+        assert isinstance(instance, LicenceNormaliser)
 
     def test_thread_safety_same_instance(self) -> None:
         results: list[object | None] = [None] * 20
@@ -46,11 +46,11 @@ class TestDefaultNormaliserSingleton:
         assert results[0] is not None
         assert all(r is results[0] for r in results if r is not None)
 
-    def test_concurrent_normalise_license(self) -> None:
+    def test_concurrent_normalise_licence(self) -> None:
         licenses = ["MIT", "Apache-2.0", "CC BY 4.0", "GPL-3.0", "BSD-3-Clause"]
 
         def normalise(lic: str) -> str:
-            v = normalise_license(lic)
+            v = normalise_licence(lic)
             return v.key
 
         with ThreadPoolExecutor(max_workers=10) as executor:
@@ -68,12 +68,12 @@ class TestDefaultNormaliserSingleton:
 
 
 class TestModuleLevelAPI:
-    def test_normalise_license_returns_license_version(self) -> None:
-        v = normalise_license("MIT")
+    def test_normalise_licence_returns_license_version(self) -> None:
+        v = normalise_licence("MIT")
         assert str(v) == "mit"
 
-    def test_normalise_licenses_returns_list(self) -> None:
-        results = normalise_licenses(["MIT", "Apache-2.0"])
+    def test_normalise_licences_returns_list(self) -> None:
+        results = normalise_licences(["MIT", "Apache-2.0"])
         assert len(results) == 2
         assert all(str(r) in ("mit", "apache-2.0") for r in results)
 

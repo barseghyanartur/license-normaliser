@@ -11,31 +11,31 @@ __copyright__ = "2026 Artur Barseghyan"
 __license__ = "MIT"
 __all__ = (
     "DataSourceError",
-    "LicenseNormalisationError",
-    "LicenseNormaliserError",
-    "LicenseNotFoundError",
+    "LicenceNormalisationError",
+    "LicenceNormaliserError",
+    "LicenceNotFoundError",
 )
 
 
-class LicenseNormaliserError(Exception):
+class LicenceNormaliserError(Exception):
     """Base exception for all licence-normaliser errors."""
 
 
-class LicenseNotFoundError(LicenseNormaliserError):
-    """Raised in strict mode when a license string cannot be resolved."""
+class LicenceNotFoundError(LicenceNormaliserError):
+    """Raised in strict mode when a licence string cannot be resolved."""
 
     def __init__(self, raw: str, cleaned: str) -> None:
         self.raw = raw
         self.cleaned = cleaned
         super().__init__(
-            f"License not found: {raw!r} (cleaned: {cleaned!r}). "
+            f"Licence not found: {raw!r} (cleaned: {cleaned!r}). "
             "Pass strict=False to return an 'unknown' result instead."
         )
 
 
-class DataSourceError(LicenseNormaliserError):
+class DataSourceError(LicenceNormaliserError):
     """Raised when a data source file cannot be loaded or parsed."""
 
 
-class LicenseNormalisationError(ValueError):
-    """Raised when ``strict=True`` and no canonical license could be resolved."""
+class LicenceNormalisationError(ValueError):
+    """Raised when ``strict=True`` and no canonical licence could be resolved."""
