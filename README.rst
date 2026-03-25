@@ -50,12 +50,13 @@ Features
   and more.
 - **File-driven data** - Add aliases, URLs, and patterns by editing JSON files.
   No Python code changes required for new synonyms.
-- **Pluggable data sources** - Drop in a new ``DataSource`` class to ingest
-  any external license registry automatically.
+- **Pluggable parsers** - Drop in a new parser class to ingest
+  any external license registry. Parsers implement plugin interfaces
+  (``RegistryPlugin``, ``URLPlugin``, etc.).
 - **Strict mode** - Raise ``LicenseNotFoundError`` instead of silently
   returning ``"unknown"``.
 - **Caching** - LRU caching for performance.
-- **CLI** - Command-line interface with ``--strict`` support.
+- **CLI** - Command-line interface with ``--strict`` and ``--explain`` support.
 
 Hierarchy
 =========
@@ -217,13 +218,13 @@ Disable it by passing ``cache=False`` for debugging:
     ln = LicenseNormaliser(cache=False)
     result = ln.normalise_license("MIT")
 
-Update data sources (CLI)
-=========================
+Update data (CLI)
+=================
 
 .. code-block:: sh
 
     license-normaliser update-data --force
-    # Fetches fresh SPDX + OpenDefinition JSONs into src/license_normaliser/data/
+    # Fetches fresh SPDX, OpenDefinition, OSI, CreativeCommons, and ScanCode JSONs
 
 Integration tests (public API only)
 ===================================
