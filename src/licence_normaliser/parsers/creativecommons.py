@@ -7,7 +7,6 @@ import re
 import urllib.request
 from html.parser import HTMLParser
 from pathlib import Path
-from typing import Any
 
 from licence_normaliser.plugins import BasePlugin, RegistryPlugin, URLPlugin
 
@@ -213,24 +212,6 @@ class CreativeCommonsParser(BasePlugin, RegistryPlugin, URLPlugin):
     id = "creativecommons"
     url = "https://creativecommons.org/licenses/list.en"
     local_path = "data/creativecommons/creativecommons.json"
-
-    def parse(self) -> list[tuple[str, dict[str, Any]]]:
-        path = Path(__file__).parent.parent / self.local_path
-        if not path.exists():
-            return []
-        data: list[dict[str, str]] = json.loads(path.read_text(encoding="utf-8"))
-        return [
-            (
-                entry["license_key"],
-                {
-                    "url": entry["url"],
-                    "name": entry["license_key"],
-                    "path": entry["path"],
-                },
-            )
-            for entry in data
-            if "license_key" in entry
-        ]
 
     def load_registry(self) -> dict[str, str]:
         path = Path(__file__).parent.parent / self.local_path

@@ -9,12 +9,9 @@ __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"
 __license__ = "MIT"
 __all__ = (
-    "TRACE_STAGES",
     "LicenceTrace",
     "LicenceTraceStage",
 )
-
-TRACE_STAGES = ("alias", "registry", "url", "prose", "fallback")
 
 
 @dataclass
