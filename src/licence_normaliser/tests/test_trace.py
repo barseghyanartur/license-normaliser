@@ -127,6 +127,11 @@ class TestTraceProseResolution:
         output = v.explain()
         assert "[✓]" in output
 
+    def test_trace_prose_pattern_output(self):
+        v = normalise_licence("The Apache Software Foundation License 2.0", trace=True)
+        output = v.explain()
+        assert "prose" in output
+
 
 class TestBatchTrace:
     def test_batch_with_trace(self):
@@ -148,3 +153,66 @@ class TestBatchTrace:
         assert len(results) == 2
         assert results[0]._trace is not None
         assert results[1]._trace is not None
+
+
+class TestTraceEmptyInput:
+    def test_trace_empty_input(self):
+        v = normalise_licence("", trace=True)
+        assert v._trace is not None
+        output = v.explain()
+        assert "fallback" in output
+
+    def test_trace_whitespace_only_input(self):
+        v = normalise_licence("   ", trace=True)
+        assert v._trace is not None
+        output = v.explain()
+        assert "fallback" in output
+
+
+class TestTracePublisherURL:
+    def test_trace_publisher_url_source(self):
+        v = normalise_licence(
+            "https://www.elsevier.com/open-access/userlicense/1.0/", trace=True
+        )
+        output = v.explain()
+        assert "url" in output
+        assert "publishers.json" in output
+
+    def test_trace_publisher_alias_with_line(self):
+        v = normalise_licence("Elsevier User License", trace=True)
+        output = v.explain()
+        assert "[✓]" in output
+
+
+class TestTraceFamilyInference:
+    def test_infer_family_cc_pdm(self):
+        v = normalise_licence("cc-pdm-1.0")
+        assert v.family.key == "public-domain"
+
+    def test_infer_family_odbl(self):
+        v = normalise_licence("odbl-1.0")
+        assert v.family.key == "open-data"
+
+    def test_infer_family_pddl(self):
+        v = normalise_licence("pddl-1.0")
+        assert v.family.key == "data"
+
+    def test_infer_family_implied_oa(self):
+        v = normalise_licence("implied-oa")
+        assert v.family.key == "publisher-oa"
+
+    def test_infer_family_elsevier_tdm(self):
+        v = normalise_licence("elsevier-tdm")
+        assert v.family.key == "publisher-tdm"
+
+    def test_infer_family_wiley(self):
+        v = normalise_licence("wiley-terms")
+        assert v.family.key == "publisher-proprietary"
+
+    def test_infer_family_public_domain(self):
+        v = normalise_licence("public-domain")
+        assert v.family.key == "public-domain"
+
+    def test_infer_family_other_oa(self):
+        v = normalise_licence("other-oa")
+        assert v.family.key == "other-oa"
