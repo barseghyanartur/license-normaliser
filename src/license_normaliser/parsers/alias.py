@@ -1,4 +1,19 @@
-"""Alias parser - loads aliases.json with rich metadata for aliases/family overrides."""
+"""Alias parser - loads aliases.json with rich metadata for aliases/family overrides.
+
+Each entry may carry an optional ``aliases`` list of extra lookup keys that all
+resolve to the same ``version_key``.  This lets data authors enumerate explicit
+variants (e.g. hyphen vs space forms) without any auto-generation magic::
+
+    "cc by-nc": {
+        "version_key": "cc-by-nc",
+        "name_key": "cc-by-nc",
+        "family_key": "cc",
+        "aliases": ["cc-by-nc", "cc by nc", "cc-by nc"]
+    }
+
+All keys in ``aliases`` inherit the same ``version_key``, ``name_key``, and
+``family_key`` as the primary entry.
+"""
 
 from __future__ import annotations
 
@@ -14,33 +29,53 @@ __license__ = "MIT"
 __all__ = ("AliasParser",)
 
 
+def _iter_entries(
+    data: dict[str, Any],
+) -> list[tuple[str, dict[str, Any]]]:
+    """Yield (key, meta) pairs, expanding ``aliases`` sub-keys.
+
+    For every primary entry that has an ``"aliases"`` list, each alias key is
+    emitted as an additional entry with the same metadata dict (minus the
+    ``aliases`` field itself, to keep things tidy).
+    """
+    results: list[tuple[str, dict[str, Any]]] = []
+    for primary_key, meta in data.items():
+        if primary_key.startswith("_"):
+            continue
+        if not isinstance(meta, dict):
+            continue
+        version_key = meta.get("version_key", "")
+        if not version_key:
+            continue
+        results.append((primary_key, meta))
+
+        # Expand explicit alias variants
+        for extra_key in meta.get("aliases", []):
+            if not isinstance(extra_key, str) or not extra_key:
+                continue
+            if extra_key == primary_key:
+                continue  # already emitted
+            # Build a slim copy without the aliases list to avoid recursion
+            slim_meta = {k: v for k, v in meta.items() if k != "aliases"}
+            results.append((extra_key, slim_meta))
+
+    return results
+
+
 class AliasParser(BasePlugin, AliasPlugin, FamilyPlugin, NamePlugin):
     url = None
     local_path = "data/aliases/aliases.json"
 
-    def parse(self) -> list[tuple[str, dict[str, Any]]]:
+    def _load_data(self) -> dict[str, Any]:
         path = Path(__file__).parent.parent / self.local_path
-        data: dict[str, dict[str, str]] = json.loads(path.read_text(encoding="utf-8"))
-        results: list[tuple[str, dict[str, Any]]] = []
-        for alias_key, meta in data.items():
-            if alias_key.startswith("_"):
-                continue
-            if not isinstance(meta, dict):
-                continue
-            version_key = meta.get("version_key", "")
-            if version_key:
-                results.append((alias_key, meta))
-        return results
+        return json.loads(path.read_text(encoding="utf-8"))
+
+    def parse(self) -> list[tuple[str, dict[str, Any]]]:
+        return _iter_entries(self._load_data())
 
     def load_aliases(self) -> dict[str, str]:
-        path = Path(__file__).parent.parent / self.local_path
-        data: dict[str, dict[str, str]] = json.loads(path.read_text(encoding="utf-8"))
         aliases: dict[str, str] = {}
-        for alias_key, meta in data.items():
-            if alias_key.startswith("_"):
-                continue
-            if not isinstance(meta, dict):
-                continue
+        for alias_key, meta in _iter_entries(self._load_data()):
             version_key = meta.get("version_key", "")
             if version_key:
                 aliases[alias_key] = version_key
@@ -51,30 +86,47 @@ class AliasParser(BasePlugin, AliasPlugin, FamilyPlugin, NamePlugin):
     ) -> dict[str, tuple[str, int]]:
         """Load aliases with their source line numbers.
 
+        Extra keys from ``aliases`` lists are reported at the line of their
+        primary entry (best approximation without per-alias line tracking).
+
         Returns:
             dict mapping alias_key -> (version_key, line_number)
         """
         path = Path(__file__).parent.parent / self.local_path
         content = path.read_text(encoding="utf-8")
-        data: dict[str, dict[str, str]] = json.loads(content)
+        data: dict[str, Any] = json.loads(content)
         lines = content.splitlines()
         result: dict[str, tuple[str, int]] = {}
-        for alias_key, meta in data.items():
-            if alias_key.startswith("_"):
+
+        for primary_key, meta in data.items():
+            if primary_key.startswith("_"):
                 continue
             if not isinstance(meta, dict):
                 continue
             version_key = meta.get("version_key", "")
-            if version_key:
-                for i, line in enumerate(lines, start=1):
-                    if f'"{alias_key}"' in line:
-                        result[alias_key] = (version_key, i)
-                        break
+            if not version_key:
+                continue
+
+            # Find line of the primary key
+            primary_line = 1
+            for i, line in enumerate(lines, start=1):
+                if f'"{primary_key}"' in line:
+                    primary_line = i
+                    break
+
+            result[primary_key] = (version_key, primary_line)
+
+            for extra_key in meta.get("aliases", []):
+                if not isinstance(extra_key, str) or not extra_key:
+                    continue
+                if extra_key == primary_key:
+                    continue
+                result[extra_key] = (version_key, primary_line)
+
         return result
 
     def load_families(self) -> dict[str, str]:
-        path = Path(__file__).parent.parent / self.local_path
-        data: dict[str, dict[str, str]] = json.loads(path.read_text(encoding="utf-8"))
+        data = self._load_data()
         overrides: dict[str, str] = {}
         for meta in data.values():
             if not isinstance(meta, dict):
@@ -86,8 +138,7 @@ class AliasParser(BasePlugin, AliasPlugin, FamilyPlugin, NamePlugin):
         return overrides
 
     def load_names(self) -> dict[str, str]:
-        path = Path(__file__).parent.parent / self.local_path
-        data: dict[str, dict[str, str]] = json.loads(path.read_text(encoding="utf-8"))
+        data = self._load_data()
         names: dict[str, str] = {}
         for meta in data.values():
             if not isinstance(meta, dict):

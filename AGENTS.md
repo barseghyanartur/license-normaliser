@@ -323,14 +323,15 @@ uv run pytest path/to/test_something.py  # run specific test
 
 ```text
 src/license_normaliser/tests/
-    test_integration.py    - public API only (survives any rewrite)
-    test_core.py           - end-to-end pipeline tests
-    test_exceptions.py     - exception hierarchy and strict mode
-    test_cli.py            - CLI commands including update-data
-    test_models.py         - LicenseFamily, LicenseName, LicenseVersion
-    test_aliases.py        - non-CC aliases (Apache, MIT, BSD, GPL, etc.)
-    test_publisher.py      - publisher URLs and shorthand aliases
-    test_prose.py          - prose pattern matching
+    test_integration.py     - public API only (survives any rewrite)
+    test_core.py            - end-to-end pipeline tests
+    test_exceptions.py      - exception hierarchy and strict mode
+    test_cli.py             - CLI commands including update-data
+    test_models.py          - LicenseFamily, LicenseName, LicenseVersion
+    test_aliases.py         - non-CC aliases (Apache, MIT, BSD, GPL, etc.)
+    test_alias_expansion.py - explicit aliases array expansion feature
+    test_publisher.py       - publisher URLs and shorthand aliases
+    test_prose.py           - prose pattern matching
 ```
 
 ### Documentation snippet conventions
