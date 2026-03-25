@@ -2,7 +2,7 @@
  Architecture Guide
 ===================
 
-:Version: 0.3.1
+:Version: 0.3.2
 :Author: Artur Barseghyan <artur.barseghyan@gmail.com>
 :Repository: https://github.com/barseghyanartur/license-normaliser
 
@@ -108,6 +108,21 @@ Step 1 -- Alias table
 Each entry maps a cleaned string to a version key.  Aliases are checked
 **before** the registry to ensure canonical forms (e.g. ``"gpl-3.0+"``)
 resolve correctly.
+
+**Explicit alias variants** — Each entry in ``aliases.json`` may carry an
+optional ``aliases`` list of extra lookup keys that all resolve to the same
+``version_key``.  This lets data authors enumerate explicit variants
+(e.g. hyphen vs space forms)::
+
+    "cc by-nc": {
+        "version_key": "cc-by-nc",
+        "name_key": "cc-by-nc",
+        "family_key": "cc",
+        "aliases": ["cc-by-nc", "cc by nc", "cc-by nc"]
+    }
+
+All keys in ``aliases`` inherit the same ``version_key``, ``name_key``, and
+``family_key`` as the primary entry.
 
 Step 2 -- Direct registry lookup
 --------------------------------
@@ -338,6 +353,26 @@ a dict with ``version_key``, ``name_key``, and ``family_key``:
         "family_key": "cc"
       }
     }
+
+Optionally, add an ``aliases`` array to define additional lookup variants
+(e.g. hyphen vs space forms) that all resolve to the same target:
+
+.. code-block:: json
+
+    {
+      "my new alias": {
+        "version_key": "existing-version-key",
+        "name_key": "existing-name",
+        "family_key": "cc",
+        "aliases": [
+          "my-new-alias",
+          "my new alias variant"
+        ]
+      }
+    }
+
+All keys in the ``aliases`` array inherit the same ``version_key``,
+``name_key``, and ``family_key`` as the primary entry.
 
 Adding a new URL
 ----------------

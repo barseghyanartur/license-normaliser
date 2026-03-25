@@ -119,6 +119,42 @@ By default, unresolvable inputs return an ``"unknown"`` result.  Pass
         print(exc.raw)      # original input
         print(exc.cleaned)  # cleaned form that failed lookup
 
+Trace / Explain
+===============
+
+Set ``ENABLE_LICENSE_NORMALISER_TRACE=1`` or pass ``trace=True`` to get
+resolution traces showing how the license was matched:
+
+.. code-block:: python
+    :name: test_trace
+
+    from license_normaliser import normalise_license
+
+    # Via function
+    v = normalise_license("cc by-nc-nd 3.0 igo", trace=True)
+    print(v.explain())
+
+    # Via class
+    from license_normaliser import LicenseNormaliser
+    ln = LicenseNormaliser(trace=True)
+    v = ln.normalise_license("MIT")
+    print(v.explain())
+
+Output shows the resolution pipeline (alias → registry → url → prose →
+fallback) and which source file + line matched:
+
+.. code-block:: text
+
+    Input: 'cc by-nc-nd 3.0 igo' → 'cc by-nc-nd 3.0 igo'
+      [✓] alias: 'cc by-nc-nd 3.0 igo' → 'cc-by-nc-nd-3.0-igo' (line 139 in aliases.json)
+
+    Result:
+      version_key: 'cc-by-nc-nd-3.0-igo'
+      name_key: 'cc-by-nc-nd'
+      family_key: 'cc'
+
+The trace can also be accessed via ``v._trace`` for programmatic use.
+
 Batch normalisation
 ===================
 

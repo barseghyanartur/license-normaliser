@@ -94,6 +94,9 @@ class LicenseNormaliser:
         self._url_to_vkey: dict[str, str] = {}
         self._aliases: dict[str, str] = {}
         self._alias_lines: dict[str, tuple[str, int]] = {}
+        self._publisher_alias_lines: dict[str, tuple[str, int]] = {}
+        self._publisher_url_lines: dict[str, tuple[str, int]] = {}
+        self._prose_lines: list[tuple[re.Pattern[str], str, int]] = []
         self._alias_lines_loaded: bool = False
         self._family_overrides: dict[str, str] = {}
         self._name_overrides: dict[str, str] = {}
@@ -109,6 +112,11 @@ class LicenseNormaliser:
         family = family or get_default_family()
         name = name or get_default_name()
         prose = prose or get_default_prose()
+
+        # Store plugin lists for trace resolution
+        self._alias_plugins = alias
+        self._url_plugins = url
+        self._prose_plugins = prose
 
         # Instantiate plugins and load their data
         for plugin_cls in registry:
@@ -155,15 +163,42 @@ class LicenseNormaliser:
         return _should_trace()
 
     def _load_alias_lines(self):
-        """Lazy load alias line numbers on first trace request."""
-        from license_normaliser.defaults import get_default_alias
-
-        for plugin_cls in get_default_alias():
+        """Lazy load all source line numbers on first trace request."""
+        for plugin_cls in self._alias_plugins:
             if hasattr(plugin_cls, "load_aliases_with_lines"):
                 lines_data = plugin_cls().load_aliases_with_lines()
                 for alias_key, (version_key, line_num) in lines_data.items():
                     if version_key == self._aliases.get(alias_key):
                         self._alias_lines[alias_key] = (version_key, line_num)
+
+        for plugin_cls in self._alias_plugins:
+            if hasattr(plugin_cls, "load_aliases_with_lines"):
+                lines_data = plugin_cls().load_aliases_with_lines()
+                for alias_key, (version_key, line_num) in lines_data.items():
+                    if (
+                        version_key == self._aliases.get(alias_key)
+                        and alias_key not in self._alias_lines
+                    ):
+                        self._alias_lines[alias_key] = (version_key, line_num)
+
+        for plugin_cls in self._url_plugins:
+            if hasattr(plugin_cls, "load_aliases_with_lines"):
+                lines_data = plugin_cls().load_aliases_with_lines()
+                for alias_key, (version_key, line_num) in lines_data.items():
+                    if version_key == self._aliases.get(alias_key):
+                        self._publisher_alias_lines[alias_key] = (version_key, line_num)
+
+        for plugin_cls in self._url_plugins:
+            if hasattr(plugin_cls, "load_urls_with_lines"):
+                lines_data = plugin_cls().load_urls_with_lines()
+                for url_key, (version_key, line_num) in lines_data.items():
+                    if version_key == self._url_map.get(url_key):
+                        self._publisher_url_lines[url_key] = (version_key, line_num)
+
+        for plugin_cls in self._prose_plugins:
+            if hasattr(plugin_cls, "load_prose_with_lines"):
+                lines_data = plugin_cls().load_prose_with_lines()
+                self._prose_lines.extend(lines_data)
 
     def _resolve_with_trace(
         self, raw: str, cleaned: str, strict: bool
@@ -225,7 +260,16 @@ class LicenseNormaliser:
         url_key = self._normalise_url(cleaned)
         if url_key in self._url_map:
             resolved = self._url_map[url_key]
-            stages.append(LicenseTraceStage("url", url_key, resolved, True))
+            source_line = None
+            source_file = None
+            if url_key in self._publisher_url_lines:
+                _, source_line = self._publisher_url_lines[url_key]
+                source_file = "publishers.json"
+            stages.append(
+                LicenseTraceStage(
+                    "url", url_key, resolved, True, source_line, source_file
+                )
+            )
             v = self._make(resolved)
             trace = LicenseTrace(
                 raw,
@@ -241,9 +285,17 @@ class LicenseNormaliser:
 
         # 4. Prose matching (only for longer strings)
         if len(cleaned) >= 20:
-            for pattern, vkey in self._prose_patterns:
+            for i, (pattern, vkey) in enumerate(self._prose_patterns):
                 if pattern.search(cleaned):
-                    stages.append(LicenseTraceStage("prose", cleaned, vkey, True))
+                    source_line = None
+                    source_file = "prose_patterns.json"
+                    if self._prose_lines and i < len(self._prose_lines):
+                        _, _, source_line = self._prose_lines[i]
+                    stages.append(
+                        LicenseTraceStage(
+                            "prose", cleaned, vkey, True, source_line, source_file
+                        )
+                    )
                     v = self._make(vkey)
                     trace = LicenseTrace(
                         raw,

@@ -49,12 +49,11 @@
 | `src/license_normaliser/parsers/` | Parser classes implementing plugin interfaces |
 | `src/license_normaliser/cli/_main.py` | CLI with normalise, batch, update-data |
 | `src/license_normaliser/exceptions.py` | LicenseNormalisationError |
-| `src/license_normaliser/data/spdx/spdx.json` | Full SPDX license list (loaded at runtime) |
-| `src/license_normaliser/data/opendefinition/opendefinition.json` | Full OpenDefinition list (loaded at runtime) |
+| `src/license_normaliser/data/spdx/spdx.json` | **DO NOT MODIFY** Full SPDX license list (loaded at runtime) |
+| `src/license_normaliser/data/opendefinition/opendefinition.json` | **DO NOT MODIFY** Full OpenDefinition list (loaded at runtime) |
 | `src/license_normaliser/data/aliases/aliases.json` | Curated aliases with rich metadata |
 | `src/license_normaliser/data/prose/prose_patterns.json` | Curated prose regex patterns |
 | `src/license_normaliser/data/publishers/publishers.json` | Publisher URLs and shorthand aliases |
-| `src/license_normaliser/data/original/` | **DO NOT MODIFY** - upstream originals |
 
 ---
 
@@ -180,6 +179,45 @@ This fetches fresh JSON from the authoritative upstream URLs and writes them to:
 
 ---
 
+## 4a. Trace / Explain
+
+When debugging why a license resolves a certain way, or aligning curated
+data sources, use the trace feature:
+
+**Via CLI:**
+
+```sh
+license-normaliser normalise "MIT" --trace
+license-normaliser normalise "CC BY-NC-ND 3.0 igo" --trace
+license-normaliser batch MIT Apache --trace
+```
+
+Or via environment variable:
+```sh
+ENABLE_LICENSE_NORMALISER_TRACE=1 license-normaliser normalise "MIT"
+```
+
+**Via Python:**
+
+```python name=test_trace
+from license_normaliser import normalise_license
+v = normalise_license("MIT", trace=True)
+print(v.explain())
+```
+
+The trace shows:
+- Each resolution stage attempted (alias → registry → url → prose → fallback)
+- Whether it matched (✓) or didn't (-)
+- Source file and line number for curated sources (aliases.json, publishers.json, prose_patterns.json)
+- Final result with version_key, name_key, family_key
+
+This is essential for:
+- Understanding why a license resolves unexpectedly
+- Finding the source line that defines an alias when curating data
+- Debugging resolution order issues
+
+---
+
 ## 5. Adding a New Parser
 
 Parsers implement plugin interfaces and can be added to `src/license_normaliser/parsers/`:
@@ -242,6 +280,7 @@ Run linting: `make ruff` or `make pre-commit`
 2. **Identify the correct location**:
    - New SPDX/OD license → update SPDX/OpenDefinition JSON files (run `update-data`)
    - New alias or family override → add to `data/aliases/aliases.json`
+   - **Use `--trace` to find the exact line that defines an alias**
    - New URL mapping → add to `data/publishers/publishers.json`
    - New prose pattern → add to `data/prose/prose_patterns.json`
    - New parser → `parsers/my_parser.py` + `defaults.py`
@@ -284,14 +323,15 @@ uv run pytest path/to/test_something.py  # run specific test
 
 ```text
 src/license_normaliser/tests/
-    test_integration.py    - public API only (survives any rewrite)
-    test_core.py          - end-to-end pipeline tests
-    test_exceptions.py    - exception hierarchy and strict mode
-    test_cli.py           - CLI commands including update-data
-    test_models.py        - LicenseFamily, LicenseName, LicenseVersion
-    test_aliases.py       - non-CC aliases (Apache, MIT, BSD, GPL, etc.)
-    test_publisher.py      - publisher URLs and shorthand aliases
-    test_prose.py         - prose pattern matching
+    test_integration.py     - public API only (survives any rewrite)
+    test_core.py            - end-to-end pipeline tests
+    test_exceptions.py      - exception hierarchy and strict mode
+    test_cli.py             - CLI commands including update-data
+    test_models.py          - LicenseFamily, LicenseName, LicenseVersion
+    test_aliases.py         - non-CC aliases (Apache, MIT, BSD, GPL, etc.)
+    test_alias_expansion.py - explicit aliases array expansion feature
+    test_publisher.py       - publisher URLs and shorthand aliases
+    test_prose.py           - prose pattern matching
 ```
 
 ### Documentation snippet conventions
@@ -325,7 +365,13 @@ assert isinstance(foo, Foo)
 - Adding external dependencies
 - Removing existing normalisation coverage
 - Changing the three-level hierarchy structure
-- Modifying files in `src/license_normaliser/data/original/` - these are upstream originals, **DO NOT MODIFY**
-- Modifying `src/license_normaliser/data/spdx/spdx.json` or
-  `src/license_normaliser/data/opendefinition/opendefinition.json` directly.
-  Use `license-normaliser update-data --force` to refresh them from upstream sources.
+- Modifying the following files is strictly forbidden:
+
+  - `src/license_normaliser/data/creativecommons/creativecommons.json`
+  - `src/license_normaliser/data/opendefinition/opendefinition.json`
+  - `src/license_normaliser/data/osi/osi.json`
+  - `src/license_normaliser/data/scancode_licensedb/scancode_licensedb.json`
+  - `src/license_normaliser/data/spdx/spdx.json`
+
+  Use `license-normaliser update-data --force` to refresh them from upstream
+  sources.

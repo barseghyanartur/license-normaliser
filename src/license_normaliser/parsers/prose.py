@@ -62,6 +62,31 @@ class ProseParser(BasePlugin, ProsePlugin):
                 _COMPILED_PATTERNS.append((compiled, version_key))
         return _COMPILED_PATTERNS
 
+    def load_prose_with_lines(self) -> list[tuple[re.Pattern[str], str, int]]:
+        """Load prose patterns with their source line numbers.
+
+        Returns:
+            list of (compiled_pattern, version_key, line_number)
+        """
+        path = Path(__file__).parent.parent / self.local_path
+        content = path.read_text(encoding="utf-8")
+        data: list[dict[str, str]] = json.loads(content)
+        lines = content.splitlines()
+        result: list[tuple[re.Pattern[str], str, int]] = []
+        for entry in data:
+            pattern_str = entry.get("pattern", "")
+            version_key = entry.get("version_key", "")
+            if pattern_str and version_key:
+                compiled = re.compile(pattern_str, re.IGNORECASE)
+                serialized = json.dumps(pattern_str)
+                line_num = 1
+                for i, line in enumerate(lines, start=1):
+                    if '"pattern"' in line and serialized[:30] in line:
+                        line_num = i
+                        break
+                result.append((compiled, version_key, line_num))
+        return result
+
 
 def get_prose_patterns() -> list[tuple[re.Pattern[str], str]]:
     """Legacy helper: return the compiled prose patterns."""
