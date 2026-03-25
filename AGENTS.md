@@ -5,7 +5,7 @@
 
 ---
 
-## 1. Project Mission (Never Deviate)
+## 1. Project mission (never deviate)
 
 > Comprehensive licence normalisation with a three-level hierarchy - secure,
 > fast, and extensible.
@@ -21,7 +21,7 @@
 
 ## 2. Architecture
 
-### Three-Level Hierarchy
+### Three-level hierarchy
 
 | Level | Class | Example |
 | ----- | ----- | ------- |
@@ -29,7 +29,7 @@
 | **Name** | `LicenceName` | `"cc-by"`, `"mit"`, `"gpl-3.0-only"` |
 | **Version** | `LicenceVersion` | `"cc-by-4.0"`, `"mit"`, `"gpl-3.0-only"` |
 
-### Resolution Pipeline
+### Resolution pipeline
 
 1. **Alias table** - cleaned lowercase key matches `ALIASES` (loaded from `data/aliases/aliases.json`)
 2. **Direct registry lookup** - hit in `REGISTRY` (SPDX, OpenDefinition, OSI, CC, ScanCode licence keys)
@@ -37,7 +37,7 @@
 4. **Prose pattern scan** - regex patterns from `data/prose/prose_patterns.json` (for strings >20 chars)
 5. **Fallback** - key = cleaned string, family = unknown
 
-### Key Files
+### Key files
 
 | File | Purpose |
 | ---- | ------- |
@@ -218,7 +218,7 @@ This is essential for:
 
 ---
 
-## 5. Adding a New Parser
+## 5. Adding a new parser
 
 Parsers implement plugin interfaces and can be added to `src/licence_normaliser/parsers/`:
 
@@ -259,7 +259,7 @@ def _load_registry_plugins() -> list[type]:
 
 ---
 
-## 6. Coding Conventions
+## 6. Coding conventions
 
 - Line length: **88 characters** (ruff)
 - Every non-test module must have `__all__`, `__author__`, `__copyright__`, `__license__`
@@ -274,7 +274,7 @@ Run linting: `make ruff` or `make pre-commit`
 
 ---
 
-## 7. Agent Workflow: Adding Features or Fixing Bugs
+## 7. Agent workflow: adding features or fixing bugs
 
 1. **Check the mission** - does the change preserve the no-dependencies policy and three-level hierarchy?
 2. **Identify the correct location**:
@@ -292,7 +292,7 @@ Run linting: `make ruff` or `make pre-commit`
 
 ---
 
-## 8. Testing Rules
+## 8. Testing rules
 
 > [!NOTE]
 > Python 3.15 is being tested on GitHub CI, but not inside a local Docker image.
@@ -362,9 +362,9 @@ assert isinstance(foo, Foo)
 
 ## 9. Forbidden
 
-- Adding external dependencies
-- Removing existing normalisation coverage
-- Changing the three-level hierarchy structure
+- Adding external dependencies is strictly forbidden
+- Removing existing normalisation coverage is strictly forbidden
+- Changing the three-level hierarchy structure is strictly forbidden
 - Modifying the following files is strictly forbidden:
 
   - `src/licence_normaliser/data/creativecommons/creativecommons.json`
@@ -373,5 +373,5 @@ assert isinstance(foo, Foo)
   - `src/licence_normaliser/data/scancode_licensedb/scancode_licensedb.json`
   - `src/licence_normaliser/data/spdx/spdx.json`
 
-  Use `licence-normaliser update-data --force` to refresh them from upstream
-  sources.
+  Instead, use `licence-normaliser update-data --force` command to refresh
+  them from upstream sources.
