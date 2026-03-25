@@ -586,20 +586,18 @@
       "the mit license"
     ]
   },
-  "mozilla": {
-    "version_key": "mpl-2.0",
-    "name_key": "mpl",
-    "family_key": "osi"
-  },
-  "mozilla public license": {
-    "version_key": "mpl-2.0",
-    "name_key": "mpl",
-    "family_key": "osi"
-  },
   "mozilla public license 2.0": {
     "version_key": "mpl-2.0",
     "name_key": "mpl",
-    "family_key": "osi"
+    "family_key": "osi",
+    "aliases": [
+      "mpl",
+      "mpl-2.0",
+      "mpl 2.0",
+      "mozilla license",
+      "mozilla public license",
+      "mozilla"
+    ]
   },
   "no reuse": {
     "version_key": "no-reuse",
