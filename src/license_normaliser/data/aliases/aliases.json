@@ -1,40 +1,31 @@
 {
   "_comment": "Curated alias map: cleaned-lowercase-string -> metadata dict.",
   "_comment2": "Keys must already be in cleaned form (lowercase, whitespace-collapsed).",
-  "aaas author reuse": {
-    "version_key": "aaas-author-reuse",
-    "name_key": "aaas-author-reuse",
-    "family_key": "publisher-proprietary"
-  },
   "aaas reuse": {
     "version_key": "aaas-author-reuse",
     "name_key": "aaas-author-reuse",
-    "family_key": "publisher-proprietary"
-  },
-  "aaas-author-reuse": {
-    "version_key": "aaas-author-reuse",
-    "name_key": "aaas-author-reuse",
-    "family_key": "publisher-proprietary"
+    "family_key": "publisher-proprietary",
+    "aliases": [
+      "aaas author reuse",
+      "aaas-author-reuse",
+      "science author reuse"
+    ]
   },
   "acs authorchoice": {
     "version_key": "acs-authorchoice",
     "name_key": "acs-authorchoice",
-    "family_key": "publisher-oa"
-  },
-  "acs authorchoice cc by": {
-    "version_key": "acs-authorchoice-ccby",
-    "name_key": "acs-authorchoice-ccby",
-    "family_key": "publisher-oa"
-  },
-  "acs-authorchoice": {
-    "version_key": "acs-authorchoice",
-    "name_key": "acs-authorchoice",
-    "family_key": "publisher-oa"
+    "family_key": "publisher-oa",
+    "aliases": [
+      "acs-authorchoice"
+    ]
   },
   "acs-authorchoice-ccby": {
     "version_key": "acs-authorchoice-ccby",
     "name_key": "acs-authorchoice-ccby",
-    "family_key": "publisher-oa"
+    "family_key": "publisher-oa",
+    "aliases": [
+      "acs authorchoice cc by"
+    ]
   },
   "acs-authorchoice-ccbyncnd": {
     "version_key": "acs-authorchoice-ccbyncnd",
@@ -70,25 +61,21 @@
     "name_key": "agpl-3",
     "family_key": "copyleft"
   },
-  "aip permissions": {
-    "version_key": "aip-rights",
-    "name_key": "aip-rights",
-    "family_key": "publisher-proprietary"
-  },
   "aip-rights": {
     "version_key": "aip-rights",
     "name_key": "aip-rights",
-    "family_key": "publisher-proprietary"
+    "family_key": "publisher-proprietary",
+    "aliases": [
+      "aip permissions"
+    ]
   },
   "all rights reserved": {
     "version_key": "all-rights-reserved",
     "name_key": "all-rights-reserved",
-    "family_key": "publisher-proprietary"
-  },
-  "all-rights-reserved": {
-    "version_key": "all-rights-reserved",
-    "name_key": "all-rights-reserved",
-    "family_key": "publisher-proprietary"
+    "family_key": "publisher-proprietary",
+    "aliases": [
+      "all-rights-reserved"
+    ]
   },
   "apache": {
     "version_key": "apache-2.0",
@@ -115,35 +102,29 @@
     "name_key": "apache",
     "family_key": "osi"
   },
-  "aps default license": {
-    "version_key": "aps-default",
-    "name_key": "aps-default",
-    "family_key": "publisher-proprietary"
-  },
-  "aps text mining": {
-    "version_key": "aps-tdm",
-    "name_key": "aps-tdm",
-    "family_key": "publisher-tdm"
-  },
   "aps-default": {
     "version_key": "aps-default",
     "name_key": "aps-default",
-    "family_key": "publisher-proprietary"
+    "family_key": "publisher-proprietary",
+    "aliases": [
+      "aps default license"
+    ]
   },
   "aps-tdm": {
     "version_key": "aps-tdm",
     "name_key": "aps-tdm",
-    "family_key": "publisher-tdm"
+    "family_key": "publisher-tdm",
+    "aliases": [
+      "aps text mining"
+    ]
   },
   "author manuscript": {
     "version_key": "author-manuscript",
     "name_key": "author-manuscript",
-    "family_key": "publisher-oa"
-  },
-  "author-manuscript": {
-    "version_key": "author-manuscript",
-    "name_key": "author-manuscript",
-    "family_key": "publisher-oa"
+    "family_key": "publisher-oa",
+    "aliases": [
+      "author-manuscript"
+    ]
   },
   "bmj-copyright": {
     "version_key": "bmj-copyright",
@@ -164,11 +145,6 @@
     "version_key": "bsd-3-clause",
     "name_key": "bsd-3-clause",
     "family_key": "osi"
-  },
-  "cambridge terms": {
-    "version_key": "cup-terms",
-    "name_key": "cup-terms",
-    "family_key": "publisher-proprietary"
   },
   "cc by": {
     "version_key": "cc-by",
@@ -444,7 +420,10 @@
   "cup-terms": {
     "version_key": "cup-terms",
     "name_key": "cup-terms",
-    "family_key": "publisher-proprietary"
+    "family_key": "publisher-proprietary",
+    "aliases": [
+      "cambridge terms"
+    ]
   },
   "degruyter-terms": {
     "version_key": "degruyter-terms",
@@ -459,37 +438,22 @@
     "name_key": "elsevier-oa",
     "family_key": "publisher-oa",
     "aliases": [
-      "elsevier-oa"
+      "elsevier-oa",
+      "elsevier user license"
     ]
   },
   "elsevier tdm": {
     "version_key": "elsevier-tdm",
     "name_key": "elsevier-tdm",
-    "family_key": "publisher-tdm"
-  },
-  "elsevier tdmu": {
-    "version_key": "elsevier-tdm",
-    "name_key": "elsevier-tdm",
-    "family_key": "publisher-tdm"
-  },
-  "elsevier user license": {
-    "version_key": "elsevier-oa",
-    "name_key": "elsevier-oa",
-    "family_key": "publisher-oa"
-  },
-  "elsevier-tdm": {
-    "version_key": "elsevier-tdm",
-    "name_key": "elsevier-tdm",
-    "family_key": "publisher-tdm"
+    "family_key": "publisher-tdm",
+    "aliases": [
+      "elsevier tdmu",
+      "elsevier-tdm"
+    ]
   },
   "gnu gpl": {
     "version_key": "gpl-3.0",
     "name_key": "gpl-3",
-    "family_key": "copyleft"
-  },
-  "gnu gpl v2": {
-    "version_key": "gpl-2.0",
-    "name_key": "gpl-2",
     "family_key": "copyleft"
   },
   "gnu gpl v3": {
@@ -500,11 +464,6 @@
   "gpl": {
     "version_key": "gpl-3.0",
     "name_key": "gpl-3",
-    "family_key": "copyleft"
-  },
-  "gpl v2": {
-    "version_key": "gpl-2.0",
-    "name_key": "gpl-2",
     "family_key": "copyleft"
   },
   "gpl v3": {
@@ -518,13 +477,11 @@
     "family_key": "copyleft",
     "aliases": [
       "gpl-v2",
-      "gpl 2"
+      "gpl 2",
+      "gnu gpl v2",
+      "gpl v2",
+      "gpl-2.0+"
     ]
-  },
-  "gpl-2.0+": {
-    "version_key": "gpl-2.0",
-    "name_key": "gpl-2",
-    "family_key": "copyleft"
   },
   "gpl-3": {
     "version_key": "gpl-3.0",
@@ -544,22 +501,11 @@
   "implied oa": {
     "version_key": "implied-oa",
     "name_key": "implied-oa",
-    "family_key": "publisher-oa"
-  },
-  "implied open access": {
-    "version_key": "implied-oa",
-    "name_key": "implied-oa",
-    "family_key": "publisher-oa"
-  },
-  "implied-oa": {
-    "version_key": "implied-oa",
-    "name_key": "implied-oa",
-    "family_key": "publisher-oa"
-  },
-  "iop text and data mining": {
-    "version_key": "iop-tdm",
-    "name_key": "iop-tdm",
-    "family_key": "publisher-tdm"
+    "family_key": "publisher-oa",
+    "aliases": [
+      "implied open access",
+      "implied-oa"
+    ]
   },
   "iop-copyright": {
     "version_key": "iop-copyright",
@@ -569,22 +515,23 @@
   "iop-tdm": {
     "version_key": "iop-tdm",
     "name_key": "iop-tdm",
-    "family_key": "publisher-tdm"
+    "family_key": "publisher-tdm",
+    "aliases": [
+      "iop text and data mining"
+    ]
   },
   "isc license": {
     "version_key": "isc",
     "name_key": "isc",
     "family_key": "osi"
   },
-  "jama open access": {
-    "version_key": "jama-cc-by",
-    "name_key": "jama-cc-by",
-    "family_key": "publisher-oa"
-  },
   "jama-cc-by": {
     "version_key": "jama-cc-by",
     "name_key": "jama-cc-by",
-    "family_key": "publisher-oa"
+    "family_key": "publisher-oa",
+    "aliases": [
+      "jama open access"
+    ]
   },
   "lgpl": {
     "version_key": "lgpl-3.0",
@@ -634,7 +581,10 @@
   "mit license": {
     "version_key": "mit",
     "name_key": "mit",
-    "family_key": "osi"
+    "family_key": "osi",
+    "aliases": [
+      "the mit license"
+    ]
   },
   "mozilla": {
     "version_key": "mpl-2.0",
@@ -654,48 +604,32 @@
   "no reuse": {
     "version_key": "no-reuse",
     "name_key": "no-reuse",
-    "family_key": "publisher-proprietary"
-  },
-  "no-reuse": {
-    "version_key": "no-reuse",
-    "name_key": "no-reuse",
-    "family_key": "publisher-proprietary"
+    "family_key": "publisher-proprietary",
+    "aliases": [
+      "no-reuse"
+    ]
   },
   "odbl": {
     "version_key": "odbl",
     "name_key": "odbl",
-    "family_key": "open-data"
+    "family_key": "open-data",
+    "aliases": [
+      "open database license"
+    ]
   },
   "odc-by": {
     "version_key": "odc-by",
     "name_key": "odc-by",
     "family_key": "open-data"
   },
-  "open access": {
-    "version_key": "other-oa",
-    "name_key": "other-oa",
-    "family_key": "other-oa"
-  },
-  "open database license": {
-    "version_key": "odbl",
-    "name_key": "odbl",
-    "family_key": "open-data"
-  },
-  "open-access": {
-    "version_key": "other-oa",
-    "name_key": "other-oa",
-    "family_key": "other-oa",
-    "justification": "FIXED: was version_key='open-access', name_key='open-access' — inconsistent with 'open access' (spaced) alias which mapped to 'other-oa'. These two aliases represent the same concept and must resolve identically. Aligned to other-oa to match the spaced variant and the broader other-oa category."
-  },
   "other-oa": {
     "version_key": "other-oa",
     "name_key": "other-oa",
-    "family_key": "other-oa"
-  },
-  "oup standard publication": {
-    "version_key": "oup-terms",
-    "name_key": "oup-terms",
-    "family_key": "publisher-proprietary"
+    "family_key": "other-oa",
+    "aliases": [
+      "open access",
+      "open-access"
+    ]
   },
   "oup-chorus": {
     "version_key": "oup-chorus",
@@ -705,13 +639,20 @@
   "oup-terms": {
     "version_key": "oup-terms",
     "name_key": "oup-terms",
-    "family_key": "publisher-proprietary"
+    "family_key": "publisher-proprietary",
+    "aliases": [
+      "oup standard publication"
+    ]
   },
   "pd": {
     "version_key": "public-domain",
     "name_key": "public-domain",
     "family_key": "public-domain",
-    "justification": ""
+    "justification": "",
+    "aliases": [
+      "public domain",
+      "public-domain"
+    ]
   },
   "pddl": {
     "version_key": "pddl",
@@ -721,33 +662,10 @@
   "pnas terms": {
     "version_key": "pnas-licenses",
     "name_key": "pnas-licenses",
-    "family_key": "publisher-proprietary"
-  },
-  "pnas-licenses": {
-    "version_key": "pnas-licenses",
-    "name_key": "pnas-licenses",
-    "family_key": "publisher-proprietary"
-  },
-  "public domain": {
-    "version_key": "public-domain",
-    "name_key": "public-domain",
-    "family_key": "public-domain",
-    "justification": ""
-  },
-  "public-domain": {
-    "version_key": "public-domain",
-    "name_key": "public-domain",
-    "family_key": "public-domain"
-  },
-  "publisher specific oa": {
-    "version_key": "publisher-specific-oa",
-    "name_key": "publisher-specific-oa",
-    "family_key": "publisher-oa"
-  },
-  "publisher-specific-oa": {
-    "version_key": "publisher-specific-oa",
-    "name_key": "publisher-specific-oa",
-    "family_key": "publisher-oa"
+    "family_key": "publisher-proprietary",
+    "aliases": [
+      "pnas-licenses"
+    ]
   },
   "rsc-terms": {
     "version_key": "rsc-terms",
@@ -759,65 +677,39 @@
     "name_key": "sage-permissions",
     "family_key": "publisher-proprietary"
   },
-  "science author reuse": {
-    "version_key": "aaas-author-reuse",
-    "name_key": "aaas-author-reuse",
-    "family_key": "publisher-proprietary"
-  },
-  "springer nature tdm": {
-    "version_key": "springernature-tdm",
-    "name_key": "springernature-tdm",
-    "family_key": "publisher-tdm"
-  },
-  "springer nature text and data mining": {
-    "version_key": "springernature-tdm",
-    "name_key": "springernature-tdm",
-    "family_key": "publisher-tdm"
-  },
   "springer tdm": {
     "version_key": "springer-tdm",
     "name_key": "springer-tdm",
-    "family_key": "publisher-tdm"
-  },
-  "springer-tdm": {
-    "version_key": "springer-tdm",
-    "name_key": "springer-tdm",
-    "family_key": "publisher-tdm"
+    "family_key": "publisher-tdm",
+    "aliases": [
+      "springer-tdm"
+    ]
   },
   "springernature-tdm": {
     "version_key": "springernature-tdm",
     "name_key": "springernature-tdm",
-    "family_key": "publisher-tdm"
+    "family_key": "publisher-tdm",
+    "aliases": [
+      "springer nature tdm",
+      "springer nature text and data mining"
+    ]
   },
   "tandf-terms": {
     "version_key": "tandf-terms",
     "name_key": "tandf-terms",
-    "family_key": "publisher-proprietary"
-  },
-  "taylor and francis terms": {
-    "version_key": "tandf-terms",
-    "name_key": "tandf-terms",
-    "family_key": "publisher-proprietary"
-  },
-  "taylor francis terms": {
-    "version_key": "tandf-terms",
-    "name_key": "tandf-terms",
-    "family_key": "publisher-proprietary"
-  },
-  "the mit license": {
-    "version_key": "mit",
-    "name_key": "mit",
-    "family_key": "osi"
+    "family_key": "publisher-proprietary",
+    "aliases": [
+      "taylor and francis terms",
+      "taylor francis terms"
+    ]
   },
   "thieme nlm": {
     "version_key": "thieme-nlm",
     "name_key": "thieme-nlm",
-    "family_key": "publisher-oa"
-  },
-  "thieme-nlm": {
-    "version_key": "thieme-nlm",
-    "name_key": "thieme-nlm",
-    "family_key": "publisher-oa"
+    "family_key": "publisher-oa",
+    "aliases": [
+      "thieme-nlm"
+    ]
   },
   "unlicense": {
     "version_key": "unlicense",
@@ -827,42 +719,34 @@
   "unspecified oa": {
     "version_key": "unspecified-oa",
     "name_key": "unspecified-oa",
-    "family_key": "other-oa"
-  },
-  "unspecified-oa": {
-    "version_key": "unspecified-oa",
-    "name_key": "unspecified-oa",
-    "family_key": "other-oa"
-  },
-  "wiley author manuscript": {
-    "version_key": "wiley-am",
-    "name_key": "wiley-am",
-    "family_key": "publisher-proprietary"
-  },
-  "wiley tdm license": {
-    "version_key": "wiley-tdm",
-    "name_key": "wiley-tdm",
-    "family_key": "publisher-tdm"
+    "family_key": "other-oa",
+    "aliases": [
+      "unspecified-oa"
+    ]
   },
   "wiley terms": {
     "version_key": "wiley-terms",
     "name_key": "wiley-terms",
-    "family_key": "publisher-proprietary"
+    "family_key": "publisher-proprietary",
+    "aliases": [
+      "wiley-terms"
+    ]
   },
   "wiley-am": {
     "version_key": "wiley-am",
     "name_key": "wiley-am",
-    "family_key": "publisher-proprietary"
+    "family_key": "publisher-proprietary",
+    "aliases": [
+      "wiley author manuscript"
+    ]
   },
   "wiley-tdm": {
     "version_key": "wiley-tdm",
     "name_key": "wiley-tdm",
-    "family_key": "publisher-tdm"
-  },
-  "wiley-terms": {
-    "version_key": "wiley-terms",
-    "name_key": "wiley-terms",
-    "family_key": "publisher-proprietary"
+    "family_key": "publisher-tdm",
+    "aliases": [
+      "wiley tdm license"
+    ]
   },
   "wiley-vor": {
     "version_key": "wiley-vor",
@@ -882,6 +766,10 @@
   "© the author(s)": {
     "version_key": "publisher-specific-oa",
     "name_key": "publisher-specific-oa",
-    "family_key": "publisher-oa"
+    "family_key": "publisher-oa",
+    "aliases": [
+      "publisher specific oa",
+      "publisher-specific-oa"
+    ]
   }
 }
