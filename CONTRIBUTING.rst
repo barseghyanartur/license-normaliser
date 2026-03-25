@@ -124,8 +124,23 @@ Adding new normalisation rules
 For a new **alias** or **family override** for an *existing* license:
 
 1. Add an entry to ``src/license_normaliser/data/aliases/aliases.json``.
-2. Add a test in ``src/license_normaliser/tests/test_aliases.py``.
-3. No Python changes needed.
+2. Optionally, add an ``aliases`` array to define additional lookup variants
+   (e.g. hyphen vs space forms) that resolve to the same target:
+
+   .. code-block:: json
+
+       {
+         "cc by-nc": {
+           "version_key": "cc-by-nc",
+           "name_key": "cc-by-nc",
+           "family_key": "cc",
+           "aliases": ["cc-by-nc", "cc by nc", "cc-by nc"]
+         }
+       }
+
+3. Add a test in ``src/license_normaliser/tests/test_aliases.py`` or
+   ``test_alias_expansion.py``.
+4. No Python changes needed.
 
 For a new **prose pattern** (regex matching free-text descriptions):
 
