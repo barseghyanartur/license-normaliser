@@ -325,10 +325,13 @@ class LicenceNormaliser:
         self, v: LicenceVersion, trace: LicenceTrace
     ) -> LicenceVersion:
         """Create a LicenceVersion with trace attached."""
-
-        # Reconstruct with trace using object.__setattr__ (frozen dataclass)
-        object.__setattr__(v, "_trace", trace)
-        return v
+        # Create new instance with trace (proper way for frozen dataclass)
+        return LicenceVersion(
+            key=v.key,
+            url=v.url,
+            licence=v.licence,
+            _trace=trace,
+        )
 
     def _resolve_impl(self, cleaned: str) -> LicenceVersion:
         # 1. Alias lookup
