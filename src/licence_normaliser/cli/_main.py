@@ -132,15 +132,19 @@ def _cmd_update_data(args: argparse.Namespace) -> int:
         url = parser_cls.url
         target = parser_cls.local_path
         target_path = Path(__file__).parent.parent / target
-        ok = parser_cls.refresh(args.force)
+
+        # Check skip condition before calling refresh
         if target_path.exists() and not args.force:
             status = "skipped"
-        elif ok:
-            status = "fetched"
+            ok = True  # Not a failure, just skipped
         else:
-            status = "FAILED"
-        if not ok:
-            failed.append(name)
+            ok = parser_cls.refresh(args.force)
+            if ok:
+                status = "fetched"
+            else:
+                status = "FAILED"
+                failed.append(name)
+
         print(f"  {status}: {name} ({url}) -> {target}")
 
     if failed:
