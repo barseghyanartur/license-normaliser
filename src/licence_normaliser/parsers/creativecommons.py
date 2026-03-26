@@ -88,6 +88,12 @@ class CCLinkParser(HTMLParser):
 
 
 def _fetch_html(url: str) -> str:
+    """Fetch HTML from a hardcoded URL.
+
+    Security note: This function uses urlopen with S310 suppression.
+    It is safe because it is only called from _scrape() with hardcoded
+    URL constants, never with user-supplied input.
+    """
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
     with urllib.request.urlopen(req, timeout=30) as response:  # noqa: S310
         return response.read().decode("utf-8")
@@ -180,6 +186,11 @@ def _extract_deeds(html: str) -> set[str]:
 
 
 def _scrape() -> list[dict[str, str]]:
+    """Scrape Creative Commons license data from hardcoded URLs.
+
+    Security note: All URLs in this function are hardcoded constants,
+    ensuring safe use of urlopen in _fetch_html().
+    """
     pages = [
         "https://creativecommons.org/licenses/list.en",
         "https://creativecommons.org/publicdomain/list.en",

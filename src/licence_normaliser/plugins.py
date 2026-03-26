@@ -45,6 +45,10 @@ class BasePlugin:
         source and the operation succeeds without fetching.
 
         Returns True on success, False on failure.
+
+        Security note: urlopen with S310 suppression is safe here because
+        cls.url is always a hardcoded class-level constant, never derived
+        from user input. Subclasses must maintain this invariant.
         """
         if not cls.local_path:
             return False
