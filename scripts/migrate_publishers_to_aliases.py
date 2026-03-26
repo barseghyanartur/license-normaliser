@@ -26,7 +26,7 @@ DATA_DIR = Path(__file__).parent.parent / "src" / "licence_normaliser" / "data"
 
 ALIASES_PATH = DATA_DIR / "aliases" / "aliases.json"
 PUBLISHERS_PATH = DATA_DIR / "publishers" / "publishers.json"
-OUTPUT_PATH = DATA_DIR / "aliases" / "aliases.merged.json"
+DRYRUN_PATH = DATA_DIR / "aliases" / "aliases.dryrun.json"
 
 
 def normalise_url(url: str) -> str:
@@ -119,14 +119,14 @@ def main() -> None:
             aliases_added += 1
 
     # Write merged file
-    with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
+    with open(DRYRUN_PATH, "w", encoding="utf-8") as f:
         json.dump(aliases_data, f, indent=2, ensure_ascii=False)
 
     print("\nPublishers migration completed successfully!")
     print(f"   URLs added          : {urls_added}")
     print(f"   Shorthand aliases added : {aliases_added}")
     print(f"   New entries created : {new_entries_created}")
-    print(f"   Output written to   : {OUTPUT_PATH}")
+    print(f"   Output written to   : {DRYRUN_PATH}")
     print("\nNext steps:")
     print("1. Review aliases.merged.json")
     print("2. If happy, replace aliases.json with it")
