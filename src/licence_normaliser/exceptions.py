@@ -37,5 +37,10 @@ class DataSourceError(LicenceNormaliserError):
     """Raised when a data source file cannot be loaded or parsed."""
 
 
-class LicenceNormalisationError(ValueError):
-    """Raised when ``strict=True`` and no canonical licence could be resolved."""
+class LicenceNormalisationError(LicenceNormaliserError):
+    """Raised when licence normalisation fails.
+
+    .. deprecated::
+        Use :class:`LicenceNotFoundError` instead. This exception is kept for
+        backwards compatibility but is no longer raised by the library.
+    """

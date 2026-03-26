@@ -474,7 +474,7 @@ Directory structure
     ├── _core.py                  # Internal resolve helpers (deprecated, kept for compat)
     ├── plugins.py                # Plugin interfaces (BasePlugin, RegistryPlugin, etc.)
     ├── defaults.py               # Lazy-loading default plugin bundle
-    ├── exceptions.py             # LicenceNormalisationError, LicenceNotFoundError
+    ├── exceptions.py             # LicenceNormaliserError (base), LicenceNotFoundError
     ├── cli/
     │   ├── __init__.py
     │   └── _main.py              # CLI entry point

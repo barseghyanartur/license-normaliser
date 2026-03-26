@@ -7,7 +7,6 @@ Each tuple: (input_string, expected_version_key, expected_licence_key,
 import pytest
 
 from licence_normaliser import (
-    LicenceNormalisationError,
     LicenceNotFoundError,
     LicenceVersion,
     normalise_licence,
@@ -372,7 +371,7 @@ def test_licence_matrix(raw, expected_key, expected_licence, expected_family):
 
 
 def test_strict_mode_unknown_raises():
-    with pytest.raises((LicenceNormalisationError, LicenceNotFoundError)):
+    with pytest.raises(LicenceNotFoundError):
         normalise_licence("xyzzy unknown license 123", strict=True)
 
 
@@ -426,12 +425,12 @@ def test_batch():
 
 
 def test_strict_mode_raises():
-    with pytest.raises((LicenceNormalisationError, LicenceNotFoundError)):
+    with pytest.raises(LicenceNotFoundError):
         normalise_licence("Totally Fake License XYZ999", strict=True)
 
 
 def test_strict_batch_raises():
-    with pytest.raises((LicenceNormalisationError, LicenceNotFoundError)):
+    with pytest.raises(LicenceNotFoundError):
         normalise_licences(["MIT", "Fake License XYZ999"], strict=True)
 
 
