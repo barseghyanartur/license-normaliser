@@ -9,7 +9,11 @@ from ._core import (
 )
 from ._normaliser import LicenceNormaliser
 from ._trace import LicenceTrace, LicenceTraceStage
-from .exceptions import LicenceNormalisationError, LicenceNotFoundError
+from .exceptions import (
+    DataSourceError,
+    LicenceNormalisationError,
+    LicenceNotFoundError,
+)
 
 __title__ = "licence-normaliser"
 __version__ = "0.4"
@@ -18,6 +22,7 @@ __copyright__ = "2026 Artur Barseghyan"
 __license__ = "MIT"
 
 __all__ = (
+    "DataSourceError",
     "LicenceFamily",
     "LicenceName",
     "LicenceVersion",

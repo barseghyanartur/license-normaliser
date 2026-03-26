@@ -1,7 +1,8 @@
 """licence_normaliser.exceptions - public exception hierarchy.
 
-These are the only exceptions that cross the public API boundary.
-All internal errors are wrapped before propagation.
+These are the only exceptions that should cross the public API boundary.
+Internal errors from data loading (JSONDecodeError, OSError, FileNotFoundError)
+are wrapped in DataSourceError during plugin initialization.
 """
 
 from __future__ import annotations
