@@ -95,7 +95,7 @@ class LicenceNormaliser:
     ) -> None:
         self._registry: dict[str, str] = {}
         self._url_map: dict[str, str] = {}
-        self._vkey_to_url: dict[str, str] = {}
+        self._vkey_to_url: dict[str, list[str]] = {}
         self._aliases: dict[str, str] = {}
         self._alias_lines: dict[str, tuple[str, int]] = {}
         self._url_plugin_alias_lines: dict[str, tuple[str, int]] = {}
@@ -131,9 +131,13 @@ class LicenceNormaliser:
             data = plugin_cls().load_urls()
             self._url_map.update(data)
 
-        # Build version_key -> URL map (for LicenceVersion.url)
-        # Note: last-writer-wins when multiple URLs map to same version_key
-        self._vkey_to_url = {v: k for k, v in self._url_map.items()}
+        # Build version_key -> list of URLs map (for LicenceVersion.url)
+        # For each version_key, collect all URLs; select shortest for cleaner display
+        self._vkey_to_url: dict[str, list[str]] = {}
+        for url, vkey in self._url_map.items():
+            if vkey not in self._vkey_to_url:
+                self._vkey_to_url[vkey] = []
+            self._vkey_to_url[vkey].append(url)
 
         for plugin_cls in alias:
             data = plugin_cls().load_aliases()
@@ -423,8 +427,10 @@ class LicenceNormaliser:
         # Get canonical key from registry
         canonical = self._registry.get(k) or k
 
-        # Get URL via version_key -> URL map
-        url = self._vkey_to_url.get(canonical) or self._vkey_to_url.get(k)
+        # Get URL via version_key -> URL list map
+        # Select shortest URL for cleaner display
+        url_list = self._vkey_to_url.get(canonical) or self._vkey_to_url.get(k)
+        url = min(url_list) if url_list else None
 
         # Infer name:
         # - For CC licences, use override only if it's different from canonical
