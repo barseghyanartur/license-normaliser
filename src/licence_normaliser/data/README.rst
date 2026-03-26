@@ -12,13 +12,9 @@ Structure
 
     data/
     ├── aliases/
-    │   └── aliases.json             # Alias string → metadata dict
-    ├── urls/
-    │   └── url_map.json             # Canonical URL → metadata dict
+    │   └── aliases.json             # Alias string → metadata dict (includes URLs and shorthand aliases)
     ├── prose/
     │   └── prose_patterns.json      # Ordered regex patterns for long text scanning
-    ├── publishers/
-    │   └── publishers.json          # Publisher URLs and shorthand aliases
     ├── spdx/
     │   └── spdx.json                # SPDX licence list (auto-refreshed)
     ├── opendefinition/
@@ -61,43 +57,26 @@ Edit ``aliases/aliases.json``:
 
 The key must be **lowercase and whitespace-collapsed**.
 
-How to Add a Publisher URL or Shorthand
----------------------------------------
+How to Add a Publisher URL or Shorthand Alias
+---------------------------------------------
 
-Edit ``publishers/publishers.json``:
+**Note**: Publisher URLs and shorthand aliases are stored
+in ``aliases/aliases.json``.
+
+Add a new entry or update an existing one:
 
 .. code:: json
 
-   {
-     "urls": {
-       "https://example.com/my-licence/": {
-         "version_key": "my-licence",
-         "name_key": "my-licence",
-         "family_key": "publisher-oa"
-       }
-     },
-     "shorthand_aliases": {
-       "my shorthand alias": "my-licence"
-     }
+   "my-alias": {
+     "version_key": "my-licence",
+     "name_key": "my-licence",
+     "family_key": "publisher-oa",
+     "aliases": ["my shorthand alias"],
+     "urls": ["https://example.com/my-licence/"]
    }
 
 Both ``http://`` and ``https://`` URL variants may be listed; they are
 normalised at lookup time (http→https, trailing slash stripped).
-
-How to Add a New URL Mapping
-----------------------------
-
-Edit ``urls/url_map.json``:
-
-.. code:: json
-
-   {
-     "https://example.com/my-licence/": {
-       "version_key": "my-licence",
-       "name_key": "my-licence",
-       "family_key": "publisher-oa"
-     }
-   }
 
 How to Add a New Prose Pattern
 ------------------------------

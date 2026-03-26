@@ -59,9 +59,8 @@ first.
 | `src/licence_normaliser/exceptions.py` | LicenceNormalisationError |
 | `src/licence_normaliser/data/spdx/spdx.json` | **DO NOT MODIFY** Full SPDX licence list (loaded at runtime) |
 | `src/licence_normaliser/data/opendefinition/opendefinition.json` | **DO NOT MODIFY** Full OpenDefinition list (loaded at runtime) |
-| `src/licence_normaliser/data/aliases/aliases.json` | Curated aliases with rich metadata |
+| `src/licence_normaliser/data/aliases/aliases.json` | Curated aliases with rich metadata (includes migrated URLs and shorthand aliases) |
 | `src/licence_normaliser/data/prose/prose_patterns.json` | Curated prose regex patterns |
-| `src/licence_normaliser/data/publishers/publishers.json` | Publisher URLs and shorthand aliases |
 
 ---
 
@@ -216,7 +215,7 @@ print(v.explain())
 The trace shows:
 - Each resolution stage attempted (alias → registry → url → prose → fallback)
 - Whether it matched (✓) or didn't (-)
-- Source file and line number for curated sources (aliases.json, publishers.json, prose_patterns.json)
+- Source file and line number for curated sources (aliases.json, prose_patterns.json)
 - Final result with version_key, name_key, family_key
 
 This is essential for:
@@ -289,7 +288,7 @@ Run linting: `make ruff` or `make pre-commit`
    - New SPDX/OD licence → update SPDX/OpenDefinition JSON files (run `update-data`)
    - New alias or family override → add to `data/aliases/aliases.json`
    - **Use `--trace` to find the exact line that defines an alias**
-   - New URL mapping → add to `data/publishers/publishers.json`
+   - New URL mapping → add to `data/aliases/aliases.json` (under `urls` key)
    - New prose pattern → add to `data/prose/prose_patterns.json`
    - New parser → `parsers/my_parser.py` + `defaults.py`
    - Core pipeline change → `_normaliser.py` or `_cache.py`

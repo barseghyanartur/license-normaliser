@@ -52,27 +52,25 @@ def _load_registry_plugins() -> list[type]:
 
 
 def _load_url_plugins() -> list[type]:
+    from .parsers.alias import AliasParser
     from .parsers.creativecommons import CreativeCommonsParser
     from .parsers.opendefinition import OpenDefinitionParser
     from .parsers.osi import OSIParser
-    from .parsers.publisher import PublisherParser
     from .parsers.spdx import SPDXParser
 
     return [
+        AliasParser,
         SPDXParser,
         OpenDefinitionParser,
         OSIParser,
         CreativeCommonsParser,
-        PublisherParser,
     ]
 
 
 def _load_alias_plugins() -> list[type]:
     from .parsers.alias import AliasParser
-    from .parsers.publisher import PublisherParser
 
-    # PublisherParser first, then AliasParser - AliasParser values take precedence
-    return [PublisherParser, AliasParser]
+    return [AliasParser]
 
 
 def _load_family_plugins() -> list[type]:

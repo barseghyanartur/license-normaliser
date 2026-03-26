@@ -21,7 +21,13 @@ import json
 from pathlib import Path
 from typing import Any
 
-from licence_normaliser.plugins import AliasPlugin, BasePlugin, FamilyPlugin, NamePlugin
+from licence_normaliser.plugins import (
+    AliasPlugin,
+    BasePlugin,
+    FamilyPlugin,
+    NamePlugin,
+    URLPlugin,
+)
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"
@@ -62,13 +68,67 @@ def _iter_entries(
     return results
 
 
-class AliasParser(BasePlugin, AliasPlugin, FamilyPlugin, NamePlugin):
+class AliasParser(BasePlugin, AliasPlugin, FamilyPlugin, NamePlugin, URLPlugin):
     url = None
     local_path = "data/aliases/aliases.json"
 
     def _load_data(self) -> dict[str, Any]:
         path = Path(__file__).parent.parent / self.local_path
         return json.loads(path.read_text(encoding="utf-8"))
+
+    def load_urls(self) -> dict[str, str]:
+        """Load URLs from aliases.json entries that have a urls array."""
+        result: dict[str, str] = {}
+        data = self._load_data()
+        for meta in data.values():
+            if not isinstance(meta, dict):
+                continue
+            version_key = meta.get("version_key", "")
+            if not version_key:
+                continue
+            urls = meta.get("urls", [])
+            if isinstance(urls, list):
+                for url in urls:
+                    if isinstance(url, str):
+                        normalized = url.strip().lower().rstrip("/")
+                        if normalized.startswith("http://"):
+                            normalized = "https://" + normalized[7:]
+                        result[normalized] = version_key
+        return result
+
+    def load_urls_with_lines(self) -> dict[str, tuple[str, int]]:
+        """Load URLs with their source line numbers."""
+        path = Path(__file__).parent.parent / self.local_path
+        content = path.read_text(encoding="utf-8")
+        data: dict[str, Any] = json.loads(content)
+        lines = content.splitlines()
+        result: dict[str, tuple[str, int]] = {}
+
+        for primary_key, meta in data.items():
+            if primary_key.startswith("_"):
+                continue
+            if not isinstance(meta, dict):
+                continue
+            version_key = meta.get("version_key", "")
+            if not version_key:
+                continue
+
+            primary_line = 1
+            for i, line in enumerate(lines, start=1):
+                if f'"{primary_key}"' in line:
+                    primary_line = i
+                    break
+
+            urls = meta.get("urls", [])
+            if isinstance(urls, list):
+                for url in urls:
+                    if isinstance(url, str):
+                        normalized = url.strip().lower().rstrip("/")
+                        if normalized.startswith("http://"):
+                            normalized = "https://" + normalized[7:]
+                        result[normalized] = (version_key, primary_line)
+
+        return result
 
     def load_aliases(self) -> dict[str, str]:
         aliases: dict[str, str] = {}

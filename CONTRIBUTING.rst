@@ -150,9 +150,10 @@ For a new **prose pattern** (regex matching free-text descriptions):
 
 For a new **URL mapping**:
 
-1. Add an entry to ``src/licence_normaliser/data/urls/url_map.json`` or
-   ``src/licence_normaliser/data/publishers/publishers.json``.
-2. Add a test in ``src/licence_normaliser/tests/test_publisher.py``.
+1. Add an entry to ``src/licence_normaliser/data/aliases/aliases.json``
+   under the appropriate entry's ``urls`` array.
+2. Add a test in ``src/licence_normaliser/tests/test_aliases.py``
+   or ``test_integration.py``.
 3. No Python changes needed.
 
 For a **brand-new licence key** (SPDX, OpenDefinition, OSI, CC, or ScanCode):
