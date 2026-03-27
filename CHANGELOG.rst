@@ -19,6 +19,15 @@ are used for versioning (schema follows below):
   0.3.4 to 0.4).
 - All backwards incompatible changes are mentioned in this document.
 
+0.5
+---
+2026-03-27
+
+- Merge url_map.json and publisher.json into aliases.json.
+- Simplify lookups.
+- Fix wrongly categorised licences.
+- Various fixes.
+
 0.4
 ---
 2026-03-26
