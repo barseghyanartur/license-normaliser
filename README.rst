@@ -93,9 +93,10 @@ Quick start
     from licence_normaliser import normalise_licence
 
     v = normalise_licence("CC BY-NC-ND 4.0")
-    str(v)                  # "cc-by-nc-nd-4.0"   ← LicenceVersion
-    str(v.licence)          # "cc-by-nc-nd"       ← LicenceName
-    str(v.licence.family)   # "cc"                ← LicenceFamily
+    assert str(v) == "cc-by-nc-nd-4.0"      #     ← LicenceVersion
+    assert str(v.licence) == "cc-by-nc-nd"  #     ← LicenceName
+    assert str(v.licence.family) == "cc"    #     ← LicenceFamily
+
 
 Strict mode
 ===========
@@ -111,7 +112,7 @@ By default, unresolvable inputs return an ``"unknown"`` result.  Pass
 
     # Silent fallback (default)
     v = normalise_licence("some-unknown-string")
-    v.family.key  # "unknown"
+    assert v.family.key == "unknown"
 
     # Strict: raises on unresolvable input
     try:
