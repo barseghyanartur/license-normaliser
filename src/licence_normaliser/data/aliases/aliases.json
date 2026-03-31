@@ -339,6 +339,10 @@
       "creative commons by-nc"
     ],
     "patterns": [
+      "cc-?\\s*by-nc-nd(?!\\s*\\d)",
+      "cc-?\\s*by-nc-sa(?!\\s*\\d)",
+      "creative\\s+commons\\s+by-nc-nd",
+      "creative\\s+commons\\s+by-nc-sa",
       "creative\\s+commons\\s+by-nc",
       "cc-?\\s*by-nc(?!\\s*\\d)",
       "attribution.{0,30}non.?commercial"

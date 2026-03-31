@@ -38,7 +38,11 @@ to a metadata dict with three required fields:
   (e.g. ``"cc-by"``)
 - ``family_key`` – the family-level identifier (e.g. ``"cc"``)
 
-URLs are stored separately in the ``url`` field of the metadata dict.
+Optional fields:
+
+- ``aliases`` – list of alternative lookup strings
+- ``urls`` – list of licence URLs
+- ``patterns`` – list of regex patterns for prose matching (strings ≥20 chars)
 
 How to add a new licence alias
 ------------------------------
@@ -81,21 +85,40 @@ normalised at lookup time (http→https, trailing slash stripped).
 How to Add a New Prose Pattern
 ------------------------------
 
-Edit ``prose/prose_patterns.json`` — insert your entry **before** any
-pattern it should take priority over:
+Prose patterns (regex patterns for matching licence references in longer
+text strings) can be added to either location:
+
+1. **Recommended**: Add to ``aliases/aliases.json`` using the ``patterns``
+   field:
+
+.. code:: json
+
+   "my licence": {
+     "version_key": "my-licence-1.0",
+     "name_key": "my-licence",
+     "family_key": "publisher-oa",
+     "patterns": [
+       "my very specific phrase",
+       "creative\\s+commons\\s+my-licence"
+     ]
+   }
+
+2. Or add to ``prose/prose_patterns.json``:
 
 .. code:: json
 
    [
      {"pattern": "my very specific phrase",
-      "version_key": "my-licence",
+      "version_key": "my-licence-1.0",
       "name_key": "my-licence",
       "family_key": "publisher-oa"},
      ...
    ]
 
 Patterns are Python regular expressions matched case-insensitively.
-More-specific patterns must come first.
+More-specific patterns must come first. Patterns from both sources are
+combined, with ``prose_patterns.json`` processed first to maintain
+ordering.
 
 How to add a brand-new licence
 ------------------------------
