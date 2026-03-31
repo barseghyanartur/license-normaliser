@@ -18,6 +18,7 @@ All keys in ``aliases`` inherit the same ``version_key``, ``name_key``, and
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Any
 
@@ -26,6 +27,7 @@ from licence_normaliser.plugins import (
     BasePlugin,
     FamilyPlugin,
     NamePlugin,
+    ProsePlugin,
     URLPlugin,
 )
 
@@ -68,7 +70,9 @@ def _iter_entries(
     return results
 
 
-class AliasParser(BasePlugin, AliasPlugin, FamilyPlugin, NamePlugin, URLPlugin):
+class AliasParser(
+    BasePlugin, AliasPlugin, FamilyPlugin, NamePlugin, URLPlugin, ProsePlugin
+):
     url = None
     local_path = "data/aliases/aliases.json"
 
@@ -205,3 +209,24 @@ class AliasParser(BasePlugin, AliasPlugin, FamilyPlugin, NamePlugin, URLPlugin):
             if vk and nk:
                 names[vk] = nk
         return names
+
+    def load_prose(self) -> list[tuple[re.Pattern[str], str]]:
+        """Load regex patterns from aliases.json entries that have a patterns array."""
+        result: list[tuple[re.Pattern[str], str]] = []
+        data = self._load_data()
+        for meta in data.values():
+            if not isinstance(meta, dict):
+                continue
+            version_key = meta.get("version_key", "")
+            if not version_key:
+                continue
+            patterns = meta.get("patterns", [])
+            if isinstance(patterns, list):
+                for pattern_str in patterns:
+                    if isinstance(pattern_str, str) and pattern_str:
+                        try:
+                            compiled = re.compile(pattern_str, re.IGNORECASE)
+                            result.append((compiled, version_key))
+                        except re.error:
+                            pass  # Skip invalid patterns
+        return result

@@ -86,9 +86,10 @@ def _load_name_plugins() -> list[type]:
 
 
 def _load_prose_plugins() -> list[type]:
+    from .parsers.alias import AliasParser
     from .parsers.prose import ProseParser
 
-    return [ProseParser]
+    return [ProseParser, AliasParser]
 
 
 # Lazy-loaded bundle - functions delay imports until actually needed

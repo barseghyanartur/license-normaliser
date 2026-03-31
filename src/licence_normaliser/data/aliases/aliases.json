@@ -30,6 +30,9 @@
     "urls": [
       "https://pubs.acs.org/page/policy/authorchoice_termsofuse.html",
       "https://doi.org/10.1021/policy/oa-license"
+    ],
+    "patterns": [
+      "acs\\s*authorchoice"
     ]
   },
 
@@ -42,6 +45,9 @@
     ],
     "urls": [
       "https://pubs.acs.org/page/policy/authorchoice_ccby_termsofuse.html"
+    ],
+    "patterns": [
+      "acs\\s*authorchoice.*cc\\s*by(?!-nc)"
     ]
   },
 
@@ -106,6 +112,9 @@
     "aliases": [
       "all-rights-reserved",
       "all rights reserved"
+    ],
+    "patterns": [
+      "all\\s*rights\\s*reserved"
     ]
   },
 
@@ -159,6 +168,9 @@
     "aliases": [
       "author-manuscript",
       "author manuscript"
+    ],
+    "patterns": [
+      "author\\s*manuscript"
     ]
   },
 
@@ -218,6 +230,10 @@
       "creative commons attribution",
       "creative commons attribution license",
       "creative commons by"
+    ],
+    "patterns": [
+      "creative\\s+commons\\s+by",
+      "\\bcc-?\\s*by\\b(?!\\s*-)"
     ]
   },
 
@@ -236,6 +252,9 @@
     "family_key": "cc",
     "urls": [
       "https://creativecommons.org/licenses/by/2.0"
+    ],
+    "patterns": [
+      "cc-?\\s*by\\s*2\\.0"
     ]
   },
 
@@ -260,6 +279,9 @@
     "urls": [
       "https://creativecommons.org/licenses/by/3.0",
       "https://creativecommons.org/licenses/by/3.0/deed.en_us"
+    ],
+    "patterns": [
+      "cc-?\\s*by\\s*3\\.0"
     ]
   },
 
@@ -299,6 +321,9 @@
     ],
     "urls": [
       "https://creativecommons.org/licenses/by/4.0"
+    ],
+    "patterns": [
+      "cc-?\\s*by\\s*4\\.0"
     ]
   },
 
@@ -312,6 +337,11 @@
       "cc-by nc",
       "creative commons attribution-noncommercial",
       "creative commons by-nc"
+    ],
+    "patterns": [
+      "creative\\s+commons\\s+by-nc",
+      "cc-?\\s*by-nc(?!\\s*\\d)",
+      "attribution.{0,30}non.?commercial"
     ]
   },
 
@@ -363,6 +393,9 @@
     "family_key": "cc",
     "urls": [
       "https://creativecommons.org/licenses/by-nc/3.0"
+    ],
+    "patterns": [
+      "cc-?\\s*by-nc\\s*3\\.0"
     ]
   },
 
@@ -384,6 +417,9 @@
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nc/4.0"
+    ],
+    "patterns": [
+      "cc-?\\s*by-nc\\s*4\\.0"
     ]
   },
 
@@ -414,6 +450,11 @@
       "cc-by nc-nd",
       "creative commons attribution-noncommercial-noderivatives",
       "creative commons by-nc-nd"
+    ],
+    "patterns": [
+      "cc-?\\s*by-nc-nd(?!\\s*\\d)",
+      "creative\\s+commons\\s+by-nc-nd",
+      "attribution.{0,30}non.?commercial.{0,30}no.?deriv"
     ]
   },
 
@@ -477,6 +518,9 @@
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nc-nd/3.0"
+    ],
+    "patterns": [
+      "cc-?\\s*by-nc-nd\\s*3\\.0"
     ]
   },
 
@@ -520,6 +564,9 @@
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nc-nd/4.0"
+    ],
+    "patterns": [
+      "cc-?\\s*by-nc-nd\\s*4\\.0"
     ]
   },
 
@@ -533,6 +580,11 @@
       "cc by nc sa",
       "cc-by nc-sa",
       "creative commons by-nc-sa"
+    ],
+    "patterns": [
+      "creative\\s+commons\\s+by-nc-sa",
+      "cc-?\\s*by-nc-sa(?!\\s*\\d)",
+      "attribution.{0,30}non.?commercial.{0,30}share.?alike"
     ]
   },
 
@@ -584,6 +636,9 @@
     "family_key": "cc",
     "urls": [
       "https://creativecommons.org/licenses/by-nc-sa/3.0"
+    ],
+    "patterns": [
+      "cc-?\\s*by-nc-sa\\s*3\\.0"
     ]
   },
 
@@ -626,6 +681,9 @@
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nc-sa/4.0"
+    ],
+    "patterns": [
+      "cc-?\\s*by-nc-sa\\s*4\\.0"
     ]
   },
 
@@ -639,6 +697,11 @@
       "cc-by nd",
       "creative commons by-nd",
       "creative commons attribution-noderivatives"
+    ],
+    "patterns": [
+      "creative\\s+commons\\s+by-nd",
+      "cc-?\\s*by-nd(?!\\s*\\d)",
+      "attribution.{0,30}no.?deriv"
     ]
   },
 
@@ -681,6 +744,9 @@
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nd/3.0"
+    ],
+    "patterns": [
+      "cc-?\\s*by-nd\\s*3\\.0"
     ]
   },
 
@@ -702,6 +768,9 @@
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nd/4.0"
+    ],
+    "patterns": [
+      "cc-?\\s*by-nd\\s*4\\.0"
     ]
   },
 
@@ -715,6 +784,11 @@
       "cc-by sa",
       "creative commons attribution-sharealike",
       "creative commons by-sa"
+    ],
+    "patterns": [
+      "creative\\s+commons\\s+by-sa",
+      "cc-?\\s*by-sa(?!\\s*\\d)",
+      "attribution.{0,30}share.?alike"
     ]
   },
 
@@ -766,6 +840,9 @@
     "family_key": "cc",
     "urls": [
       "https://creativecommons.org/licenses/by-sa/3.0"
+    ],
+    "patterns": [
+      "cc-?\\s*by-sa\\s*3\\.0"
     ]
   },
 
@@ -787,6 +864,9 @@
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-sa/4.0"
+    ],
+    "patterns": [
+      "cc-?\\s*by-sa\\s*4\\.0"
     ]
   },
 
@@ -865,6 +945,9 @@
     ],
     "urls": [
       "https://www.elsevier.com/open-access/userlicense/1.0"
+    ],
+    "patterns": [
+      "elsevier.*user\\s*licen"
     ]
   },
 
@@ -879,6 +962,9 @@
     ],
     "urls": [
       "https://www.elsevier.com/tdm/userlicense/1.0"
+    ],
+    "patterns": [
+      "elsevier.*tdm|tdm.*elsevier"
     ]
   },
 
@@ -1139,6 +1225,9 @@
     "aliases": [
       "open access",
       "open-access"
+    ],
+    "patterns": [
+      "open\\s*access"
     ]
   },
 
@@ -1175,6 +1264,9 @@
       "public domain",
       "public-domain",
       "pd"
+    ],
+    "patterns": [
+      "public\\s*domain"
     ]
   },
 
@@ -1238,6 +1330,9 @@
     ],
     "urls": [
       "https://www.springer.com/tdm"
+    ],
+    "patterns": [
+      "springer.*tdm|tdm.*springer"
     ]
   },
 
@@ -1332,6 +1427,9 @@
     ],
     "urls": [
       "https://doi.wiley.com/10.1002/tdm_license_1"
+    ],
+    "patterns": [
+      "wiley.*tdm|tdm.*wiley"
     ]
   },
 
