@@ -130,6 +130,37 @@ LICENCE_MATRIX = [
         "cc-by",
         "cc",
     ),
+    # Hyphenated CC licence forms in prose (CC-BY-NC-ND style)
+    (
+        "This is an open access article CC-BY-NC-ND IGO",
+        "cc-by-nc-nd",
+        "cc-by-nc-nd",
+        "cc",
+    ),
+    (
+        "This is an open access article CC-BY-NC-ND-IGO",
+        "cc-by-nc-nd",
+        "cc-by-nc-nd",
+        "cc",
+    ),
+    (
+        "This is an open access article CC-BY-NC-ND",
+        "cc-by-nc-nd",
+        "cc-by-nc-nd",
+        "cc",
+    ),
+    (
+        "This is an open access article CC-BY-NC",
+        "cc-by-nc",
+        "cc-by-nc",
+        "cc",
+    ),
+    (
+        "This is an open access article CC-BY",
+        "cc-by",
+        "cc-by",
+        "cc",
+    ),
     ("CC BY-ND 4.0", "cc-by-nd-4.0", "cc-by-nd", "cc"),
     ("cc by-nd 4.0", "cc-by-nd-4.0", "cc-by-nd", "cc"),
     ("cc-by-nd-4.0", "cc-by-nd-4.0", "cc-by-nd", "cc"),
