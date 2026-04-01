@@ -98,11 +98,11 @@ where the **first step that matches wins**:
 Step 1 -- Alias table
 ---------------------
 
-``ALIASES`` is a merged dict built from three sources:
+``ALIASES`` is a merged dict built from two sources:
 
 * ``data/aliases/aliases.json`` -- manually curated aliases with rich metadata
-  (version_key, name_key, family_key).
-* ``data/publishers/publishers.json`` -- publisher shorthand aliases.
+  (version_key, name_key, family_key, URLs, patterns). Includes all publisher
+  aliases, shorthand aliases, and prose patterns.
 * Built-in CC forms in ``_registry.py``.
 
 Each entry maps a cleaned string to a version key.  Aliases are checked
@@ -137,7 +137,7 @@ Step 3 -- URL map
 
 ``URL_MAP`` is a merged dict built from:
 
-* ``data/publishers/publishers.json`` -- publisher-specific URLs.
+* ``data/aliases/aliases.json`` -- publisher-specific URLs.
 * SPDX data source -- official reference URLs.
 * Open Definition data source -- official reference URLs.
 * OSI data source -- HTML reference URLs.
@@ -153,8 +153,8 @@ Step 4 -- Prose pattern scan
 ----------------------------
 
 ``PROSE_PATTERNS`` is a list of compiled ``(Pattern, version_key)``
-tuples loaded from ``data/prose/prose_patterns.json`` by the
-``ProseParser``.  Patterns are evaluated in order, and the **first
+tuples loaded from ``data/aliases/aliases.json`` (the ``patterns`` field)
+by the ``AliasParser``.  Patterns are evaluated in order, and the **first
 match** wins.  Only inputs of 20 characters or longer are tested
 against prose patterns.  Patterns are compiled once at import time.
 
@@ -234,14 +234,8 @@ interfaces.  Parsers contribute data to ``LicenceNormaliser``:
      - Registry + URL + BasePlugin
      - ``data/creativecommons/creativecommons.json`` (scraped)
    * - ``AliasParser``
-     - Alias + Family + Name + BasePlugin
-     - ``data/aliases/aliases.json`` (local-only)
-   * - ``PublisherParser``
-     - Alias + URL + BasePlugin
-     - ``data/publishers/publishers.json`` (local-only)
-   * - ``ProseParser``
-     - Prose + BasePlugin
-     - ``data/prose/prose_patterns.json`` (local-only)
+     - Alias + Family + Name + BasePlugin + ProsePlugin
+     - ``data/aliases/aliases.json`` (local-only, includes all curated data)
 
 Default plugins
 ---------------
@@ -377,47 +371,52 @@ All keys in the ``aliases`` array inherit the same ``version_key``,
 Adding a new URL
 ----------------
 
-Edit ``data/publishers/publishers.json`` under ``urls``:
+Add to the ``urls`` array in an entry in ``data/aliases/aliases.json``:
 
 .. code-block:: json
 
-    {
-      "urls": {
-        "https://example.com/license/": {
-          "version_key": "my-licence",
-          "name_key": "my-licence",
-          "family_key": "osi"
-        }
-      }
+    "my licence": {
+      "version_key": "my-licence",
+      "name_key": "my-licence",
+      "family_key": "osi",
+      "urls": [
+        "https://example.com/license/"
+      ]
     }
 
 Adding a shorthand alias
 ------------------------
 
-Edit ``data/publishers/publishers.json`` under ``shorthand_aliases``:
+Add to the ``aliases`` array in an entry in ``data/aliases/aliases.json``:
 
 .. code-block:: json
 
-    {
-      "shorthand_aliases": {
-        "my shorthand alias": "my-licence"
-      }
+    "my licence": {
+      "version_key": "my-licence",
+      "name_key": "my-licence",
+      "family_key": "osi",
+      "aliases": [
+        "my shorthand alias"
+      ]
     }
 
 Adding a prose pattern
 ----------------------
 
-Edit ``data/prose/prose_patterns.json`` (order matters -- specific
-patterns before general ones):
+Add a ``patterns`` field to an entry in ``data/aliases/aliases.json``
+(order matters within each entry -- specific patterns before general ones):
 
 .. code-block:: json
 
-    [
-      {"pattern": "my specific phrase",
-       "version_key": "existing-version-key",
-       "name_key": "existing-name",
-       "family_key": "osi"}
-    ]
+    "my licence": {
+      "version_key": "my-licence-1.0",
+      "name_key": "my-licence",
+      "family_key": "publisher-oa",
+      "patterns": [
+        "my specific phrase",
+        "another\\s+pattern"
+      ]
+    }
 
 Note: prose patterns are only tested against inputs of 20 characters or
 longer to avoid false positives on short strings.
@@ -485,9 +484,7 @@ Directory structure
     │   ├── osi.py                # OSIParser
     │   ├── scancode_licensedb.py # ScanCodeLicenseDBParser
     │   ├── creativecommons.py    # CreativeCommonsParser
-    │   ├── prose.py              # ProseParser
-    │   ├── alias.py              # AliasParser
-    │   └── publisher.py          # PublisherParser
+    │   └── alias.py              # AliasParser (includes aliases, URLs, prose patterns)
     └── tests/
         ├── conftest.py
         ├── test_aliases.py
@@ -500,9 +497,7 @@ Directory structure
         └── test_publisher.py
 
     data/
-    ├── aliases/aliases.json
-    ├── prose/prose_patterns.json
-    ├── publishers/publishers.json
+    ├── aliases/aliases.json      # includes all curated data (aliases, URLs, prose patterns)
     ├── spdx/spdx.json             (full SPDX list — loaded at runtime)
     ├── opendefinition/opendefinition.json  (full OD list — loaded at runtime)
     ├── osi/osi.json               (OSI API response)

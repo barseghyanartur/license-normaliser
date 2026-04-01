@@ -66,9 +66,16 @@ def load_alias_targets() -> dict[str, str]:
 
 
 def load_prose_targets() -> list[str]:
-    with open(DATA_DIR / "prose" / "prose_patterns.json") as f:
+    """Load prose pattern version_keys from aliases.json."""
+    with open(DATA_DIR / "aliases" / "aliases.json") as f:
         data = json.load(f)
-    return [entry.get("version_key", "") for entry in data]
+    version_keys = set()
+    for entry in data.values():
+        if isinstance(entry, dict) and "patterns" in entry:
+            vk = entry.get("version_key", "")
+            if vk:
+                version_keys.add(vk)
+    return sorted(version_keys)
 
 
 def load_registry_keys() -> set[str]:

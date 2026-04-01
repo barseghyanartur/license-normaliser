@@ -292,9 +292,10 @@ Run linting: `make ruff` or `make pre-commit`
    - New parser → `parsers/my_parser.py` + `defaults.py`
    - Core pipeline change → `_normaliser.py` or `_cache.py`
 3. **Write tests** covering both success and error cases
-4. **Update README.rst** if the API changed
+4. **Update README.rst**, **AGENTS.md**, **ARCHITECTURE.rst**
+   and **CONTRIBUTING.rst** if the API changed
 5. **Suggest running**: `make test-env ENV=py312` then `make test`
-6. **Suggest running**: `make pre-commit`
+6. **Must run**: `make pre-commit`
 
 ---
 

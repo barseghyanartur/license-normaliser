@@ -144,7 +144,8 @@ For a new **alias** or **family override** for an *existing* licence:
 
 For a new **prose pattern** (regex matching free-text descriptions):
 
-1. Add an entry to ``src/licence_normaliser/data/prose/prose_patterns.json``.
+1. Add a ``patterns`` field to an entry in
+   ``src/licence_normaliser/data/aliases/aliases.json``.
 2. Add a test in ``src/licence_normaliser/tests/test_prose.py``.
 3. No Python changes needed.
 

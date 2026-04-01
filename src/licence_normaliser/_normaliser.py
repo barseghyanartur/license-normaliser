@@ -349,7 +349,7 @@ class LicenceNormaliser:
             for i, (pattern, vkey) in enumerate(self._prose_patterns):
                 if pattern.search(cleaned):
                     source_line = None
-                    source_file = "prose_patterns.json"
+                    source_file = "aliases.json"
                     if self._prose_lines and i < len(self._prose_lines):
                         _, _, source_line = self._prose_lines[i]
                     stages.append(
