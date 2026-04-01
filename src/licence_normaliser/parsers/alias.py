@@ -227,6 +227,9 @@ class AliasParser(
                         try:
                             compiled = re.compile(pattern_str, re.IGNORECASE)
                             result.append((compiled, version_key))
-                        except re.error:
-                            pass  # Skip invalid patterns
+                        except re.error as e:
+                            raise ValueError(
+                                f"Invalid prose pattern in aliases.json: "
+                                f"pattern={pattern_str!r}, version_key={version_key!r}"
+                            ) from e
         return result
