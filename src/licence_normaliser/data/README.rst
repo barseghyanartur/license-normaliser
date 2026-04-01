@@ -99,7 +99,8 @@ text strings) to ``aliases/aliases.json`` using the ``patterns`` field:
    }
 
 Patterns are Python regular expressions matched case-insensitively.
-More-specific patterns must come first within each entry.
+More-specific patterns must come first: matching priority is determined by full
+load order across all entries, then by pattern order within each entry.
 
 How to add a brand-new licence
 ------------------------------
