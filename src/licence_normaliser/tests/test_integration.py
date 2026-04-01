@@ -108,6 +108,68 @@ LICENCE_MATRIX = [
     ("CC BY-SA 3.0", "cc-by-sa-3.0", "cc-by-sa", "cc"),
     ("cc-by-3.0-igo", "cc-by-3.0-igo", "cc-by", "cc"),
     ("cc-by-nc-nd-3.0-igo", "cc-by-nc-nd-3.0-igo", "cc-by-nc-nd", "cc"),
+    # Prose patterns for CC licences
+    (
+        "This is an open access article under the CC BY-NC-ND license.",
+        "cc-by-nc-nd",
+        "cc-by-nc-nd",
+        "cc",
+    ),
+    (
+        "This is an open access article under the CC BY IGO license.",
+        "cc-by",
+        "cc-by",
+        "cc",
+    ),
+    (
+        "This is an open access article under the CC BY-NC-ND IGO license.",
+        "cc-by-nc-nd",
+        "cc-by-nc-nd",
+        "cc",
+    ),
+    (
+        "This is an open access article under the CC BY-NC license.",
+        "cc-by-nc",
+        "cc-by-nc",
+        "cc",
+    ),
+    (
+        "This is an open access article under the CC BY license.",
+        "cc-by",
+        "cc-by",
+        "cc",
+    ),
+    # Hyphenated CC licence forms in prose (CC-BY-NC-ND style)
+    (
+        "This is an open access article CC-BY-NC-ND IGO",
+        "cc-by-nc-nd",
+        "cc-by-nc-nd",
+        "cc",
+    ),
+    (
+        "This is an open access article CC-BY-NC-ND-IGO",
+        "cc-by-nc-nd",
+        "cc-by-nc-nd",
+        "cc",
+    ),
+    (
+        "This is an open access article CC-BY-NC-ND",
+        "cc-by-nc-nd",
+        "cc-by-nc-nd",
+        "cc",
+    ),
+    (
+        "This is an open access article CC-BY-NC",
+        "cc-by-nc",
+        "cc-by-nc",
+        "cc",
+    ),
+    (
+        "This is an open access article CC-BY",
+        "cc-by",
+        "cc-by",
+        "cc",
+    ),
     # CC0
     ("CC0 1.0", "cc0-1.0", "cc0", "cc0"),
     ("cc0 1.0", "cc0-1.0", "cc0", "cc0"),

@@ -23,6 +23,7 @@
   {"pattern": "cc\\s*by\\s*4\\.0", "version_key": "cc-by-4.0", "name_key": "cc-by", "family_key": "cc"},
   {"pattern": "cc\\s*by\\s*3\\.0", "version_key": "cc-by-3.0", "name_key": "cc-by", "family_key": "cc"},
   {"pattern": "cc\\s*by\\s*2\\.0", "version_key": "cc-by-2.0", "name_key": "cc-by", "family_key": "cc"},
+  {"pattern": "acs\\s*authorchoice.*cc\\s*by(?!-nc)", "version_key": "acs-authorchoice-ccby", "name_key": "acs-authorchoice-ccby", "family_key": "publisher-oa"},
   {"pattern": "\\bcc\\s*by\\b(?!\\s*-)", "version_key": "cc-by", "name_key": "cc-by", "family_key": "cc"},
   {"pattern": "\\bcc\\s*0\\b|cc\\s*zero", "version_key": "cc0", "name_key": "cc0", "family_key": "cc0"},
   {"pattern": "attribution.{0,30}non.?commercial.{0,30}no.?deriv", "version_key": "cc-by-nc-nd", "name_key": "cc-by-nc-nd", "family_key": "cc"},
