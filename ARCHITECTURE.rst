@@ -234,8 +234,8 @@ interfaces.  Parsers contribute data to ``LicenceNormaliser``:
      - Registry + URL + BasePlugin
      - ``data/creativecommons/creativecommons.json`` (scraped)
    * - ``AliasParser``
-     - Alias + Family + Name + BasePlugin + ProsePlugin
-     - ``data/aliases/aliases.json`` (local-only, includes all curated data)
+     - Alias + Family + Name + URL + BasePlugin + ProsePlugin
+     - ``data/aliases/aliases.json`` (local-only, includes all curated data: aliases, URLs, prose patterns)
 
 Default plugins
 ---------------
