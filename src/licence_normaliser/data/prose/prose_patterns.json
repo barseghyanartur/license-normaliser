@@ -47,6 +47,7 @@
   {"pattern": "cc[- ]+by[- ]+2\\.5\\b", "version_key": "cc-by-2.5", "name_key": "cc-by", "family_key": "cc"},
   {"pattern": "cc[- ]+by[- ]+2\\.0\\b", "version_key": "cc-by-2.0", "name_key": "cc-by", "family_key": "cc"},
   {"pattern": "cc[- ]+by[- ]+1\\.0\\b", "version_key": "cc-by-1.0", "name_key": "cc-by", "family_key": "cc"},
+  {"pattern": "acs\\s*authorchoice.*cc\\s*by(?!-nc)", "version_key": "acs-authorchoice-ccby", "name_key": "acs-authorchoice-ccby", "family_key": "publisher-oa"},
   {"pattern": "cc[- ]+by\\b", "version_key": "cc-by", "name_key": "cc-by", "family_key": "cc"},
 
   {"pattern": "cc\\s*by-nc-nd\\s*4\\.0", "version_key": "cc-by-nc-nd-4.0", "name_key": "cc-by-nc-nd", "family_key": "cc"},
@@ -97,7 +98,6 @@
   {"pattern": "cc\\s*by\\s*2\\.5", "version_key": "cc-by-2.5", "name_key": "cc-by", "family_key": "cc"},
   {"pattern": "cc\\s*by\\s*2\\.0", "version_key": "cc-by-2.0", "name_key": "cc-by", "family_key": "cc"},
   {"pattern": "cc\\s*by\\s*1\\.0", "version_key": "cc-by-1.0", "name_key": "cc-by", "family_key": "cc"},
-  {"pattern": "acs\\s*authorchoice.*cc\\s*by(?!-nc)", "version_key": "acs-authorchoice-ccby", "name_key": "acs-authorchoice-ccby", "family_key": "publisher-oa"},
 
   {"pattern": "cc-by-nc-nd", "version_key": "cc-by-nc-nd", "name_key": "cc-by-nc-nd", "family_key": "cc"},
   {"pattern": "cc-by-nc-sa", "version_key": "cc-by-nc-sa", "name_key": "cc-by-nc-sa", "family_key": "cc"},
