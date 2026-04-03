@@ -19,6 +19,18 @@ are used for versioning (schema follows below):
   0.3.4 to 0.4).
 - All backwards incompatible changes are mentioned in this document.
 
+0.5.1
+-----
+2026-04-04
+
+- Improved Creative Commons recognition (additional aliases, versions and
+  IGO variants) and expanded free-text matching.
+- Enhanced traceability: resolved licences include source line/file info
+  surfaced in explain outputs.
+- Added integration and trace tests for CC matching and source-line
+  explanations.
+- Docs updated to reflect traceability and plugin interface changes.
+
 0.5
 ---
 2026-03-27
