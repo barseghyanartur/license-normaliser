@@ -2,7 +2,7 @@
  Architecture guide
 ===================
 
-:Version: 0.5
+:Version: 0.5.1
 :Author: Artur Barseghyan <artur.barseghyan@gmail.com>
 :Repository: https://github.com/barseghyanartur/licence-normaliser
 
@@ -180,6 +180,7 @@ Six plugin types are supported (defined in ``plugins.py``):
 
 .. list-table::
    :header-rows: 1
+   :widths: 20 30 50
 
    * - Interface
      - Method
@@ -190,6 +191,9 @@ Six plugin types are supported (defined in ``plugins.py``):
    * - ``RegistryPlugin``
      - ``load_registry()``
      - ``dict[str, str]``: key → canonical_key
+   * -
+     - ``load_registry_lines()``
+     - ``dict[str, tuple[int, str]]``: key → (line, source_file) for trace
    * - ``URLPlugin``
      - ``load_urls()``
      - ``dict[str, str]``: cleaned_url → version_key

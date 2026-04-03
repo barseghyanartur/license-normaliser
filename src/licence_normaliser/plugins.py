@@ -92,6 +92,10 @@ class RegistryPlugin:
     def load_registry(self) -> dict[str, str]:
         raise NotImplementedError
 
+    def load_registry_lines(self) -> dict[str, tuple[int, str]]:
+        """Return dict mapping key -> (line_number, source_file)."""
+        return {}
+
 
 class URLPlugin:
     """Returns cleaned_url -> version_key mappings."""

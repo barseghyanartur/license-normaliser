@@ -94,6 +94,7 @@ class LicenceNormaliser:
         trace: bool | None = None,
     ) -> None:
         self._registry: dict[str, str] = {}
+        self._registry_lines: dict[str, tuple[int, str]] = {}
         self._url_map: dict[str, str] = {}
         self._vkey_to_url: dict[str, list[str]] = {}
         self._aliases: dict[str, str] = {}
@@ -127,6 +128,9 @@ class LicenceNormaliser:
             for plugin_cls in registry:
                 data = plugin_cls().load_registry()
                 self._registry.update(data)
+                lines_data = plugin_cls().load_registry_lines()
+                for key, line_info in lines_data.items():
+                    self._registry_lines[key] = line_info
         except OSError as exc:
             raise DataSourceError(
                 f"Failed to load registry from {plugin_cls.__name__}: {exc}"
@@ -303,7 +307,15 @@ class LicenceNormaliser:
         # 2. Registry lookup
         if cleaned in self._registry:
             canonical = self._registry[cleaned]
-            stages.append(LicenceTraceStage("registry", cleaned, canonical, True))
+            source_line = None
+            source_file = None
+            if cleaned in self._registry_lines:
+                source_line, source_file = self._registry_lines[cleaned]
+            stages.append(
+                LicenceTraceStage(
+                    "registry", cleaned, canonical, True, source_line, source_file
+                )
+            )
             v = self._make(canonical)
             trace = LicenceTrace(
                 raw,

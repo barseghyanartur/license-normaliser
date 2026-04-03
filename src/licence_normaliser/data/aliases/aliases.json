@@ -255,6 +255,10 @@
     "aliases": [
       "cc-by-3.0",
       "cc-by-3",
+      "cc by 3.0",
+      "cc-by 3.0",
+      "cc by 3",
+      "cc-by 3",
       "creative commons attribution 3.0"
     ],
     "urls": [
@@ -283,6 +287,77 @@
     ]
   },
 
+  "cc by-nc 3.0-igo": {
+    "version_key": "cc-by-nc-3.0-igo",
+    "name_key": "cc-by-nc",
+    "family_key": "cc",
+    "aliases": [
+      "cc-by-nc-3.0-igo",
+      "cc by-nc 3.0 igo",
+      "cc-by nc 3.0 igo",
+      "cc by-nc 3.0-igo",
+      "cc-by nc 3.0-igo",
+      "creative commons attribution-noncommercial 3.0 igo"
+    ],
+    "urls": [
+      "https://creativecommons.org/licenses/by-nc/3.0/igo"
+    ]
+  },
+
+  "cc by-nd 3.0-igo": {
+    "version_key": "cc-by-nd-3.0-igo",
+    "name_key": "cc-by-nd",
+    "family_key": "cc",
+    "aliases": [
+      "cc-by-nd-3.0-igo",
+      "cc by-nd 3.0 igo",
+      "cc-by nd 3.0 igo",
+      "cc by-nd 3.0-igo",
+      "cc-by nd 3.0-igo",
+      "creative commons attribution-noderivatives 3.0 igo"
+    ],
+    "urls": [
+      "https://creativecommons.org/licenses/by-nd/3.0/igo"
+    ]
+  },
+
+  "cc by-sa 3.0-igo": {
+    "version_key": "cc-by-sa-3.0-igo",
+    "name_key": "cc-by-sa",
+    "family_key": "cc",
+    "aliases": [
+      "cc-by-sa-3.0-igo",
+      "cc by-sa 3.0 igo",
+      "cc-by sa 3.0 igo",
+      "cc by-sa 3.0-igo",
+      "cc-by sa 3.0-igo",
+      "creative commons attribution-sharealike 3.0 igo"
+    ],
+    "urls": [
+      "https://creativecommons.org/licenses/by-sa/3.0/igo"
+    ]
+  },
+
+  "cc by 4.0-igo": {
+    "version_key": "cc-by-4.0-igo",
+    "name_key": "cc-by",
+    "family_key": "cc",
+    "aliases": [
+      "cc-by-4.0-igo",
+      "cc by 4.0 igo",
+      "cc-by 4.0 igo",
+      "cc by 4.0-igo",
+      "cc-by 4.0-igo",
+      "creative commons attribution 4.0 igo",
+      "creative commons attribution 4.0 international",
+      "creative commons attribution 4.0 international license",
+      "creative commons by 4.0 igo"
+    ],
+    "urls": [
+      "https://creativecommons.org/licenses/by/4.0/igo"
+    ]
+  },
+
   "cc by 4.0": {
     "version_key": "cc-by-4.0",
     "name_key": "cc-by",
@@ -292,6 +367,10 @@
       "cc by 4",
       "cc-by 4",
       "cc-by-4",
+      "cc by 4.0",
+      "cc-by 4.0",
+      "cc by 4.0",
+      "cc-by 4.0",
       "creative commons attribution 4.0",
       "creative commons attribution 4.0 international",
       "creative commons attribution 4.0 international license",

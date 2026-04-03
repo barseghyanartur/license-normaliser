@@ -67,6 +67,32 @@ class TestTraceSourceInfo:
         output = v.explain()
         assert "line" in output.lower()
 
+    def test_trace_shows_registry_source_line(self):
+        v = normalise_licence("MIT", trace=True)
+        output = v.explain()
+        assert "line" in output.lower()
+        assert "scancode_licensedb.json" in output
+
+    def test_trace_shows_registry_source_for_gpl(self):
+        v = normalise_licence("gpl-3.0", trace=True)
+        output = v.explain()
+        assert "line" in output.lower()
+        assert "scancode_licensedb.json" in output
+
+    def test_trace_shows_registry_source_for_apache(self):
+        v = normalise_licence("apache-2.0", trace=True)
+        output = v.explain()
+        assert "line" in output.lower()
+
+    def test_trace_shows_prose_source_line(self):
+        v = normalise_licence(
+            "This is an open access article under the CC BY-NC-ND license.",
+            trace=True,
+        )
+        output = v.explain()
+        assert "line" in output.lower()
+        assert "prose_patterns.json" in output
+
 
 class TestTraceEnvVariable:
     def test_env_variable_enables_trace(self, monkeypatch):

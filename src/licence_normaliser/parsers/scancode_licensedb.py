@@ -31,3 +31,18 @@ class ScanCodeLicenseDBParser(BasePlugin, RegistryPlugin):
             if key and key.lower() != "unknown":
                 result[key.lower().strip()] = key.lower().strip()
         return result
+
+    def load_registry_lines(self) -> dict[str, tuple[int, str]]:
+        path = Path(__file__).parent.parent / self.local_path
+        data = json.loads(path.read_text(encoding="utf-8"))
+        result: dict[str, tuple[int, str]] = {}
+        source_file = "scancode_licensedb.json"
+        if not isinstance(data, list):
+            return result
+        for idx, entry in enumerate(data, start=1):
+            if not isinstance(entry, dict):
+                continue
+            key = entry.get("license_key", "")
+            if key and key.lower() != "unknown":
+                result[key.lower().strip()] = (idx, source_file)
+        return result

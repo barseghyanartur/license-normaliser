@@ -101,7 +101,7 @@ Quick start
 Strict mode
 ===========
 
-By default, unresolvable inputs return an ``"unknown"`` result.  Pass
+By default, unresolvable inputs return an ``"unknown"`` result. Pass
 ``strict=True`` to raise ``LicenceNotFoundError`` instead:
 
 .. code-block:: python

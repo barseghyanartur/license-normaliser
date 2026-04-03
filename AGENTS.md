@@ -215,7 +215,7 @@ print(v.explain())
 The trace shows:
 - Each resolution stage attempted (alias → registry → url → prose → fallback)
 - Whether it matched (✓) or didn't (-)
-- Source file and line number for curated sources (aliases.json, prose_patterns.json)
+- Source file and line number for curated sources (aliases.json, prose_patterns.json, spdx.json, etc.)
 - Final result with version_key, name_key, family_key
 
 This is essential for:

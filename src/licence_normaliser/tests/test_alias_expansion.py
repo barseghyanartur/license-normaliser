@@ -16,6 +16,10 @@ from licence_normaliser import normalise_licence
 from licence_normaliser.exceptions import LicenceNotFoundError
 from licence_normaliser.parsers.alias import _iter_entries
 
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2026 Artur Barseghyan"
+__license__ = "MIT"
+
 # ---------------------------------------------------------------------------
 # Unit tests for _iter_entries helper
 # ---------------------------------------------------------------------------
@@ -251,26 +255,18 @@ def test_false_still_fails():
 
 
 class TestExistingAliasesNotBroken:
-    def test_cc_by_4_0(self):
-        assert normalise_licence("CC BY 4.0").key == "cc-by-4.0"
-
-    def test_cc_by_nc_4_0(self):
-        assert normalise_licence("CC BY-NC 4.0").key == "cc-by-nc-4.0"
-
-    def test_cc_by_nc_nd_4_0(self):
-        assert normalise_licence("CC BY-NC-ND 4.0").key == "cc-by-nc-nd-4.0"
-
-    def test_gpl_3_0(self):
-        assert normalise_licence("gpl-3.0").key == "gpl-3.0"
-
-    def test_gpl_2_0(self):
-        assert normalise_licence("gpl-2.0").key == "gpl-2.0"
-
-    def test_mit(self):
-        assert normalise_licence("MIT").key == "mit"
-
-    def test_apache(self):
-        assert normalise_licence("Apache-2.0").key == "apache-2.0"
-
-    def test_public_domain(self):
-        assert normalise_licence("public domain").key == "public-domain"
+    @pytest.mark.parametrize(
+        "input_str,expected_key",
+        [
+            ("CC BY 4.0", "cc-by-4.0"),
+            ("CC BY-NC 4.0", "cc-by-nc-4.0"),
+            ("CC BY-NC-ND 4.0", "cc-by-nc-nd-4.0"),
+            ("gpl-3.0", "gpl-3.0"),
+            ("gpl-2.0", "gpl-2.0"),
+            ("MIT", "mit"),
+            ("Apache-2.0", "apache-2.0"),
+            ("public domain", "public-domain"),
+        ],
+    )
+    def test_existing_aliases(self, input_str: str, expected_key: str) -> None:
+        assert normalise_licence(input_str).key == expected_key

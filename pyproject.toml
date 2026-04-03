@@ -1,8 +1,8 @@
 [project]
 name = "licence-normaliser"
-description = "Comprehensive licence normalisation with a three-level hierarchy."
+description = "Robust licence normalisation with a three-level hierarchy for common licences."
 readme = "README.rst"
-version = "0.5"
+version = "0.5.1"
 requires-python = ">=3.10"
 dependencies = []
 authors = [

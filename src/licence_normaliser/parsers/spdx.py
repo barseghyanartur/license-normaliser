@@ -30,6 +30,19 @@ class SPDXParser(BasePlugin, RegistryPlugin, URLPlugin):
                 result[lid.lower().strip()] = lid.lower().strip()
         return result
 
+    def load_registry_lines(self) -> dict[str, tuple[int, str]]:
+        path = Path(__file__).parent.parent / self.local_path
+        data = json.loads(path.read_text(encoding="utf-8"))
+        result: dict[str, tuple[int, str]] = {}
+        source_file = "spdx.json"
+        for idx, entry in enumerate(data.get("licenses", []), start=1):
+            if not isinstance(entry, dict):
+                continue
+            lid = entry.get("licenseId", "")
+            if lid:
+                result[lid.lower().strip()] = (idx, source_file)
+        return result
+
     def load_urls(self) -> dict[str, str]:
         path = Path(__file__).parent.parent / self.local_path
         data = json.loads(path.read_text(encoding="utf-8"))

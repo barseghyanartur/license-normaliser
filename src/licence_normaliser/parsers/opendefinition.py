@@ -30,6 +30,19 @@ class OpenDefinitionParser(BasePlugin, RegistryPlugin, URLPlugin):
                 result[lid.lower().strip()] = lid.lower().strip()
         return result
 
+    def load_registry_lines(self) -> dict[str, tuple[int, str]]:
+        path = Path(__file__).parent.parent / self.local_path
+        data = json.loads(path.read_text(encoding="utf-8"))
+        result: dict[str, tuple[int, str]] = {}
+        source_file = "opendefinition.json"
+        for idx, entry in enumerate(data.values(), start=1):
+            if not isinstance(entry, dict):
+                continue
+            lid = entry.get("id", "")
+            if lid:
+                result[lid.lower().strip()] = (idx, source_file)
+        return result
+
     def load_urls(self) -> dict[str, str]:
         path = Path(__file__).parent.parent / self.local_path
         data = json.loads(path.read_text(encoding="utf-8"))

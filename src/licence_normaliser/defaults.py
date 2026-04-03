@@ -44,10 +44,10 @@ def _load_registry_plugins() -> list[type]:
 
     return [
         SPDXParser,
+        CreativeCommonsParser,
         OpenDefinitionParser,
         OSIParser,
         ScanCodeLicenseDBParser,
-        CreativeCommonsParser,
     ]
 
 

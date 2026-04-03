@@ -32,6 +32,21 @@ class OSIParser(BasePlugin, RegistryPlugin, URLPlugin):
                 result[key.lower()] = key.lower()
         return result
 
+    def load_registry_lines(self) -> dict[str, tuple[int, str]]:
+        path = Path(__file__).parent.parent / self.local_path
+        data = json.loads(path.read_text(encoding="utf-8"))
+        result: dict[str, tuple[int, str]] = {}
+        source_file = "osi.json"
+        if not isinstance(data, list):
+            return result
+        for idx, entry in enumerate(data, start=1):
+            if not isinstance(entry, dict):
+                continue
+            key = entry.get("id", "").strip()
+            if key:
+                result[key.lower()] = (idx, source_file)
+        return result
+
     def load_urls(self) -> dict[str, str]:
         path = Path(__file__).parent.parent / self.local_path
         data = json.loads(path.read_text(encoding="utf-8"))

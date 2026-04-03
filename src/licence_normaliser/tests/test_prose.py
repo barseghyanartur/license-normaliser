@@ -2,6 +2,10 @@
 
 from licence_normaliser import normalise_licence
 
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2026 Artur Barseghyan"
+__license__ = "MIT"
+
 
 class TestProsePatternMatching:
     def test_cc_by_nc_nd_4_0_prose(self):
@@ -57,6 +61,39 @@ class TestProsePatternMatching:
         v = normalise_licence("acs authorchoice option was selected by the authors")
         assert v.key == "acs-authorchoice"
         assert v.family.key == "publisher-oa"
+
+    def test_acs_authorchoice_cc_by_prose(self):
+        v = normalise_licence("This is an ACS AuthorChoice CC BY article.")
+        assert v.key == "acs-authorchoice-ccby"
+        assert v.family.key == "publisher-oa"
+
+    def test_acs_authorchoice_cc_by_variant_prose(self):
+        v = normalise_licence("ACS AuthorChoice with CC BY license")
+        assert v.key == "acs-authorchoice-ccby"
+        assert v.family.key == "publisher-oa"
+
+    def test_acs_authorchoice_cc_by_4_0_prose(self):
+        v = normalise_licence("ACS AuthorChoice CC BY 4.0 article")
+        assert v.key == "acs-authorchoice-ccby"
+        assert v.family.key == "publisher-oa"
+
+    def test_cc_by_nc_3_0_igo_prose(self):
+        v = normalise_licence("Article published under CC by-nc 3.0-igo license.")
+        assert v.key == "cc-by-nc-3.0-igo"
+        assert v.licence.key == "cc-by-nc"
+        assert v.family.key == "cc"
+
+    def test_cc_by_nd_3_0_igo_prose(self):
+        v = normalise_licence("Article published under CC by-nd 3.0-igo license.")
+        assert v.key == "cc-by-nd-3.0-igo"
+        assert v.licence.key == "cc-by-nd"
+        assert v.family.key == "cc"
+
+    def test_cc_by_sa_3_0_igo_prose(self):
+        v = normalise_licence("Article published under CC by-sa 3.0-igo license.")
+        assert v.key == "cc-by-sa-3.0-igo"
+        assert v.licence.key == "cc-by-sa"
+        assert v.family.key == "cc"
 
     def test_all_rights_reserved_prose(self):
         v = normalise_licence("all rights reserved except as permitted by law")
