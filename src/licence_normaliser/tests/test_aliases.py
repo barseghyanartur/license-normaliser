@@ -2,6 +2,10 @@
 
 from licence_normaliser import normalise_licence
 
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2026 Artur Barseghyan"
+__license__ = "MIT"
+
 
 class TestNonCCAliases:
     def test_apache_shorthand(self):

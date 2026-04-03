@@ -13,6 +13,11 @@ from licence_normaliser import (
     normalise_licences,
 )
 
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2026 Artur Barseghyan"
+__license__ = "MIT"
+
+
 LICENCE_MATRIX = [
     # raw,expected_key,expected_licence,expected_family
     # === OSI-approved licences ===

@@ -2,6 +2,10 @@
 
 from licence_normaliser import normalise_licence
 
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2026 Artur Barseghyan"
+__license__ = "MIT"
+
 
 class TestProsePatternMatching:
     def test_cc_by_nc_nd_4_0_prose(self):

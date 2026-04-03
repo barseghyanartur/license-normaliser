@@ -16,6 +16,10 @@ from licence_normaliser import normalise_licence
 from licence_normaliser.exceptions import LicenceNotFoundError
 from licence_normaliser.parsers.alias import _iter_entries
 
+__author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
+__copyright__ = "2026 Artur Barseghyan"
+__license__ = "MIT"
+
 # ---------------------------------------------------------------------------
 # Unit tests for _iter_entries helper
 # ---------------------------------------------------------------------------
