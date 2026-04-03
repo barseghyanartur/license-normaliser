@@ -1,5 +1,7 @@
 """Tests for AliasParser - non-CC aliases (Apache, MIT, BSD, GPL, etc.)."""
 
+import pytest
+
 from licence_normaliser import normalise_licence
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
@@ -8,132 +10,40 @@ __license__ = "MIT"
 
 
 class TestNonCCAliases:
-    def test_apache_shorthand(self):
-        v = normalise_licence("apache")
-        assert v.key == "apache-2.0"
-        assert v.family.key == "osi"
-
-    def test_apache_license(self):
-        v = normalise_licence("apache license")
-        assert v.key == "apache-2.0"
-        assert v.family.key == "osi"
-
-    def test_apache_2(self):
-        v = normalise_licence("apache 2")
-        assert v.key == "apache-2.0"
-        assert v.family.key == "osi"
-
-    def test_apache_2_0(self):
-        v = normalise_licence("apache 2.0")
-        assert v.key == "apache-2.0"
-        assert v.family.key == "osi"
-
-    def test_mit_license(self):
-        v = normalise_licence("mit license")
-        assert v.key == "mit"
-        assert v.family.key == "osi"
-
-    def test_the_mit_license(self):
-        v = normalise_licence("the mit license")
-        assert v.key == "mit"
-        assert v.family.key == "osi"
-
-    def test_bsd_shorthand(self):
-        v = normalise_licence("bsd")
-        assert v.key == "bsd-3-clause"
-        assert v.family.key == "osi"
-
-    def test_bsd_license(self):
-        v = normalise_licence("bsd license")
-        assert v.key == "bsd-3-clause"
-        assert v.family.key == "osi"
-
-    def test_mozilla(self):
-        v = normalise_licence("mozilla")
-        assert v.key == "mpl-2.0"
-        assert v.family.key == "osi"
-
-    def test_isc_license(self):
-        v = normalise_licence("isc license")
-        assert v.key == "isc"
-        assert v.family.key == "osi"
-
-    def test_gpl_shorthand(self):
-        v = normalise_licence("gpl")
-        assert v.key == "gpl-3.0"
-        assert v.family.key == "copyleft"
-
-    def test_gnu_gpl(self):
-        v = normalise_licence("gnu gpl")
-        assert v.key == "gpl-3.0"
-        assert v.family.key == "copyleft"
-
-    def test_gnu_gpl_v2(self):
-        v = normalise_licence("gnu gpl v2")
-        assert v.key == "gpl-2.0"
-        assert v.family.key == "copyleft"
-
-    def test_gpl_3_0_or_later(self):
-        v = normalise_licence("gpl-3.0+")
-        assert v.key == "gpl-3.0"
-        assert v.family.key == "copyleft"
-
-    def test_gpl_2_0_or_later(self):
-        v = normalise_licence("gpl-2.0+")
-        assert v.key == "gpl-2.0"
-        assert v.family.key == "copyleft"
-
-    def test_agpl_shorthand(self):
-        v = normalise_licence("agpl")
-        assert v.key == "agpl-3.0"
-        assert v.family.key == "copyleft"
-
-    def test_agpl_3_0_or_later(self):
-        v = normalise_licence("agpl-3.0+")
-        assert v.key == "agpl-3.0"
-        assert v.family.key == "copyleft"
-
-    def test_lgpl_shorthand(self):
-        v = normalise_licence("lgpl")
-        assert v.key == "lgpl-3.0"
-        assert v.family.key == "copyleft"
-
-    def test_lgpl_2_1_or_later(self):
-        v = normalise_licence("lgpl-2.1+")
-        assert v.key == "lgpl-2.1"
-        assert v.family.key == "copyleft"
-
-    def test_lgpl_3_0_or_later(self):
-        v = normalise_licence("lgpl-3.0+")
-        assert v.key == "lgpl-3.0"
-        assert v.family.key == "copyleft"
-
-    def test_unlicense(self):
-        v = normalise_licence("unlicense")
-        assert v.key == "unlicense"
-        assert v.family.key == "public-domain"
-
-    def test_wtfpl(self):
-        v = normalise_licence("wtfpl")
-        assert v.key == "wtfpl"
-        assert v.family.key == "public-domain"
-
-    def test_zlib(self):
-        v = normalise_licence("zlib")
-        assert v.key == "zlib"
-        assert v.family.key == "osi"
-
-    def test_open_database_license(self):
-        v = normalise_licence("open database license")
-        assert v.key == "odbl"
-        assert v.family.key == "open-data"
-
-    def test_public_domain(self):
-        v = normalise_licence("public domain")
-        assert v.key == "public-domain"
-        assert v.family.key == "public-domain"
-
-    def test_pd_alias(self):
-        v = normalise_licence("pd")
-        assert v.key == "public-domain"
-        assert v.family.key == "public-domain"
+    @pytest.mark.parametrize(
+        "input_str,expected_key,expected_family",
+        [
+            ("apache", "apache-2.0", "osi"),
+            ("apache license", "apache-2.0", "osi"),
+            ("apache 2", "apache-2.0", "osi"),
+            ("apache 2.0", "apache-2.0", "osi"),
+            ("mit license", "mit", "osi"),
+            ("the mit license", "mit", "osi"),
+            ("bsd", "bsd-3-clause", "osi"),
+            ("bsd license", "bsd-3-clause", "osi"),
+            ("mozilla", "mpl-2.0", "osi"),
+            ("isc license", "isc", "osi"),
+            ("gpl", "gpl-3.0", "copyleft"),
+            ("gnu gpl", "gpl-3.0", "copyleft"),
+            ("gnu gpl v2", "gpl-2.0", "copyleft"),
+            ("gpl-3.0+", "gpl-3.0", "copyleft"),
+            ("gpl-2.0+", "gpl-2.0", "copyleft"),
+            ("agpl", "agpl-3.0", "copyleft"),
+            ("agpl-3.0+", "agpl-3.0", "copyleft"),
+            ("lgpl", "lgpl-3.0", "copyleft"),
+            ("lgpl-2.1+", "lgpl-2.1", "copyleft"),
+            ("lgpl-3.0+", "lgpl-3.0", "copyleft"),
+            ("unlicense", "unlicense", "public-domain"),
+            ("wtfpl", "wtfpl", "public-domain"),
+            ("zlib", "zlib", "osi"),
+            ("open database license", "odbl", "open-data"),
+            ("public domain", "public-domain", "public-domain"),
+            ("pd", "public-domain", "public-domain"),
+        ],
+    )
+    def test_non_cc_aliases(
+        self, input_str: str, expected_key: str, expected_family: str
+    ) -> None:
+        v = normalise_licence(input_str)
+        assert v.key == expected_key
+        assert v.family.key == expected_family
