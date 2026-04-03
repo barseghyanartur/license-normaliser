@@ -156,7 +156,7 @@ class TestBatchNormalisation:
         assert [r.key for r in normalise_licences(raw)] == expected
 
     def test_batch_accepts_generator(self):
-        results = normalise_licences(["MIT", "ISC"])
+        results = normalise_licences((x for x in ["MIT", "ISC"]))  # noqa: C416
         assert results[0].key == "mit"
 
     def test_batch_empty(self):
