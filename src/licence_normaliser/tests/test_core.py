@@ -49,23 +49,19 @@ class TestDirectLookup:
 
 
 class TestBuiltinAliases:
-    def test_cc_by(self):
-        assert normalise_licence("CC BY").key == "cc-by"
-
-    def test_cc_by_4_0(self):
-        assert normalise_licence("CC BY 4.0").key == "cc-by-4.0"
-
-    def test_cc_by_nc_nd_4_0(self):
-        assert normalise_licence("CC BY-NC-ND 4.0").key == "cc-by-nc-nd-4.0"
-
-    def test_cc_by_nc_sa_4_0(self):
-        assert normalise_licence("CC BY-NC-SA 4.0").key == "cc-by-nc-sa-4.0"
-
-    def test_cc0_1_0(self):
-        assert normalise_licence("CC0 1.0").key == "cc0-1.0"
-
-    def test_public_domain(self):
-        assert normalise_licence("public domain").key == "public-domain"
+    @pytest.mark.parametrize(
+        "input_str,expected_key",
+        [
+            ("CC BY", "cc-by"),
+            ("CC BY 4.0", "cc-by-4.0"),
+            ("CC BY-NC-ND 4.0", "cc-by-nc-nd-4.0"),
+            ("CC BY-NC-SA 4.0", "cc-by-nc-sa-4.0"),
+            ("CC0 1.0", "cc0-1.0"),
+            ("public domain", "public-domain"),
+        ],
+    )
+    def test_builtin_aliases(self, input_str: str, expected_key: str) -> None:
+        assert normalise_licence(input_str).key == expected_key
 
 
 class TestUrlLookup:
