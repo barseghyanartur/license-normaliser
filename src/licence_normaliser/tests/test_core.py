@@ -1,5 +1,7 @@
 """End-to-end pipeline tests via the public API."""
 
+import pytest
+
 from licence_normaliser import normalise_licence, normalise_licences
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
@@ -8,100 +10,36 @@ __license__ = "MIT"
 
 
 class TestDirectLookup:
-    def test_mit(self):
-        v = normalise_licence("mit")
-        assert v.key == "mit"
-        assert v.family.key == "osi"
-
-    def test_apache(self):
-        v = normalise_licence("apache-2.0")
-        assert v.key == "apache-2.0"
-        assert v.family.key == "osi"
-
-    def test_cc_by_4_0(self):
-        v = normalise_licence("cc-by-4.0")
-        assert v.key == "cc-by-4.0"
-        assert v.family.key == "cc"
-
-    def test_cc_by_nc_nd_4_0(self):
-        v = normalise_licence("cc-by-nc-nd-4.0")
-        assert v.key == "cc-by-nc-nd-4.0"
-        assert v.family.key == "cc"
-
-    def test_cc0_1_0(self):
-        v = normalise_licence("cc0-1.0")
-        assert v.key == "cc0-1.0"
-        assert v.family.key == "cc0"
-
-    def test_gpl_3_0(self):
-        v = normalise_licence("gpl-3.0")
-        assert v.key == "gpl-3.0"
-        assert v.family.key == "copyleft"
-
-    def test_gpl_2_0_only(self):
-        v = normalise_licence("gpl-2.0-only")
-        assert v.key == "gpl-2.0-only"
-        assert v.family.key == "copyleft"
-
-    def test_lgpl_2_1(self):
-        v = normalise_licence("lgpl-2.1")
-        assert v.key == "lgpl-2.1"
-        assert v.family.key == "copyleft"
-
-    def test_agpl_3_0(self):
-        v = normalise_licence("agpl-3.0")
-        assert v.key == "agpl-3.0"
-        assert v.family.key == "copyleft"
-
-    def test_bsd_3_clause(self):
-        v = normalise_licence("bsd-3-clause")
-        assert v.key == "bsd-3-clause"
-        assert v.family.key == "osi"
-
-    def test_isc(self):
-        v = normalise_licence("isc")
-        assert v.key == "isc"
-        assert v.family.key == "osi"
-
-    def test_mpl_2_0(self):
-        v = normalise_licence("mpl-2.0")
-        assert v.key == "mpl-2.0"
-        assert v.family.key == "osi"
-
-    def test_unlicense(self):
-        v = normalise_licence("unlicense")
-        assert v.key == "unlicense"
-        assert v.family.key == "public-domain"
-
-    def test_wtfpl(self):
-        v = normalise_licence("wtfpl")
-        assert v.key == "wtfpl"
-        assert v.family.key == "public-domain"
-
-    def test_zlib(self):
-        v = normalise_licence("zlib")
-        assert v.key == "zlib"
-        assert v.family.key == "osi"
-
-    def test_odbl_1_0(self):
-        v = normalise_licence("odbl-1.0")
-        assert v.key == "odbl-1.0"
-        assert v.family.key == "open-data"
-
-    def test_pddl_1_0(self):
-        v = normalise_licence("pddl-1.0")
-        assert v.key == "pddl-1.0"
-        assert v.family.key == "data"
-
-    def test_odc_by_1_0(self):
-        v = normalise_licence("odc-by-1.0")
-        assert v.key == "odc-by-1.0"
-        assert v.family.key == "open-data"
-
-    def test_unknown(self):
-        v = normalise_licence("unknown")
-        assert v.key == "unknown"
-        assert v.family.key == "unknown"
+    @pytest.mark.parametrize(
+        "input_str,expected_key,expected_family",
+        [
+            ("mit", "mit", "osi"),
+            ("apache-2.0", "apache-2.0", "osi"),
+            ("cc-by-4.0", "cc-by-4.0", "cc"),
+            ("cc-by-nc-nd-4.0", "cc-by-nc-nd-4.0", "cc"),
+            ("cc0-1.0", "cc0-1.0", "cc0"),
+            ("gpl-3.0", "gpl-3.0", "copyleft"),
+            ("gpl-2.0-only", "gpl-2.0-only", "copyleft"),
+            ("lgpl-2.1", "lgpl-2.1", "copyleft"),
+            ("agpl-3.0", "agpl-3.0", "copyleft"),
+            ("bsd-3-clause", "bsd-3-clause", "osi"),
+            ("isc", "isc", "osi"),
+            ("mpl-2.0", "mpl-2.0", "osi"),
+            ("unlicense", "unlicense", "public-domain"),
+            ("wtfpl", "wtfpl", "public-domain"),
+            ("zlib", "zlib", "osi"),
+            ("odbl-1.0", "odbl-1.0", "open-data"),
+            ("pddl-1.0", "pddl-1.0", "data"),
+            ("odc-by-1.0", "odc-by-1.0", "open-data"),
+            ("unknown", "unknown", "unknown"),
+        ],
+    )
+    def test_direct_lookup(
+        self, input_str: str, expected_key: str, expected_family: str
+    ) -> None:
+        v = normalise_licence(input_str)
+        assert v.key == expected_key
+        assert v.family.key == expected_family
 
     def test_case_insensitive(self):
         v = normalise_licence("MIT")
