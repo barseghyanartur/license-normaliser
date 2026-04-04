@@ -7,15 +7,21 @@ the contents of each key file.
 .. code-block:: text
    :caption: Project directory layout
 
-   licence-normaliser/
+   license-normaliser/
    ├── docs
    │   ├── conf.py
    │   └── full_llms.rst
    ├── scripts
    │   ├── __init__.py
+   │   ├── apply_aliases_patch.py
    │   ├── check_missing_aliases.py
    │   ├── compare_datasets.py
+   │   ├── compare_scancode_categories.py
+   │   ├── find_alias_duplicates.py
+   │   ├── migrate_publishers_to_aliases.py
+   │   ├── migrate_url_map_to_aliases.py
    │   ├── README.rst
+   │   ├── sort_aliases.py
    │   └── test_name_inference.py
    ├── src
    │   └── licence_normaliser
@@ -27,10 +33,6 @@ the contents of each key file.
    │       │   │   └── aliases.json
    │       │   ├── prose
    │       │   │   └── prose_patterns.json
-   │       │   ├── publishers
-   │       │   │   └── publishers.json
-   │       │   ├── urls
-   │       │   │   └── url_map.json
    │       │   └── README.rst
    │       ├── parsers
    │       │   ├── __init__.py
@@ -39,12 +41,12 @@ the contents of each key file.
    │       │   ├── opendefinition.py
    │       │   ├── osi.py
    │       │   ├── prose.py
-   │       │   ├── publisher.py
    │       │   ├── scancode_licensedb.py
    │       │   └── spdx.py
    │       ├── tests
    │       │   ├── __init__.py
    │       │   ├── conftest.py
+   │       │   ├── test_alias_expansion.py
    │       │   ├── test_aliases.py
    │       │   ├── test_cache.py
    │       │   ├── test_cli.py
@@ -53,7 +55,7 @@ the contents of each key file.
    │       │   ├── test_integration.py
    │       │   ├── test_models.py
    │       │   ├── test_prose.py
-   │       │   └── test_publisher.py
+   │       │   └── test_trace.py
    │       ├── __init__.py
    │       ├── _cache.py
    │       ├── _core.py
@@ -144,6 +146,13 @@ scripts/__init__.py
    :language: python
    :caption: scripts/__init__.py
 
+scripts/apply_aliases_patch.py
+------------------------------
+
+.. literalinclude:: ../scripts/apply_aliases_patch.py
+   :language: python
+   :caption: scripts/apply_aliases_patch.py
+
 scripts/check_missing_aliases.py
 --------------------------------
 
@@ -157,6 +166,41 @@ scripts/compare_datasets.py
 .. literalinclude:: ../scripts/compare_datasets.py
    :language: python
    :caption: scripts/compare_datasets.py
+
+scripts/compare_scancode_categories.py
+--------------------------------------
+
+.. literalinclude:: ../scripts/compare_scancode_categories.py
+   :language: python
+   :caption: scripts/compare_scancode_categories.py
+
+scripts/find_alias_duplicates.py
+--------------------------------
+
+.. literalinclude:: ../scripts/find_alias_duplicates.py
+   :language: python
+   :caption: scripts/find_alias_duplicates.py
+
+scripts/migrate_publishers_to_aliases.py
+----------------------------------------
+
+.. literalinclude:: ../scripts/migrate_publishers_to_aliases.py
+   :language: python
+   :caption: scripts/migrate_publishers_to_aliases.py
+
+scripts/migrate_url_map_to_aliases.py
+-------------------------------------
+
+.. literalinclude:: ../scripts/migrate_url_map_to_aliases.py
+   :language: python
+   :caption: scripts/migrate_url_map_to_aliases.py
+
+scripts/sort_aliases.py
+-----------------------
+
+.. literalinclude:: ../scripts/sort_aliases.py
+   :language: python
+   :caption: scripts/sort_aliases.py
 
 scripts/test_name_inference.py
 ------------------------------
@@ -235,6 +279,27 @@ src/licence_normaliser/data/aliases/aliases.json
    :language: json
    :caption: src/licence_normaliser/data/aliases/aliases.json
 
+src/licence_normaliser/data/creativecommons/creativecommons.json
+----------------------------------------------------------------
+
+.. literalinclude:: ../src/licence_normaliser/data/creativecommons/creativecommons.json
+   :language: json
+   :caption: src/licence_normaliser/data/creativecommons/creativecommons.json
+
+src/licence_normaliser/data/opendefinition/opendefinition.json
+--------------------------------------------------------------
+
+.. literalinclude:: ../src/licence_normaliser/data/opendefinition/opendefinition.json
+   :language: json
+   :caption: src/licence_normaliser/data/opendefinition/opendefinition.json
+
+src/licence_normaliser/data/osi/osi.json
+----------------------------------------
+
+.. literalinclude:: ../src/licence_normaliser/data/osi/osi.json
+   :language: json
+   :caption: src/licence_normaliser/data/osi/osi.json
+
 src/licence_normaliser/data/prose/prose_patterns.json
 -----------------------------------------------------
 
@@ -242,19 +307,19 @@ src/licence_normaliser/data/prose/prose_patterns.json
    :language: json
    :caption: src/licence_normaliser/data/prose/prose_patterns.json
 
-src/licence_normaliser/data/publishers/publishers.json
-------------------------------------------------------
+src/licence_normaliser/data/scancode_licensedb/scancode_licensedb.json
+----------------------------------------------------------------------
 
-.. literalinclude:: ../src/licence_normaliser/data/publishers/publishers.json
+.. literalinclude:: ../src/licence_normaliser/data/scancode_licensedb/scancode_licensedb.json
    :language: json
-   :caption: src/licence_normaliser/data/publishers/publishers.json
+   :caption: src/licence_normaliser/data/scancode_licensedb/scancode_licensedb.json
 
-src/licence_normaliser/data/urls/url_map.json
----------------------------------------------
+src/licence_normaliser/data/spdx/spdx.json
+------------------------------------------
 
-.. literalinclude:: ../src/licence_normaliser/data/urls/url_map.json
+.. literalinclude:: ../src/licence_normaliser/data/spdx/spdx.json
    :language: json
-   :caption: src/licence_normaliser/data/urls/url_map.json
+   :caption: src/licence_normaliser/data/spdx/spdx.json
 
 src/licence_normaliser/defaults.py
 ----------------------------------
@@ -312,13 +377,6 @@ src/licence_normaliser/parsers/prose.py
    :language: python
    :caption: src/licence_normaliser/parsers/prose.py
 
-src/licence_normaliser/parsers/publisher.py
--------------------------------------------
-
-.. literalinclude:: ../src/licence_normaliser/parsers/publisher.py
-   :language: python
-   :caption: src/licence_normaliser/parsers/publisher.py
-
 src/licence_normaliser/parsers/scancode_licensedb.py
 ----------------------------------------------------
 
@@ -353,6 +411,13 @@ src/licence_normaliser/tests/conftest.py
 .. literalinclude:: ../src/licence_normaliser/tests/conftest.py
    :language: python
    :caption: src/licence_normaliser/tests/conftest.py
+
+src/licence_normaliser/tests/test_alias_expansion.py
+----------------------------------------------------
+
+.. literalinclude:: ../src/licence_normaliser/tests/test_alias_expansion.py
+   :language: python
+   :caption: src/licence_normaliser/tests/test_alias_expansion.py
 
 src/licence_normaliser/tests/test_aliases.py
 --------------------------------------------
@@ -410,9 +475,9 @@ src/licence_normaliser/tests/test_prose.py
    :language: python
    :caption: src/licence_normaliser/tests/test_prose.py
 
-src/licence_normaliser/tests/test_publisher.py
-----------------------------------------------
+src/licence_normaliser/tests/test_trace.py
+------------------------------------------
 
-.. literalinclude:: ../src/licence_normaliser/tests/test_publisher.py
+.. literalinclude:: ../src/licence_normaliser/tests/test_trace.py
    :language: python
-   :caption: src/licence_normaliser/tests/test_publisher.py
+   :caption: src/licence_normaliser/tests/test_trace.py

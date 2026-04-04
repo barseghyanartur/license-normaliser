@@ -188,6 +188,7 @@ ignore_missing_imports = true
 
 [tool.sphinx-source-tree]
 ignore = [
+    ".amazonq",
     "*.egg-info",
     "*.py,cover",
     "*.pyc",
@@ -265,6 +266,7 @@ title = "Full project source-tree"
 output = "docs/llms.rst"
 title = "Project source-tree"
 ignore = [
+    ".amazonq",
     "*.egg-info",
     "*.py,cover",
     "*.pyc",
