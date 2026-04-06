@@ -10,7 +10,7 @@ Guidelines for updating licence-normaliser documentation when implementing new f
 ## Documentation Files Overview
 
 | File | Audience | Purpose |
-|------|----------|---------|
+| ---- | -------- | ------- |
 | `README.rst` | End users | Public API, quick start, usage examples |
 | `AGENTS.md` | AI agents | Mission, architecture, agent workflow, code patterns |
 | `ARCHITECTURE.rst` | Developers | Deep technical architecture, design goals, plugin system |
@@ -21,6 +21,7 @@ Guidelines for updating licence-normaliser documentation when implementing new f
 ## When to Update Each File
 
 ### README.rst
+
 Update when:
 - Public API changes (new functions, parameters, exceptions)
 - New CLI commands or options
@@ -35,6 +36,7 @@ Structure to maintain:
 - API sections matching the public interface
 
 ### AGENTS.md
+
 Update when:
 - New parser added (add to "Adding a new parser" section)
 - Resolution pipeline changes
@@ -52,7 +54,9 @@ Key sections:
 - Testing rules
 
 ### ARCHITECTURE.rst
+
 Update when:
+
 - Plugin architecture changes
 - New plugin interfaces
 - Parser class reference changes
@@ -61,6 +65,7 @@ Update when:
 - Directory structure changes
 
 Key sections:
+
 - Three-level hierarchy details
 - Resolution pipeline deep dive
 - Plugin interfaces table
@@ -70,20 +75,25 @@ Key sections:
 - Extending without Python changes
 
 ### CONTRIBUTING.rst
+
 Update when:
+
 - Contribution workflow changes
 - New normalisation rule types
 - Testing procedure changes
 - Release process changes
 
 Key sections:
+
 - Developer prerequisites
 - Code standards
 - Adding new normalisation rules
 - Pull request checklist
 
 ### Data README (src/licence_normaliser/data/README.rst)
+
 Update when:
+
 - New data file format
 - New entry types
 - Data structure changes
@@ -130,7 +140,7 @@ Update when:
 
 AGENTS.md uses executable code blocks with `name=<test_name>` attributes:
 
-```markdown
+````markdown
 ```python name=test_example
 # Code here
 ```
@@ -139,7 +149,7 @@ AGENTS.md uses executable code blocks with `name=<test_name>` attributes:
 ```python name=test_example_part2
 # Continues previous block, imports/vars in scope
 ```
-```
+````
 
 When adding examples:
 - Use descriptive names: `test_<feature>_<scenario>`
@@ -149,12 +159,14 @@ When adding examples:
 ## Documentation Standards
 
 ### RST Formatting
+
 - Line length: 88 characters
 - Use `.. code-block:: python` with `:name: test_<name>` for Python
 - Use `.. code-block:: sh` for shell commands
 - Use `.. note::` for callouts
 
 ### Code Examples
+
 All code examples in AGENTS.md should be runnable tests. Use the `name=` attribute:
 
 ```rst
@@ -167,6 +179,7 @@ All code examples in AGENTS.md should be runnable tests. Use the `name=` attribu
 ```
 
 ### Cross-References
+
 - Link to related docs: ``See \`ARCHITECTURE.rst\`_``
 - Reference other sections: ``See \`Adding a new parser\`_``
 
