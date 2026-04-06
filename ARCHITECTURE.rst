@@ -98,11 +98,10 @@ where the **first step that matches wins**:
 Step 1 -- Alias table
 ---------------------
 
-``ALIASES`` is a merged dict built from three sources:
+``ALIASES`` is a merged dict built from two sources:
 
 * ``data/aliases/aliases.json`` -- manually curated aliases with rich metadata
   (version_key, name_key, family_key).
-* ``data/publishers/publishers.json`` -- publisher shorthand aliases.
 * Built-in CC forms in ``_registry.py``.
 
 Each entry maps a cleaned string to a version key.  Aliases are checked
@@ -137,7 +136,6 @@ Step 3 -- URL map
 
 ``URL_MAP`` is a merged dict built from:
 
-* ``data/publishers/publishers.json`` -- publisher-specific URLs.
 * SPDX data source -- official reference URLs.
 * Open Definition data source -- official reference URLs.
 * OSI data source -- HTML reference URLs.
@@ -378,30 +376,23 @@ All keys in the ``aliases`` array inherit the same ``version_key``,
 Adding a new URL
 ----------------
 
-Edit ``data/publishers/publishers.json`` under ``urls``:
+Optionally, add an ``urls`` array to define additional lookup variants
+(e.g. hyphen vs space forms) that all resolve to the same target:
 
 .. code-block:: json
 
     {
-      "urls": {
-        "https://example.com/license/": {
-          "version_key": "my-licence",
-          "name_key": "my-licence",
-          "family_key": "osi"
-        }
-      }
-    }
-
-Adding a shorthand alias
-------------------------
-
-Edit ``data/publishers/publishers.json`` under ``shorthand_aliases``:
-
-.. code-block:: json
-
-    {
-      "shorthand_aliases": {
-        "my shorthand alias": "my-licence"
+      "my new alias": {
+        "version_key": "existing-version-key",
+        "name_key": "existing-name",
+        "family_key": "cc",
+        "aliases": [
+          "my-new-alias",
+          "my new alias variant"
+        ],
+        "urls": [
+          "https://example.org/licenses/existing-version-key"
+        ]
       }
     }
 
@@ -422,7 +413,6 @@ patterns before general ones):
 
 Note: prose patterns are only tested against inputs of 20 characters or
 longer to avoid false positives on short strings.
-
 
 Caching
 =======
@@ -504,7 +494,6 @@ Directory structure
     data/
     ├── aliases/aliases.json
     ├── prose/prose_patterns.json
-    ├── publishers/publishers.json
     ├── spdx/spdx.json             (full SPDX list — loaded at runtime)
     ├── opendefinition/opendefinition.json  (full OD list — loaded at runtime)
     ├── osi/osi.json               (OSI API response)
