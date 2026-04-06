@@ -209,3 +209,74 @@ Do NOT modify:
 - `src/licence_normaliser/data/scancode_licensedb/scancode_licensedb.json` (auto-refreshed)
 
 Instead, document the `licence-normaliser update-data --force` command in README.rst and AGENTS.md.
+
+---
+
+## Documentation Validator Tool
+
+The `documentation-validator` tool automatically validates documentation against
+source code ground truth. It extracts actual API exports, parser classes, CLI
+commands, and exceptions from the source code, then checks that documentation
+files accurately reflect them.
+
+### What It Checks
+
+The tool performs these automated checks:
+
+| Check | Description |
+| ----- | ----------- |
+| **File paths** | All referenced files (e.g., `src/licence_normaliser/...`) exist |
+| **Public API** | `__all__` exports in `__init__.py` are documented |
+| **Parser classes** | All parsers in `parsers/` are listed in tables |
+| **CLI commands** | All CLI subcommands are documented |
+| **Code blocks** | Python code blocks have `:name:` attributes |
+| **Cross-references** | Internal doc links are valid |
+
+### Usage
+
+```sh
+# Check all documentation
+uv run python scripts/documentation_validator.py
+
+# Check with verbose output
+uv run python scripts/documentation_validator.py -v
+
+# Output JSON report (for CI)
+uv run python scripts/documentation_validator.py --json
+
+# Auto-fix issues where possible (not yet implemented)
+uv run python scripts/documentation_validator.py --fix
+```
+
+### Exit Codes
+
+| Code | Meaning |
+|------|---------|
+| 0 | All documentation in validated |
+| 1 | One or more mismatches found |
+
+### When to Run
+
+Run `documentation-validator`:
+
+- After adding new parsers or plugins
+- After adding new CLI commands
+- After changing the public API (`__all__`)
+- Before committing documentation changes
+- In CI to ensure docs stay validated against source code
+
+### Interpreting Output
+
+The tool categorizes findings by severity:
+
+- 🔴 **Error** - Documentation is incorrect or misleading (e.g., missing CLI command)
+- 🟡 **Warning** - Documentation is incomplete (e.g., undocumented parser)
+- 🔵 **Info** - Suggested improvements (e.g., missing code block name)
+
+### Implementation
+
+The tool is implemented in `scripts/documentation_validator.py` and uses:
+
+- **AST parsing** for reliable source code extraction
+- **Regex patterns** for RST/Markdown parsing
+- **Modular checks** that can be extended for new validation rules

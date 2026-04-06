@@ -35,6 +35,7 @@ keywords = [
 
 [project.scripts]
 licence-normaliser = "licence_normaliser.cli:main"
+documentation-validator = "scripts.documentation_validator:main"
 
 [project.urls]
 Homepage = "https://github.com/barseghyanartur/licence-normaliser/"

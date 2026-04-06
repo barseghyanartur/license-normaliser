@@ -74,3 +74,25 @@ for different licence families (CC, copyleft, OSI, etc.).
     uv run python scripts/test_name_inference.py
     uv run python scripts/test_name_inference.py --json  # JSON output
     uv run python scripts/test_name_inference.py --details  # Detailed breakdown
+
+Documentation Validator
+-----------------------
+
+Validates that documentation files (README.rst, AGENTS.md, ARCHITECTURE.rst, etc.)
+match the source code ground truth. Extracts actual API exports, parser classes,
+CLI commands, and exceptions from source code, then checks documentation accuracy.
+
+.. code-block:: sh
+
+    uv run python scripts/documentation_validator.py              # Check all documentation
+    uv run python scripts/documentation_validator.py -v           # Verbose output
+    uv run python scripts/documentation_validator.py --json       # JSON output for CI
+    uv run python scripts/documentation_validator.py --fix        # Auto-fix issues
+
+Checks performed:
+
+- File paths referenced in docs actually exist
+- All parser classes are documented in tables
+- All CLI commands are documented
+- Python code blocks have ``:name:`` attributes
+- Public API exports are documented
