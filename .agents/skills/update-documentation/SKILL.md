@@ -23,12 +23,14 @@ Guidelines for updating licence-normaliser documentation when implementing new f
 ### README.rst
 
 Update when:
+
 - Public API changes (new functions, parameters, exceptions)
 - New CLI commands or options
 - New output formats or behavior
 - Installation/requirement changes
 
 Structure to maintain:
+
 - Features list (add new capabilities)
 - Hierarchy section (if hierarchy levels change)
 - Installation (if requirements change)
@@ -38,6 +40,7 @@ Structure to maintain:
 ### AGENTS.md
 
 Update when:
+
 - New parser added (add to "Adding a new parser" section)
 - Resolution pipeline changes
 - New data file locations
@@ -46,6 +49,7 @@ Update when:
 - Testing workflow changes
 
 Key sections:
+
 - Project mission (never deviate from: no dependencies, three-level hierarchy)
 - Architecture table (if classes/files change)
 - Resolution pipeline (if steps change)
