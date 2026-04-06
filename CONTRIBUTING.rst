@@ -169,8 +169,10 @@ For a **brand-new licence key** (SPDX, OpenDefinition, OSI, CC, or ScanCode):
 For a **new parser** (new upstream data source):
 
 1. Create ``src/licence_normaliser/parsers/my_parser.py`` implementing
-   ``BasePlugin``.
-2. Register it in ``src/licence_normaliser/parsers/__init__.py``.
+   ``BasePlugin`` plus one or more plugin interfaces (e.g., ``RegistryPlugin``,
+   ``URLPlugin``).
+2. Register it in ``src/licence_normaliser/defaults.py`` in the appropriate
+   ``_load_*_plugins()`` function.
 3. Set ``is_registry_entry = False`` if the parser only contributes
    aliases/URLs/patterns (not new licence keys).
 4. Add tests.

@@ -268,8 +268,15 @@ Exceptions
     :name: test_exceptions
 
     from licence_normaliser.exceptions import (
-        LicenceNormaliserError,   # base class
-        LicenceNotFoundError,     # raised by strict mode
+        DataSourceError,           # data source loading errors
+        LicenceNormaliserError,    # base class
+        LicenceNotFoundError,      # raised by strict mode
+        LicenceNormalisationError, # kept for backwards compatibility
+    )
+
+    from licence_normaliser import (
+        LicenceTrace,      # resolution trace object
+        LicenceTraceStage,   # resolution stage enum
     )
 
 Testing

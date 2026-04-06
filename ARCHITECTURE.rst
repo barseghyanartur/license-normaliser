@@ -238,11 +238,8 @@ interfaces.  Parsers contribute data to ``LicenceNormaliser``:
      - Registry + URL + BasePlugin
      - ``data/creativecommons/creativecommons.json`` (scraped)
    * - ``AliasParser``
-     - Alias + Family + Name + BasePlugin
+     - Alias + Family + Name + URL + BasePlugin
      - ``data/aliases/aliases.json`` (local-only)
-   * - ``PublisherParser``
-     - Alias + URL + BasePlugin
-     - ``data/publishers/publishers.json`` (local-only)
    * - ``ProseParser``
      - Prose + BasePlugin
      - ``data/prose/prose_patterns.json`` (local-only)
@@ -490,18 +487,19 @@ Directory structure
     │   ├── scancode_licensedb.py # ScanCodeLicenseDBParser
     │   ├── creativecommons.py    # CreativeCommonsParser
     │   ├── prose.py              # ProseParser
-    │   ├── alias.py              # AliasParser
-    │   └── publisher.py          # PublisherParser
+    │   └── alias.py              # AliasParser
     └── tests/
         ├── conftest.py
         ├── test_aliases.py
+        ├── test_alias_expansion.py
+        ├── test_cache.py
         ├── test_cli.py
         ├── test_core.py
         ├── test_exceptions.py
         ├── test_integration.py
         ├── test_models.py
         ├── test_prose.py
-        └── test_publisher.py
+        └── test_trace.py
 
     data/
     ├── aliases/aliases.json

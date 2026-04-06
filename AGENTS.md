@@ -56,7 +56,8 @@ first.
 | `src/licence_normaliser/_cache.py` | Module-level API delegating to `LicenceNormaliser` |
 | `src/licence_normaliser/parsers/` | Parser classes implementing plugin interfaces |
 | `src/licence_normaliser/cli/_main.py` | CLI with normalise, batch, update-data |
-| `src/licence_normaliser/exceptions.py` | Exception hierarchy: LicenceNormaliserError (base), LicenceNotFoundError |
+| `src/licence_normaliser/exceptions.py` | Exception hierarchy: LicenceNormaliserError (base), LicenceNotFoundError, DataSourceError |
+| `src/licence_normaliser/_trace.py` | `LicenceTrace`, `LicenceTraceStage` for resolution tracing |
 | `src/licence_normaliser/data/spdx/spdx.json` | **DO NOT MODIFY** Full SPDX licence list (loaded at runtime) |
 | `src/licence_normaliser/data/opendefinition/opendefinition.json` | **DO NOT MODIFY** Full OpenDefinition list (loaded at runtime) |
 | `src/licence_normaliser/data/aliases/aliases.json` | Curated aliases with rich metadata (includes migrated URLs and shorthand aliases) |
@@ -89,7 +90,7 @@ print(v.family.key)    # "cc"
 
 ```python name=test_strict_mode
 import pytest
-from licence_normaliser import normalise_licence, LicenceNotFoundError
+from licence_normaliser import normalise_licence, LicenceNotFoundError, LicenceTrace, LicenceTraceStage
 
 # Would normally raise: Licence not found: 'unknown string'
 with pytest.raises(LicenceNotFoundError):
@@ -208,6 +209,7 @@ ENABLE_LICENCE_NORMALISER_TRACE=1 licence-normaliser normalise "MIT"
 
 ```python name=test_trace
 from licence_normaliser import normalise_licence
+
 v = normalise_licence("MIT", trace=True)
 print(v.explain())
 ```
@@ -337,8 +339,9 @@ src/licence_normaliser/tests/
     test_models.py          - LicenceFamily, LicenceName, LicenceVersion
     test_aliases.py         - non-CC aliases (Apache, MIT, BSD, GPL, etc.)
     test_alias_expansion.py - explicit aliases array expansion feature
-    test_publisher.py       - publisher URLs and shorthand aliases
     test_prose.py           - prose pattern matching
+    test_trace.py           - resolution tracing and explain functionality
+    test_cache.py           - caching behavior tests
 ```
 
 ### Documentation snippet conventions

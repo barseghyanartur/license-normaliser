@@ -101,8 +101,7 @@ How to add a brand-new licence
 ------------------------------
 
 1. Add entries to one or more JSON data files (``aliases/aliases.json``,
-   ``urls/url_map.json``, ``prose/prose_patterns.json``, or
-   ``publishers/publishers.json``). Each entry maps a key to a dict with
+   or ``prose/prose_patterns.json``). Each entry maps a key to a dict with
    ``version_key``, ``name_key``, and ``family_key``.
 
 2. If the ``family_key`` is not covered by the regex fallback table in
