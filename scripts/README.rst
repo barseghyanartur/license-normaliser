@@ -78,9 +78,10 @@ for different licence families (CC, copyleft, OSI, etc.).
 Documentation Validator
 -----------------------
 
-Validates that documentation files (README.rst, AGENTS.md, ARCHITECTURE.rst, etc.)
-match the source code ground truth. Extracts actual API exports, parser classes,
-CLI commands, and exceptions from source code, then checks documentation accuracy.
+Validates that documentation files (README.rst, AGENTS.md, ARCHITECTURE.rst,
+etc.) match the source code ground truth. Extracts actual API exports,
+parser classes, CLI commands, and exceptions from source code, then checks
+documentation accuracy.
 
 .. code-block:: sh
 

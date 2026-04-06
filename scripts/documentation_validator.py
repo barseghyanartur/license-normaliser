@@ -75,13 +75,16 @@ class SourceExtractor:
         for node in ast.walk(tree):
             if isinstance(node, ast.Assign):
                 for target in node.targets:
-                    if isinstance(target, ast.Name) and target.id == "__all__":
-                        if isinstance(node.value, ast.Tuple):
-                            return {
-                                elt.value
-                                for elt in node.value.elts
-                                if isinstance(elt, ast.Constant)
-                            }
+                    if (
+                        isinstance(target, ast.Name)
+                        and target.id == "__all__"
+                        and isinstance(node.value, ast.Tuple)
+                    ):
+                        return {
+                            elt.value
+                            for elt in node.value.elts
+                            if isinstance(elt, ast.Constant)
+                        }
         return set()
 
     def extract_exceptions(self) -> set[str]:
@@ -116,14 +119,14 @@ class SourceExtractor:
         tree = ast.parse(cli_file.read_text())
         commands = set()
         for node in ast.walk(tree):
-            if isinstance(node, ast.Call):
-                if (
-                    isinstance(node.func, ast.Attribute)
-                    and node.func.attr == "add_parser"
-                ):
-                    for arg in node.args:
-                        if isinstance(arg, ast.Constant) and isinstance(arg.value, str):
-                            commands.add(arg.value)
+            if (
+                isinstance(node, ast.Call)
+                and isinstance(node.func, ast.Attribute)
+                and node.func.attr == "add_parser"
+            ):
+                for arg in node.args:
+                    if isinstance(arg, ast.Constant) and isinstance(arg.value, str):
+                        commands.add(arg.value)
         return commands
 
     def extract_parser_classes(self) -> dict[str, dict[str, Any]]:
@@ -169,14 +172,16 @@ class SourceExtractor:
             if isinstance(node, ast.ClassDef):
                 # Look for dataclass-like patterns
                 for decorator in node.decorator_list:
-                    if isinstance(decorator, ast.Name) and decorator.id == "dataclass":
+                    is_dataclass = (
+                        isinstance(decorator, ast.Name) and decorator.id == "dataclass"
+                    )
+                    is_dataclass_call = (
+                        isinstance(decorator, ast.Call)
+                        and isinstance(decorator.func, ast.Name)
+                        and decorator.func.id == "dataclass"
+                    )
+                    if is_dataclass or is_dataclass_call:
                         classes.add(node.name)
-                    elif isinstance(decorator, ast.Call):
-                        if (
-                            isinstance(decorator.func, ast.Name)
-                            and decorator.func.id == "dataclass"
-                        ):
-                            classes.add(node.name)
         return classes
 
 
@@ -214,23 +219,21 @@ class RSTParser:
 
     def extract_code_blocks(self) -> list[dict[str, Any]]:
         """Extract code blocks with their names."""
-        blocks = []
-        for match in self.CODE_BLOCK_PATTERN.finditer(self.content):
-            blocks.append(
-                {
-                    "language": match.group(1),
-                    "name": match.group(2),
-                    "position": match.start(),
-                }
-            )
-        return blocks
+        return [
+            {
+                "language": match.group(1),
+                "name": match.group(2),
+                "position": match.start(),
+            }
+            for match in self.CODE_BLOCK_PATTERN.finditer(self.content)
+        ]
 
     def extract_table_rows(self) -> list[list[str]]:
         """Extract table rows."""
-        rows = []
-        for match in self.TABLE_ROW_PATTERN.finditer(self.content):
-            rows.append([match.group(1).strip(), match.group(2).strip()])
-        return rows
+        return [
+            [match.group(1).strip(), match.group(2).strip()]
+            for match in self.TABLE_ROW_PATTERN.finditer(self.content)
+        ]
 
     def extract_class_references(self) -> set[str]:
         """Extract class name references (PascalCase words)."""
@@ -265,16 +268,14 @@ class MarkdownParser:
 
     def extract_code_blocks(self) -> list[dict[str, Any]]:
         """Extract code blocks with their names."""
-        blocks = []
-        for match in self.CODE_BLOCK_PATTERN.finditer(self.content):
-            blocks.append(
-                {
-                    "language": match.group(1),
-                    "name": match.group(2),
-                    "position": match.start(),
-                }
-            )
-        return blocks
+        return [
+            {
+                "language": match.group(1),
+                "name": match.group(2),
+                "position": match.start(),
+            }
+            for match in self.CODE_BLOCK_PATTERN.finditer(self.content)
+        ]
 
     def extract_table_rows(self) -> list[list[str]]:
         """Extract markdown table rows."""
@@ -364,8 +365,6 @@ class DocumentationValidator:
 
     def check_code_blocks(self, doc_name: str, content: str) -> list[Mismatch]:
         """Check code blocks have proper name attributes."""
-        mismatches = []
-
         if doc_name.endswith(".rst"):
             parser = RSTParser(content)
         else:
@@ -373,123 +372,113 @@ class DocumentationValidator:
 
         blocks = parser.extract_code_blocks()
 
-        for block in blocks:
-            if block["language"] == "python" and not block["name"]:
-                mismatches.append(
-                    Mismatch(
-                        check="code_blocks",
-                        type="missing_name",
-                        message="Python code block missing :name: attribute",
-                        document=doc_name,
-                        severity="warning",
-                        fixable=False,
-                    )
-                )
-
-        return mismatches
+        return [
+            Mismatch(
+                check="code_blocks",
+                type="missing_name",
+                message="Python code block missing :name: attribute",
+                document=doc_name,
+                severity="warning",
+                fixable=False,
+            )
+            for block in blocks
+            if block["language"] == "python" and not block["name"]
+        ]
 
     def check_agents_md(self, content: str) -> list[Mismatch]:
         """Check AGENTS.md specific content."""
-        mismatches = []
-
-        # Check key files table matches actual parsers
-        parser = MarkdownParser(content)
+        mismatches: list[Mismatch] = []
 
         # Look for parser classes mentioned in tables
-        mentioned_parsers = set()
-        for match in re.finditer(r"`?(\w+Parser)`?", content):
-            mentioned_parsers.add(match.group(1))
+        parser_pattern = re.compile(r"`?(\w+Parser)`?")
+        mentioned_parsers = {
+            match.group(1) for match in parser_pattern.finditer(content)
+        }
 
         # Find parsers not documented
-        for parser_name in self.actual_parsers:
-            if parser_name not in mentioned_parsers:
-                mismatches.append(
-                    Mismatch(
-                        check="agents_md",
-                        type="undocumented_parser",
-                        message=f"Parser {parser_name} not found in AGENTS.md",
-                        document="AGENTS.md",
-                        severity="warning",
-                        fixable=False,
-                    )
-                )
+        mismatches.extend(
+            Mismatch(
+                check="agents_md",
+                type="undocumented_parser",
+                message=f"Parser {parser_name} not found in AGENTS.md",
+                document="AGENTS.md",
+                severity="warning",
+                fixable=False,
+            )
+            for parser_name in self.actual_parsers
+            if parser_name not in mentioned_parsers
+        )
 
         # Check public API exports are documented
-        for export in self.actual_api:
-            if export not in content:
-                mismatches.append(
-                    Mismatch(
-                        check="agents_md",
-                        type="undocumented_api",
-                        message=f"API export '{export}' not documented in AGENTS.md",
-                        document="AGENTS.md",
-                        severity="info",
-                        fixable=False,
-                    )
-                )
+        mismatches.extend(
+            Mismatch(
+                check="agents_md",
+                type="undocumented_api",
+                message=f"API export '{export}' not documented in AGENTS.md",
+                document="AGENTS.md",
+                severity="info",
+                fixable=False,
+            )
+            for export in self.actual_api
+            if export not in content
+        )
 
         return mismatches
 
     def check_architecture_rst(self, content: str) -> list[Mismatch]:
         """Check ARCHITECTURE.rst specific content."""
-        mismatches = []
-
-        parser = RSTParser(content)
-
         # Check all parsers are in plugin interfaces table
-        mentioned_parsers = set()
-        for match in re.finditer(r"`?(\w+Parser)`?", content):
-            mentioned_parsers.add(match.group(1))
+        parser_pattern = re.compile(r"`?(\w+Parser)`?")
+        mentioned_parsers = {
+            match.group(1) for match in parser_pattern.finditer(content)
+        }
 
-        for parser_name in self.actual_parsers:
-            if parser_name not in mentioned_parsers:
-                mismatches.append(
-                    Mismatch(
-                        check="architecture_rst",
-                        type="undocumented_parser",
-                        message=f"Parser {parser_name} not found in ARCHITECTURE.rst",
-                        document="ARCHITECTURE.rst",
-                        severity="warning",
-                        fixable=False,
-                    )
-                )
-
-        return mismatches
+        return [
+            Mismatch(
+                check="architecture_rst",
+                type="undocumented_parser",
+                message=f"Parser {parser_name} not found in ARCHITECTURE.rst",
+                document="ARCHITECTURE.rst",
+                severity="warning",
+                fixable=False,
+            )
+            for parser_name in self.actual_parsers
+            if parser_name not in mentioned_parsers
+        ]
 
     def check_readme_rst(self, content: str) -> list[Mismatch]:
         """Check README.rst specific content."""
-        mismatches = []
+        mismatches: list[Mismatch] = []
 
         # Check CLI commands are documented
-        for cmd in self.actual_cli_commands:
-            if cmd not in content:
-                mismatches.append(
-                    Mismatch(
-                        check="readme_rst",
-                        type="undocumented_cli",
-                        message=f"CLI command '{cmd}' not documented in README.rst",
-                        document="README.rst",
-                        severity="error",
-                        fixable=False,
-                    )
-                )
+        mismatches.extend(
+            Mismatch(
+                check="readme_rst",
+                type="undocumented_cli",
+                message=f"CLI command '{cmd}' not documented in README.rst",
+                document="README.rst",
+                severity="error",
+                fixable=False,
+            )
+            for cmd in self.actual_cli_commands
+            if cmd not in content
+        )
 
         # Check public API is documented
-        for export in self.actual_api:
-            # Skip internal-looking exports
-            if export.startswith("_"):
-                continue
-            if export not in content and export.lower() not in content.lower():
-                mismatches.append(
-                    Mismatch(
-                        check="readme_rst",
-                        type="undocumented_api",
-                        message=f"API export '{export}' not documented in README.rst",
-                        document="README.rst",
-                        severity="info",
-                        fixable=False,
-                    )
-                )
+        mismatches.extend(
+            Mismatch(
+                check="readme_rst",
+                type="undocumented_api",
+                message=f"API export '{export}' not documented in README.rst",
+                document="README.rst",
+                severity="info",
+                fixable=False,
+            )
+            for export in self.actual_api
+            if not export.startswith("_")
+            and export not in content
+            and export.lower() not in content.lower()
+        )
 
         return mismatches
 
@@ -599,9 +588,8 @@ class Reporter:
 
     def json_report(self) -> str:
         """Generate JSON report."""
-        output = []
-        for result in self.results:
-            output.append(
+        return json.dumps(
+            [
                 {
                     "document": result.check_name,
                     "passed": result.passed,
@@ -616,8 +604,10 @@ class Reporter:
                         for m in result.mismatches
                     ],
                 }
-            )
-        return json.dumps(output, indent=2)
+                for result in self.results
+            ],
+            indent=2,
+        )
 
 
 # =============================================================================
