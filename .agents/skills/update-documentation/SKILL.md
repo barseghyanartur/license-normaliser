@@ -236,13 +236,28 @@ When adding examples:
 
 ### Code Examples
 
-All code examples in AGENTS.md should be runnable tests. Use the `name=` attribute:
+All code examples in AGENTS.md (and other Markdown files) should be runnable
+tests. Use the `name=` attribute to prefix the block name with `test_`:
+
+````markdown
+```python name=test_feature_name
+from licence_normaliser import normalise_licence
+
+result = normalise_licence("MIT")
+assert str(result) == "mit"
+```
+````
+
+All code examples in README.rst (and other reStructuredText files) should be
+runnable tests. Use the `:name:` attribute to prefix the block name
+with `test_`:
 
 ```rst
 .. code-block:: python
    :name: test_feature_name
 
    from licence_normaliser import normalise_licence
+
    result = normalise_licence("MIT")
    assert str(result) == "mit"
 ```
