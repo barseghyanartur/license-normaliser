@@ -56,7 +56,7 @@ Features
 - **Strict mode** - Raise ``LicenceNotFoundError`` instead of silently
   returning ``"unknown"``.
 - **Caching** - LRU caching for performance.
-- **CLI** - Command-line interface with ``--strict`` and ``--explain`` support.
+- **CLI** - Command-line interface with ``--strict`` and ``--trace`` support.
 
 Hierarchy
 =========
@@ -275,7 +275,7 @@ Exceptions
     )
 
     from licence_normaliser import (
-        LicenceTrace,      # resolution trace object
+        LicenceTrace,        # resolution trace object
         LicenceTraceStage,   # resolution stage enum
     )
 
