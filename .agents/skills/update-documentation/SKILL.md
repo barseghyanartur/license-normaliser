@@ -264,8 +264,8 @@ with `test_`:
 
 ### Cross-References
 
-- Link to related docs: ``See \`ARCHITECTURE.rst\`_``
-- Reference other sections: ``See \`Adding a new parser\`_``
+- Link to related docs: ``See `ARCHITECTURE.rst`_``
+- Reference other sections: ``See `Adding a new parser`_``
 
 ## Validation Checklist
 
