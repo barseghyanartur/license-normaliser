@@ -98,11 +98,10 @@ where the **first step that matches wins**:
 Step 1 -- Alias table
 ---------------------
 
-``ALIASES`` is a merged dict built from three sources:
+``ALIASES`` is a merged dict built from two sources:
 
 * ``data/aliases/aliases.json`` -- manually curated aliases with rich metadata
   (version_key, name_key, family_key).
-* ``data/publishers/publishers.json`` -- publisher shorthand aliases.
 * Built-in CC forms in ``_registry.py``.
 
 Each entry maps a cleaned string to a version key.  Aliases are checked
@@ -137,11 +136,24 @@ Step 3 -- URL map
 
 ``URL_MAP`` is a merged dict built from:
 
-* ``data/publishers/publishers.json`` -- publisher-specific URLs.
 * SPDX data source -- official reference URLs.
 * Open Definition data source -- official reference URLs.
 * OSI data source -- HTML reference URLs.
 * Creative Commons scraped data -- multilingual deed URLs.
+* ``data/aliases/aliases.json`` -- each entry may include a ``urls`` array
+  listing additional URLs that resolve to that licence.
+
+Each entry in ``aliases.json`` may include a ``urls`` array::
+
+    "my alias": {
+        "version_key": "my-licence-1.0",
+        "name_key": "my-licence",
+        "family_key": "osi",
+        "urls": [
+            "https://example.org/licenses/my-licence-1.0",
+            "https://example.com/my-licence"
+        ]
+    }
 
 URLs are **normalised once at registry-build time**:
 
@@ -238,11 +250,8 @@ interfaces.  Parsers contribute data to ``LicenceNormaliser``:
      - Registry + URL + BasePlugin
      - ``data/creativecommons/creativecommons.json`` (scraped)
    * - ``AliasParser``
-     - Alias + Family + Name + BasePlugin
+     - Alias + Family + Name + URL + BasePlugin
      - ``data/aliases/aliases.json`` (local-only)
-   * - ``PublisherParser``
-     - Alias + URL + BasePlugin
-     - ``data/publishers/publishers.json`` (local-only)
    * - ``ProseParser``
      - Prose + BasePlugin
      - ``data/prose/prose_patterns.json`` (local-only)
@@ -381,32 +390,29 @@ All keys in the ``aliases`` array inherit the same ``version_key``,
 Adding a new URL
 ----------------
 
-Edit ``data/publishers/publishers.json`` under ``urls``:
+Edit ``data/aliases/aliases.json``.  Each entry may include a ``urls``
+array listing additional URLs that resolve to that licence:
 
 .. code-block:: json
 
     {
-      "urls": {
-        "https://example.com/license/": {
-          "version_key": "my-licence",
-          "name_key": "my-licence",
-          "family_key": "osi"
-        }
+      "my new alias": {
+        "version_key": "existing-version-key",
+        "name_key": "existing-name",
+        "family_key": "cc",
+        "aliases": [
+          "my-new-alias",
+          "my new alias variant"
+        ],
+        "urls": [
+          "https://example.org/licenses/existing-version-key"
+        ]
       }
     }
 
-Adding a shorthand alias
-------------------------
-
-Edit ``data/publishers/publishers.json`` under ``shorthand_aliases``:
-
-.. code-block:: json
-
-    {
-      "shorthand_aliases": {
-        "my shorthand alias": "my-licence"
-      }
-    }
+All URLs in the ``urls`` array are normalised (scheme forced to ``https``,
+trailing slash stripped, lowercased) and added to the ``URL_MAP`` during
+registry build time.
 
 Adding a prose pattern
 ----------------------
@@ -425,7 +431,6 @@ patterns before general ones):
 
 Note: prose patterns are only tested against inputs of 20 characters or
 longer to avoid false positives on short strings.
-
 
 Caching
 =======
@@ -490,23 +495,23 @@ Directory structure
     │   ├── scancode_licensedb.py # ScanCodeLicenseDBParser
     │   ├── creativecommons.py    # CreativeCommonsParser
     │   ├── prose.py              # ProseParser
-    │   ├── alias.py              # AliasParser
-    │   └── publisher.py          # PublisherParser
+    │   └── alias.py              # AliasParser
     └── tests/
         ├── conftest.py
         ├── test_aliases.py
+        ├── test_alias_expansion.py
+        ├── test_cache.py
         ├── test_cli.py
         ├── test_core.py
         ├── test_exceptions.py
         ├── test_integration.py
         ├── test_models.py
         ├── test_prose.py
-        └── test_publisher.py
+        └── test_trace.py
 
     data/
     ├── aliases/aliases.json
     ├── prose/prose_patterns.json
-    ├── publishers/publishers.json
     ├── spdx/spdx.json             (full SPDX list — loaded at runtime)
     ├── opendefinition/opendefinition.json  (full OD list — loaded at runtime)
     ├── osi/osi.json               (OSI API response)

@@ -44,7 +44,7 @@ Compare datasets
 ----------------
 
 Compares SPDX, OpenDefinition, OSI, CreativeCommons, ScanCode, and curated
-data files (aliases, url_map, prose, publishers).
+data files (aliases, prose).
 
 .. code-block:: sh
 
