@@ -123,10 +123,7 @@ def format_entry(key: str, data: dict, is_last: bool) -> str:
                 lines.append("    ]" if is_field_last else "    ],")
         else:
             suffix = "" if is_field_last else ","
-            if isinstance(value, str):
-                lines.append(f'    "{field_name}": "{value}"{suffix}')
-            else:
-                lines.append(f"    {field_name}: {value}{suffix}")
+            lines.append(f'    "{field_name}": {json.dumps(value)}{suffix}')
 
     lines.append("  }")
     result = "\n".join(lines)
