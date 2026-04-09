@@ -38,7 +38,9 @@
     "name_key": "acs-authorchoice-ccby",
     "family_key": "publisher-oa",
     "aliases": [
-      "acs authorchoice cc by"
+      "acs authorchoice cc by",
+      "acs authorchoice ccby",
+      "acs-authorchoice ccby"
     ],
     "urls": [
       "https://pubs.acs.org/page/policy/authorchoice_ccby_termsofuse.html"
@@ -50,7 +52,9 @@
     "name_key": "acs-authorchoice-ccbyncnd",
     "family_key": "publisher-oa",
     "aliases": [
-      "acs authorchoice cc by nc nd"
+      "acs authorchoice cc by nc nd",
+      "acs authorchoice ccbyncnd",
+      "acs-authorchoice ccbyncnd"
     ],
     "urls": [
       "https://pubs.acs.org/page/policy/authorchoice_ccbyncnd_termsofuse.html"
@@ -62,7 +66,8 @@
     "name_key": "acs-authorchoice-nih",
     "family_key": "publisher-oa",
     "aliases": [
-      "acs authorchoice nih"
+      "acs authorchoice nih",
+      "acs-authorchoice nih"
     ],
     "urls": [
       "https://pubs.acs.org/page/policy/acs_authorchoice_with_nih_addendum_termsofuse.html"
@@ -78,7 +83,8 @@
       "agpl 3",
       "agpl",
       "agpl v3",
-      "agpl-3.0+"
+      "agpl-3.0+",
+      "agpl 3.0"
     ],
     "urls": [
       "https://www.gnu.org/licenses/agpl-3.0.html",
@@ -183,7 +189,8 @@
     "aliases": [
       "bsd 2 clause",
       "bsd-2-clause",
-      "bsd-2"
+      "bsd-2",
+      "bsd-2 clause"
     ],
     "urls": [
       "https://opensource.org/licenses/bsd-2-clause"
@@ -200,7 +207,8 @@
       "bsd-3",
       "bsd-3 license",
       "bsd",
-      "bsd license"
+      "bsd license",
+      "bsd-3 clause"
     ],
     "urls": [
       "https://opensource.org/licenses/bsd-3-clause"
@@ -225,6 +233,9 @@
     "version_key": "cc-by-1.0",
     "name_key": "cc-by",
     "family_key": "cc",
+    "aliases": [
+      "cc-by 1.0"
+    ],
     "urls": [
       "https://creativecommons.org/licenses/by/1.0"
     ]
@@ -234,6 +245,9 @@
     "version_key": "cc-by-2.0",
     "name_key": "cc-by",
     "family_key": "cc",
+    "aliases": [
+      "cc-by 2.0"
+    ],
     "urls": [
       "https://creativecommons.org/licenses/by/2.0"
     ]
@@ -243,6 +257,9 @@
     "version_key": "cc-by-2.5",
     "name_key": "cc-by",
     "family_key": "cc",
+    "aliases": [
+      "cc-by 2.5"
+    ],
     "urls": [
       "https://creativecommons.org/licenses/by/2.5"
     ]
@@ -281,7 +298,9 @@
       "creative commons attribution 3.0 igo",
       "creative commons attribution 3.0 international",
       "creative commons attribution 3.0 international license",
-      "creative commons by 3.0 igo"
+      "creative commons by 3.0 igo",
+      "cc by-3.0 igo",
+      "cc-by-3.0 igo"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by/3.0/igo"
@@ -324,7 +343,9 @@
       "creative commons attribution 4.0 igo",
       "creative commons attribution 4.0 international",
       "creative commons attribution 4.0 international license",
-      "creative commons by 4.0 igo"
+      "creative commons by 4.0 igo",
+      "cc by-4.0 igo",
+      "cc-by-4.0 igo"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by/4.0/igo"
@@ -336,7 +357,10 @@
     "name_key": "cc-by-nc",
     "family_key": "cc",
     "aliases": [
-      "cc-by-nc-1.0"
+      "cc-by-nc-1.0",
+      "cc by-nc 1.0",
+      "cc-by nc 1.0",
+      "cc-by-nc 1.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nc/1.0/"
@@ -348,7 +372,14 @@
     "name_key": "cc-by-nc-sa",
     "family_key": "cc",
     "aliases": [
-      "cc-by-nc-sa-1.0"
+      "cc-by-nc-sa-1.0",
+      "cc by nc-sa 1.0",
+      "cc by-nc sa 1.0",
+      "cc by-nc-sa 1.0",
+      "cc-by nc sa 1.0",
+      "cc-by nc-sa 1.0",
+      "cc-by-nc sa 1.0",
+      "cc-by-nc-sa 1.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nc-sa/1.0/"
@@ -360,7 +391,10 @@
     "name_key": "cc-by-nd",
     "family_key": "cc",
     "aliases": [
-      "cc-by-nd-1.0"
+      "cc-by-nd-1.0",
+      "cc by-nd 1.0",
+      "cc-by nd 1.0",
+      "cc-by-nd 1.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nd/1.0/"
@@ -372,7 +406,10 @@
     "name_key": "cc-by-nd",
     "family_key": "cc",
     "aliases": [
-      "cc-by-nd-2.5"
+      "cc-by-nd-2.5",
+      "cc by-nd 2.5",
+      "cc-by nd 2.5",
+      "cc-by-nd 2.5"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nd/2.5/"
@@ -384,7 +421,10 @@
     "name_key": "cc-by-sa",
     "family_key": "cc",
     "aliases": [
-      "cc-by-sa-1.0"
+      "cc-by-sa-1.0",
+      "cc by-sa 1.0",
+      "cc-by sa 1.0",
+      "cc-by-sa 1.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-sa/1.0/"
@@ -418,7 +458,10 @@
       "creative commons attribution-noncommercial 2.0",
       "creative commons attribution-noncommercial 2.0 international",
       "creative commons attribution-noncommercial 2.0 international license",
-      "creative commons by-nc 2.0"
+      "creative commons by-nc 2.0",
+      "cc by nc 2.0",
+      "cc-by nc 2.0",
+      "cc-by-nc 2.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nc/2.0"
@@ -450,6 +493,11 @@
     "version_key": "cc-by-nc-3.0",
     "name_key": "cc-by-nc",
     "family_key": "cc",
+    "aliases": [
+      "cc by nc 3.0",
+      "cc-by nc 3.0",
+      "cc-by-nc 3.0"
+    ],
     "urls": [
       "https://creativecommons.org/licenses/by-nc/3.0"
     ]
@@ -465,7 +513,13 @@
       "cc-by nc 3.0 igo",
       "cc by-nc 3.0-igo",
       "cc-by nc 3.0-igo",
-      "creative commons attribution-noncommercial 3.0 igo"
+      "creative commons attribution-noncommercial 3.0 igo",
+      "cc by nc 3.0 igo",
+      "cc by nc-3.0 igo",
+      "cc by-nc-3.0 igo",
+      "cc-by nc-3.0 igo",
+      "cc-by-nc 3.0 igo",
+      "cc-by-nc-3.0 igo"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nc/3.0/igo"
@@ -486,7 +540,10 @@
       "creative commons attribution-noncommercial 4.0",
       "creative commons attribution-noncommercial 4.0 international",
       "creative commons attribution-noncommercial 4.0 international license",
-      "creative commons by-nc 4.0"
+      "creative commons by-nc 4.0",
+      "cc by nc 4.0",
+      "cc-by nc 4.0",
+      "cc-by-nc 4.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nc/4.0"
@@ -505,7 +562,9 @@
       "cc-by nc igo",
       "creative commons attribution-noncommercial igo",
       "creative commons attribution-noncommercial igo license",
-      "creative commons by-nc-igo"
+      "creative commons by-nc-igo",
+      "cc by-nc igo",
+      "cc-by-nc igo"
     ]
   },
 
@@ -519,7 +578,10 @@
       "cc by nc nd",
       "cc-by nc-nd",
       "creative commons attribution-noncommercial-noderivatives",
-      "creative commons by-nc-nd"
+      "creative commons by-nc-nd",
+      "cc by-nc nd",
+      "cc-by nc nd",
+      "cc-by-nc nd"
     ]
   },
 
@@ -537,7 +599,14 @@
       "creative commons attribution-noncommercial-noderivatives 2.0",
       "creative commons attribution-noncommercial-noderivatives 2.0 international",
       "creative commons attribution-noncommercial-noderivatives 2.0 international license",
-      "creative commons by-nc-nd 2.0"
+      "creative commons by-nc-nd 2.0",
+      "cc by nc nd 2.0",
+      "cc by nc-nd 2.0",
+      "cc by-nc nd 2.0",
+      "cc-by nc nd 2.0",
+      "cc-by nc-nd 2.0",
+      "cc-by-nc nd 2.0",
+      "cc-by-nc-nd 2.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nc-nd/2.0"
@@ -558,7 +627,11 @@
       "creative commons attribution-noncommercial-noderivatives 2.5",
       "creative commons attribution-noncommercial-noderivatives 2.5 international",
       "creative commons attribution-noncommercial-noderivatives 2.5 international license",
-      "creative commons by-nc-nd 2.5"
+      "creative commons by-nc-nd 2.5",
+      "cc by nc nd 2.5",
+      "cc by-nc nd 2.5",
+      "cc-by nc nd 2.5",
+      "cc-by-nc nd 2.5"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nc-nd/2.5"
@@ -579,7 +652,14 @@
       "creative commons attribution-noncommercial-noderivatives 3.0",
       "creative commons attribution-noncommercial-noderivatives 3.0 international",
       "creative commons attribution-noncommercial-noderivatives 3.0 international license",
-      "creative commons by-nc-nd 3.0"
+      "creative commons by-nc-nd 3.0",
+      "cc by nc nd 3.0",
+      "cc by nc-nd 3.0",
+      "cc by-nc nd 3.0",
+      "cc-by nc nd 3.0",
+      "cc-by nc-nd 3.0",
+      "cc-by-nc nd 3.0",
+      "cc-by-nc-nd 3.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nc-nd/3.0"
@@ -600,7 +680,19 @@
       "creative commons attribution-noncommercial-noderivatives 3.0 igo",
       "creative commons attribution-noncommercial-noderivatives 3.0 international",
       "creative commons attribution-noncommercial-noderivatives 3.0 international license",
-      "creative commons by-nc-nd 3.0 igo"
+      "creative commons by-nc-nd 3.0 igo",
+      "cc by nc nd 3.0 igo",
+      "cc by nc nd-3.0 igo",
+      "cc by nc-nd-3.0 igo",
+      "cc by-nc nd 3.0 igo",
+      "cc by-nc nd-3.0 igo",
+      "cc by-nc-nd-3.0 igo",
+      "cc-by nc nd 3.0 igo",
+      "cc-by nc nd-3.0 igo",
+      "cc-by nc-nd-3.0 igo",
+      "cc-by-nc nd 3.0 igo",
+      "cc-by-nc nd-3.0 igo",
+      "cc-by-nc-nd-3.0 igo"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nc-nd/3.0/igo"
@@ -622,7 +714,14 @@
       "creative commons attribution-noncommercial-noderivatives 4.0",
       "creative commons attribution-noncommercial-noderivatives 4.0 international",
       "creative commons attribution-noncommercial-noderivatives 4.0 international license",
-      "creative commons by-nc-nd 4.0"
+      "creative commons by-nc-nd 4.0",
+      "cc by nc nd 4.0",
+      "cc by nc-nd 4.0",
+      "cc by-nc nd 4.0",
+      "cc-by nc nd 4.0",
+      "cc-by nc-nd 4.0",
+      "cc-by-nc nd 4.0",
+      "cc-by-nc-nd 4.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nc-nd/4.0"
@@ -638,7 +737,10 @@
       "cc by nc-sa",
       "cc by nc sa",
       "cc-by nc-sa",
-      "creative commons by-nc-sa"
+      "creative commons by-nc-sa",
+      "cc by-nc sa",
+      "cc-by nc sa",
+      "cc-by-nc sa"
     ]
   },
 
@@ -656,7 +758,14 @@
       "creative commons attribution-noncommercial-sharealike 2.0",
       "creative commons attribution-noncommercial-sharealike 2.0 international",
       "creative commons attribution-noncommercial-sharealike 2.0 international license",
-      "creative commons by-nc-sa 2.0"
+      "creative commons by-nc-sa 2.0",
+      "cc by nc sa 2.0",
+      "cc by nc-sa 2.0",
+      "cc by-nc sa 2.0",
+      "cc-by nc sa 2.0",
+      "cc-by nc-sa 2.0",
+      "cc-by-nc sa 2.0",
+      "cc-by-nc-sa 2.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nc-sa/2.0"
@@ -677,7 +786,11 @@
       "creative commons attribution-noncommercial-sharealike 2.5",
       "creative commons attribution-noncommercial-sharealike 2.5 international",
       "creative commons attribution-noncommercial-sharealike 2.5 international license",
-      "creative commons by-nc-sa 2.5"
+      "creative commons by-nc-sa 2.5",
+      "cc by nc sa 2.5",
+      "cc by-nc sa 2.5",
+      "cc-by nc sa 2.5",
+      "cc-by-nc sa 2.5"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nc-sa/2.5"
@@ -688,6 +801,15 @@
     "version_key": "cc-by-nc-sa-3.0",
     "name_key": "cc-by-nc-sa",
     "family_key": "cc",
+    "aliases": [
+      "cc by nc sa 3.0",
+      "cc by nc-sa 3.0",
+      "cc by-nc sa 3.0",
+      "cc-by nc sa 3.0",
+      "cc-by nc-sa 3.0",
+      "cc-by-nc sa 3.0",
+      "cc-by-nc-sa 3.0"
+    ],
     "urls": [
       "https://creativecommons.org/licenses/by-nc-sa/3.0"
     ]
@@ -707,7 +829,19 @@
       "creative commons attribution-noncommercial-sharealike 3.0 igo",
       "creative commons attribution-noncommercial-sharealike 3.0 international",
       "creative commons attribution-noncommercial-sharealike 3.0 international license",
-      "creative commons by-nc-sa 3.0 igo"
+      "creative commons by-nc-sa 3.0 igo",
+      "cc by nc sa 3.0 igo",
+      "cc by nc sa-3.0 igo",
+      "cc by nc-sa-3.0 igo",
+      "cc by-nc sa 3.0 igo",
+      "cc by-nc sa-3.0 igo",
+      "cc by-nc-sa-3.0 igo",
+      "cc-by nc sa 3.0 igo",
+      "cc-by nc sa-3.0 igo",
+      "cc-by nc-sa-3.0 igo",
+      "cc-by-nc sa 3.0 igo",
+      "cc-by-nc sa-3.0 igo",
+      "cc-by-nc-sa-3.0 igo"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nc-sa/3.0/igo"
@@ -728,7 +862,14 @@
       "creative commons attribution-noncommercial-sharealike 4.0",
       "creative commons attribution-noncommercial-sharealike 4.0 international",
       "creative commons attribution-noncommercial-sharealike 4.0 international license",
-      "creative commons by-nc-sa 4.0"
+      "creative commons by-nc-sa 4.0",
+      "cc by nc sa 4.0",
+      "cc by nc-sa 4.0",
+      "cc by-nc sa 4.0",
+      "cc-by nc sa 4.0",
+      "cc-by nc-sa 4.0",
+      "cc-by-nc sa 4.0",
+      "cc-by-nc-sa 4.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nc-sa/4.0"
@@ -762,7 +903,10 @@
       "creative commons attribution-noderivatives 2.0",
       "creative commons attribution-noderivatives 2.0 international",
       "creative commons attribution-noderivatives 2.0 international license",
-      "creative commons by-nd 2.0"
+      "creative commons by-nd 2.0",
+      "cc by nd 2.0",
+      "cc-by nd 2.0",
+      "cc-by-nd 2.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nd/2.0"
@@ -783,7 +927,10 @@
       "creative commons attribution-noderivatives 3.0",
       "creative commons attribution-noderivatives 3.0 international",
       "creative commons attribution-noderivatives 3.0 international license",
-      "creative commons by-nd 3.0"
+      "creative commons by-nd 3.0",
+      "cc by nd 3.0",
+      "cc-by nd 3.0",
+      "cc-by-nd 3.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nd/3.0"
@@ -800,7 +947,13 @@
       "cc-by nd 3.0 igo",
       "cc by-nd 3.0-igo",
       "cc-by nd 3.0-igo",
-      "creative commons attribution-noderivatives 3.0 igo"
+      "creative commons attribution-noderivatives 3.0 igo",
+      "cc by nd 3.0 igo",
+      "cc by nd-3.0 igo",
+      "cc by-nd-3.0 igo",
+      "cc-by nd-3.0 igo",
+      "cc-by-nd 3.0 igo",
+      "cc-by-nd-3.0 igo"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nd/3.0/igo"
@@ -821,7 +974,10 @@
       "creative commons attribution-noderivatives 4.0",
       "creative commons attribution-noderivatives 4.0 international",
       "creative commons attribution-noderivatives 4.0 international license",
-      "creative commons by-nd 4.0"
+      "creative commons by-nd 4.0",
+      "cc by nd 4.0",
+      "cc-by nd 4.0",
+      "cc-by-nd 4.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-nd/4.0"
@@ -855,7 +1011,10 @@
       "creative commons attribution-sharealike 2.0",
       "creative commons attribution-sharealike 2.0 international",
       "creative commons attribution-sharealike 2.0 international license",
-      "creative commons by-sa 2.0"
+      "creative commons by-sa 2.0",
+      "cc by sa 2.0",
+      "cc-by sa 2.0",
+      "cc-by-sa 2.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-sa/2.0"
@@ -887,6 +1046,11 @@
     "version_key": "cc-by-sa-3.0",
     "name_key": "cc-by-sa",
     "family_key": "cc",
+    "aliases": [
+      "cc by sa 3.0",
+      "cc-by sa 3.0",
+      "cc-by-sa 3.0"
+    ],
     "urls": [
       "https://creativecommons.org/licenses/by-sa/3.0"
     ]
@@ -902,7 +1066,13 @@
       "cc-by sa 3.0 igo",
       "cc by-sa 3.0-igo",
       "cc-by sa 3.0-igo",
-      "creative commons attribution-sharealike 3.0 igo"
+      "creative commons attribution-sharealike 3.0 igo",
+      "cc by sa 3.0 igo",
+      "cc by sa-3.0 igo",
+      "cc by-sa-3.0 igo",
+      "cc-by sa-3.0 igo",
+      "cc-by-sa 3.0 igo",
+      "cc-by-sa-3.0 igo"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-sa/3.0/igo"
@@ -923,7 +1093,10 @@
       "creative commons attribution-sharealike 4.0",
       "creative commons attribution-sharealike 4.0 international",
       "creative commons attribution-sharealike 4.0 international license",
-      "creative commons by-sa 4.0"
+      "creative commons by-sa 4.0",
+      "cc by sa 4.0",
+      "cc-by sa 4.0",
+      "cc-by-sa 4.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/by-sa/4.0"
@@ -935,7 +1108,8 @@
     "name_key": "cc-devnations",
     "family_key": "cc",
     "aliases": [
-      "cc-devnations-2.0"
+      "cc-devnations-2.0",
+      "cc-devnations 2.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/devnations/2.0/"
@@ -947,7 +1121,8 @@
     "name_key": "cc-nc",
     "family_key": "cc",
     "aliases": [
-      "cc-nc-1.0"
+      "cc-nc-1.0",
+      "cc-nc 1.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/nc/1.0/"
@@ -959,7 +1134,10 @@
     "name_key": "cc-nc-sa",
     "family_key": "cc",
     "aliases": [
-      "cc-nc-sa-1.0"
+      "cc-nc-sa-1.0",
+      "cc nc-sa 1.0",
+      "cc-nc sa 1.0",
+      "cc-nc-sa 1.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/nc-sa/1.0/"
@@ -971,7 +1149,14 @@
     "name_key": "cc-nc-sampling-plus",
     "family_key": "cc",
     "aliases": [
-      "cc-nc-sampling-plus-1.0"
+      "cc-nc-sampling-plus-1.0",
+      "cc nc sampling-plus 1.0",
+      "cc nc-sampling plus 1.0",
+      "cc nc-sampling-plus 1.0",
+      "cc-nc sampling plus 1.0",
+      "cc-nc sampling-plus 1.0",
+      "cc-nc-sampling plus 1.0",
+      "cc-nc-sampling-plus 1.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/nc-sampling+/1.0/"
@@ -983,7 +1168,8 @@
     "name_key": "cc-nd",
     "family_key": "cc",
     "aliases": [
-      "cc-nd-1.0"
+      "cc-nd-1.0",
+      "cc-nd 1.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/nd/1.0/"
@@ -995,7 +1181,10 @@
     "name_key": "cc-nd-nc",
     "family_key": "cc",
     "aliases": [
-      "cc-nd-nc-1.0"
+      "cc-nd-nc-1.0",
+      "cc nd-nc 1.0",
+      "cc-nd nc 1.0",
+      "cc-nd-nc 1.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/nd-nc/1.0/"
@@ -1007,7 +1196,8 @@
     "name_key": "cc-sa",
     "family_key": "cc",
     "aliases": [
-      "cc-sa-1.0"
+      "cc-sa-1.0",
+      "cc-sa 1.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/sa/1.0/"
@@ -1019,7 +1209,8 @@
     "name_key": "cc-sampling",
     "family_key": "cc",
     "aliases": [
-      "cc-sampling-1.0"
+      "cc-sampling-1.0",
+      "cc-sampling 1.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/sampling/1.0/"
@@ -1031,7 +1222,10 @@
     "name_key": "cc-sampling-plus",
     "family_key": "cc",
     "aliases": [
-      "cc-sampling-plus-1.0"
+      "cc-sampling-plus-1.0",
+      "cc sampling-plus 1.0",
+      "cc-sampling plus 1.0",
+      "cc-sampling-plus 1.0"
     ],
     "urls": [
       "https://creativecommons.org/licenses/sampling+/1.0/"
@@ -1139,7 +1333,8 @@
       "gpl 2",
       "gnu gpl v2",
       "gpl v2",
-      "gpl-2.0+"
+      "gpl-2.0+",
+      "gpl 2.0"
     ],
     "urls": [
       "https://www.gnu.org/licenses/gpl-2.0.html",
@@ -1159,7 +1354,8 @@
       "gnu gpl v3",
       "gpl",
       "gpl v3",
-      "gpl-3.0+"
+      "gpl-3.0+",
+      "gpl 3.0"
     ],
     "urls": [
       "https://www.gnu.org/licenses/gpl-3.0.html",
@@ -1219,7 +1415,8 @@
     "family_key": "publisher-oa",
     "aliases": [
       "jama open access",
-      "jama cc by"
+      "jama cc by",
+      "jama-cc by"
     ],
     "urls": [
       "https://jamanetwork.com/pages/cc-by-license-permissions"
@@ -1229,19 +1426,28 @@
   "lgpl": {
     "version_key": "lgpl-3.0",
     "name_key": "lgpl-3",
-    "family_key": "copyleft"
+    "family_key": "copyleft",
+    "aliases": [
+      "lgpl 3.0"
+    ]
   },
 
   "lgpl v2.1": {
     "version_key": "lgpl-2.1",
     "name_key": "lgpl-2.1",
-    "family_key": "copyleft"
+    "family_key": "copyleft",
+    "aliases": [
+      "lgpl 2.1"
+    ]
   },
 
   "lgpl v3": {
     "version_key": "lgpl-3.0",
     "name_key": "lgpl-3",
-    "family_key": "copyleft"
+    "family_key": "copyleft",
+    "aliases": [
+      "lgpl 3.0"
+    ]
   },
 
   "lgpl-2": {
@@ -1252,7 +1458,8 @@
       "lgpl-v2",
       "lgpl 2",
       "lgpl-2.1-only",
-      "lgpl-2.1-or-later"
+      "lgpl-2.1-or-later",
+      "lgpl 2.1"
     ]
   },
 
@@ -1260,6 +1467,9 @@
     "version_key": "lgpl-2.1",
     "name_key": "lgpl-2.1",
     "family_key": "copyleft",
+    "aliases": [
+      "lgpl 2.1"
+    ],
     "urls": [
       "https://www.gnu.org/licenses/lgpl-2.1.html",
       "https://www.gnu.org/licenses/lgpl-2.1"
@@ -1272,7 +1482,8 @@
     "family_key": "copyleft",
     "aliases": [
       "lgpl-v3",
-      "lgpl 3"
+      "lgpl 3",
+      "lgpl 3.0"
     ]
   },
 
@@ -1280,6 +1491,9 @@
     "version_key": "lgpl-3.0",
     "name_key": "lgpl-3",
     "family_key": "copyleft",
+    "aliases": [
+      "lgpl 3.0"
+    ],
     "urls": [
       "https://www.gnu.org/licenses/lgpl-3.0.html",
       "https://www.gnu.org/licenses/lgpl-3.0"
@@ -1356,6 +1570,9 @@
     "version_key": "odc-by",
     "name_key": "odc-by",
     "family_key": "open-data",
+    "aliases": [
+      "odc by"
+    ],
     "urls": [
       "https://opendatacommons.org/licenses/by/1-0",
       "https://opendatacommons.org/licenses/by/1.0"
@@ -1386,7 +1603,8 @@
     "family_key": "other-oa",
     "aliases": [
       "open access",
-      "open-access"
+      "open-access",
+      "other oa"
     ]
   },
 
@@ -1495,7 +1713,8 @@
     "family_key": "publisher-tdm",
     "aliases": [
       "springer nature tdm",
-      "springer nature text and data mining"
+      "springer nature text and data mining",
+      "springernature tdm"
     ],
     "urls": [
       "https://www.springernature.com/gp/researchers/text-and-data-mining"
@@ -1640,7 +1859,8 @@
     "family_key": "publisher-oa",
     "aliases": [
       "publisher specific oa",
-      "publisher-specific-oa"
+      "publisher-specific-oa",
+      "publisher-specific oa"
     ]
   }
 
