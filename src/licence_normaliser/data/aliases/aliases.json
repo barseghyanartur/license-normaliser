@@ -250,7 +250,6 @@
     "name_key": "cc-by",
     "family_key": "cc",
     "aliases": [
-      "cc-by-3.0",
       "cc-by-3",
       "cc by 3.0",
       "cc-by 3.0",
@@ -269,11 +268,9 @@
     "name_key": "cc-by",
     "family_key": "cc",
     "aliases": [
-      "cc-by-igo",
       "cc by igo",
       "cc-by igo",
-      "cc by-igo",
-      "cc-by-igo"
+      "cc by-igo"
     ]
   },
   "cc by 3.0-igo": {
@@ -281,7 +278,6 @@
     "name_key": "cc-by",
     "family_key": "cc",
     "aliases": [
-      "cc-by-3.0-igo",
       "cc by 3.0 igo",
       "cc-by 3.0 igo",
       "cc by 3.0-igo",
@@ -302,12 +298,9 @@
     "name_key": "cc-by",
     "family_key": "cc",
     "aliases": [
-      "cc-by-4.0",
       "cc by 4",
       "cc-by 4",
       "cc-by-4",
-      "cc by 4.0",
-      "cc-by 4.0",
       "cc by 4.0",
       "cc-by 4.0",
       "creative commons attribution 4.0",
@@ -324,7 +317,6 @@
     "name_key": "cc-by",
     "family_key": "cc",
     "aliases": [
-      "cc-by-4.0-igo",
       "cc by 4.0 igo",
       "cc-by 4.0 igo",
       "cc by 4.0-igo",
@@ -345,7 +337,6 @@
     "name_key": "cc-by-nc",
     "family_key": "cc",
     "aliases": [
-      "cc-by-nc-1.0",
       "cc by-nc 1.0",
       "cc-by nc 1.0",
       "cc-by-nc 1.0"

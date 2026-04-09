@@ -25,7 +25,6 @@ from pathlib import Path
 DATA_DIR = Path(__file__).parent.parent / "src" / "licence_normaliser" / "data"
 
 ALIASES_PATH = DATA_DIR / "aliases" / "aliases.json"
-DRYRUN_PATH = DATA_DIR / "aliases" / "aliases.dryrun.json"
 
 
 def segment_key(version_key: str) -> list[str]:
@@ -276,10 +275,9 @@ def main() -> None:
     to_add_count = interactive_add(entries_needing_variants, aliases_data)
 
     if to_add_count > 0:
-        output_path = DRYRUN_PATH if args.dry_run else ALIASES_PATH
-        write_aliases(aliases_data, output_path)
+        write_aliases(aliases_data, ALIASES_PATH)
         print(f"\nAdded {to_add_count} variants")
-        print(f"Written to: {output_path}")
+        print(f"Written to: {ALIASES_PATH}")
 
 
 if __name__ == "__main__":
