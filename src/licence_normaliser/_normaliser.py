@@ -277,11 +277,11 @@ class LicenceNormaliser:
             self._alias_lines_loaded = True
 
         stages: list[LicenceTraceStage] = []
-        jurisdiction, scope = self._extract_jurisdiction_and_scope(cleaned)
 
         # 1. Alias lookup
         if cleaned in self._aliases:
             output = self._aliases[cleaned]
+            jurisdiction, scope = self._extract_jurisdiction_and_scope(output)
             source_line = None
             source_file = None
             if cleaned in self._alias_lines:
@@ -307,8 +307,10 @@ class LicenceNormaliser:
         stages.append(LicenceTraceStage("alias", cleaned, "", False))
 
         # 2. Registry lookup
+        jurisdiction, scope = None, None
         if cleaned in self._registry:
             canonical = self._registry[cleaned]
+            jurisdiction, scope = self._extract_jurisdiction_and_scope(canonical)
             source_line = None
             source_file = None
             if cleaned in self._registry_lines:
@@ -472,33 +474,40 @@ class LicenceNormaliser:
         )
 
     def _resolve_impl(self, cleaned: str) -> LicenceVersion:
-        jurisdiction, scope = self._extract_jurisdiction_and_scope(cleaned)
-
         # 1. Alias lookup
         if cleaned in self._aliases:
             v = self._make(self._aliases[cleaned])
+            jurisdiction, scope = self._extract_jurisdiction_and_scope(
+                self._aliases[cleaned]
+            )
             return self._make_with_jurisdiction_scope(v, jurisdiction, scope)
 
         # 2. Registry lookup
         if cleaned in self._registry:
             canonical = self._registry[cleaned]
             v = self._make(canonical)
+            jurisdiction, scope = self._extract_jurisdiction_and_scope(canonical)
             return self._make_with_jurisdiction_scope(v, jurisdiction, scope)
 
         # 3. URL lookup
         is_url = cleaned.startswith("http://") or cleaned.startswith("https://")
-        if (jurisdiction or scope) and is_url:
+        extracted_jur, extracted_scope = self._extract_jurisdiction_and_scope(cleaned)
+        if (extracted_jur or extracted_scope) and is_url:
             raw_key = cleaned.rstrip("/").lower()
             if raw_key.startswith("http://"):
                 raw_key = "https://" + raw_key[7:]
             if raw_key in self._url_map:
                 v = self._make(self._url_map[raw_key])
-                return self._make_with_jurisdiction_scope(v, jurisdiction, scope)
+                return self._make_with_jurisdiction_scope(
+                    v, extracted_jur, extracted_scope
+                )
 
         # Try normalized URL
         url_key = self._normalise_url(cleaned)
         if url_key in self._url_map:
             v = self._make(self._url_map[url_key])
+            # For URL, extract jurisdiction/scope from URL path
+            jurisdiction, scope = self._extract_jurisdiction_and_scope(cleaned)
             return self._make_with_jurisdiction_scope(v, jurisdiction, scope)
 
         # Try raw URL if normalized didn't match
@@ -508,6 +517,7 @@ class LicenceNormaliser:
                 raw_key = "https://" + raw_key[7:]
             if raw_key in self._url_map:
                 v = self._make(self._url_map[raw_key])
+                jurisdiction, scope = self._extract_jurisdiction_and_scope(cleaned)
                 return self._make_with_jurisdiction_scope(v, jurisdiction, scope)
 
         # 4. Prose matching (only for longer strings)
@@ -515,6 +525,7 @@ class LicenceNormaliser:
             for pattern, vkey in self._prose_patterns:
                 if pattern.search(cleaned):
                     v = self._make(vkey)
+                    jurisdiction, scope = self._extract_jurisdiction_and_scope(vkey)
                     return self._make_with_jurisdiction_scope(v, jurisdiction, scope)
 
         # 5. Fallback to unknown
@@ -775,14 +786,23 @@ class LicenceNormaliser:
         parts = key.split("-")
         if len(parts) < 3:
             return None, None
-        version_part = parts[-1]
-        if not version_part.replace(".", "").isdigit():
-            return None, None
-        potential = parts[-2] if len(parts) >= 2 else None
-        if potential == "igo":
+
+        # Check for scope (like 'igo') at end
+        if parts[-1] == "igo":
             return None, "igo"
-        if potential and len(potential) == 2 and potential.isalpha():
-            return potential, None
+
+        # Check if last part is version + jurisdiction
+        version_part = parts[-1]
+        if version_part.replace(".", "").isdigit():
+            # Version is last element, jurisdiction would be -2
+            if len(parts) >= 2 and len(parts[-2]) == 2 and parts[-2].isalpha():
+                return parts[-2], None
+            return None, None
+
+        # Last part might be jurisdiction (2-letter code)
+        if len(parts[-1]) == 2 and parts[-1].isalpha():
+            return parts[-1], None
+
         return None, None
 
     @staticmethod
