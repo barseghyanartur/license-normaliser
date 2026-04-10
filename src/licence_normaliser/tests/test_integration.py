@@ -797,7 +797,7 @@ def test_real_world_licence_strings():
         ),
     ],
 )
-def test_scope_igo(raw, expected_key, expected_scope):
+def test_scope(raw, expected_key, expected_scope):
     v = normalise_licence(raw)
     assert v.key == expected_key
     assert v.scope == expected_scope
@@ -809,7 +809,7 @@ def test_scope_igo(raw, expected_key, expected_scope):
         ("http://creativecommons.org/licenses/by-nc/2.0/uk", "cc-by-nc-2.0-uk", "uk"),
     ],
 )
-def test_jurisdiction_uk(raw, expected_key, expected_jurisdiction):
+def test_jurisdiction(raw, expected_key, expected_jurisdiction):
     v = normalise_licence(raw)
     assert v.key == expected_key
     assert v.jurisdiction == expected_jurisdiction
