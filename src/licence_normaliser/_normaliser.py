@@ -787,6 +787,9 @@ class LicenceNormaliser:
         if len(parts) < 3:
             return None, None
 
+        # CC licence type parts (NOT jurisdictions)
+        cc_types = {"by", "nc", "nd", "sa"}
+
         # Check for scope (like 'igo') at end
         if parts[-1] == "igo":
             return None, "igo"
@@ -796,11 +799,14 @@ class LicenceNormaliser:
         if version_part.replace(".", "").isdigit():
             # Version is last element, jurisdiction would be -2
             if len(parts) >= 2 and len(parts[-2]) == 2 and parts[-2].isalpha():
-                return parts[-2], None
+                potential_jur = parts[-2]
+                # Exclude known CC licence types from jurisdiction detection
+                if potential_jur not in cc_types:
+                    return potential_jur, None
             return None, None
 
         # Last part might be jurisdiction (2-letter code)
-        if len(parts[-1]) == 2 and parts[-1].isalpha():
+        if len(parts[-1]) == 2 and parts[-1].isalpha() and parts[-1] not in cc_types:
             return parts[-1], None
 
         return None, None
