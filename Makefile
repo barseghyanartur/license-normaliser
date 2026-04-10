@@ -8,7 +8,7 @@ VENV := .venv/bin/activate
 UNAME_S := $(shell uname -s)
 
 # -----------------------------------------------------------------------
-# Docker-based testing (the ONLY way to run tests)
+# Docker-based testing
 # -----------------------------------------------------------------------
 
 build:
@@ -39,6 +39,13 @@ shell-env: build
 		exit 1; \
 	fi
 	docker compose run --rm --entrypoint bash tox -e $(ENV)
+
+# -----------------------------------------------------------------------
+# uv-based testing
+# -----------------------------------------------------------------------
+
+quick-test:
+	uv run pytest
 
 ipython:
 	uv run ipython
