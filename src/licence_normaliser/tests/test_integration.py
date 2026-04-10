@@ -393,6 +393,13 @@ LICENCE_MATRIX = [
         "cc-by",
         "cc",
     ),
+    # Prose patterns with URLs
+    (
+        "This is an article https://creativecommons.org/licenses/by-sa/3.0/ license.",
+        "cc-by-sa-3.0",
+        "cc-by-sa",
+        "cc",
+    ),
     # CC0
     ("CC0 1.0", "cc0-1.0", "cc0", "cc0"),
     ("cc0 1.0", "cc0-1.0", "cc0", "cc0"),

@@ -33,6 +33,8 @@ are used for versioning (schema follows below):
   ph, ug, mt, uk.
 - Fixed bug where jurisdiction/scope extracted from URLs wasn't being included
   in the resolved key.
+- Added prose patterns for CC URLs embedded in text (e.g., "Article under
+  https://creativecommons.org/licenses/by-sa/3.0/").
 
 
 0.5.2
