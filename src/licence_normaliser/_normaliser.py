@@ -538,8 +538,13 @@ class LicenceNormaliser:
         scope: Optional[str],
     ) -> LicenceVersion:
         """Create a new LicenceVersion with jurisdiction/scope override."""
+        key = v.key
+        if jurisdiction and jurisdiction not in v.key:
+            key = f"{key}-{jurisdiction}"
+        elif scope and scope not in v.key:
+            key = f"{key}-{scope}"
         return LicenceVersion(
-            key=v.key,
+            key=key,
             url=v.url,
             licence=v.licence,
             jurisdiction=jurisdiction,
@@ -773,12 +778,13 @@ class LicenceNormaliser:
         """
         if key.startswith("http://") or key.startswith("https://"):
             parts = key.split("/")
-            for _, part in enumerate(parts):
+            cc_types = {"by", "nc", "nd", "sa"}
+            for part in parts:
                 if part == "igo":
                     return None, "igo"
-            for _, part in enumerate(parts):
-                if len(part) == 2 and part.isalpha():
+                if len(part) == 2 and part.isalpha() and part not in cc_types:
                     return part, None
+
             return None, None
 
         if not key.startswith("cc-"):

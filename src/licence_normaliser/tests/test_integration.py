@@ -113,6 +113,87 @@ LICENCE_MATRIX = [
     ("CC BY-SA 3.0", "cc-by-sa-3.0", "cc-by-sa", "cc"),
     ("cc-by-3.0-igo", "cc-by-3.0-igo", "cc-by", "cc", None, "igo"),
     ("cc-by-nc-nd-3.0-igo", "cc-by-nc-nd-3.0-igo", "cc-by-nc-nd", "cc", None, "igo"),
+    # === CC jurisdiction codes ===
+    (
+        "https://creativecommons.org/licenses/by/2.0/au/",
+        "cc-by-2.0-au",
+        "cc-by",
+        "cc",
+        "au",
+        None,
+    ),
+    (
+        "https://creativecommons.org/licenses/by/2.0/ca/",
+        "cc-by-2.0-ca",
+        "cc-by",
+        "cc",
+        "ca",
+        None,
+    ),
+    (
+        "https://creativecommons.org/licenses/by/3.0/nz/",
+        "cc-by-3.0-nz",
+        "cc-by",
+        "cc",
+        "nz",
+        None,
+    ),
+    (
+        "https://creativecommons.org/licenses/by-nc/2.0/au/",
+        "cc-by-nc-2.0-au",
+        "cc-by-nc",
+        "cc",
+        "au",
+        None,
+    ),
+    (
+        "https://creativecommons.org/licenses/by-nc/3.0/us/",
+        "cc-by-nc-3.0-us",
+        "cc-by-nc",
+        "cc",
+        "us",
+        None,
+    ),
+    (
+        "https://creativecommons.org/licenses/by-nc-sa/3.0/nz/",
+        "cc-by-nc-sa-3.0-nz",
+        "cc-by-nc-sa",
+        "cc",
+        "nz",
+        None,
+    ),
+    (
+        "https://creativecommons.org/licenses/by-nc-nd/3.0/ph/",
+        "cc-by-nc-nd-3.0-ph",
+        "cc-by-nc-nd",
+        "cc",
+        "ph",
+        None,
+    ),
+    (
+        "https://creativecommons.org/licenses/by-sa/3.0/ug/",
+        "cc-by-sa-3.0-ug",
+        "cc-by-sa",
+        "cc",
+        "ug",
+        None,
+    ),
+    (
+        "https://creativecommons.org/licenses/by-nd/2.5/mt/",
+        "cc-by-nd-2.5-mt",
+        "cc-by-nd",
+        "cc",
+        "mt",
+        None,
+    ),
+    (
+        "https://creativecommons.org/licenses/by-nc-nd/2.5/uk/",
+        "cc-by-nc-nd-2.5-uk",
+        "cc-by-nc-nd",
+        "cc",
+        "uk",
+        None,
+    ),
     # === NEW: CC licence prose patterns (2025-04-02) ===
     # cc by variants
     ("Article published under CC by license.", "cc-by", "cc-by", "cc"),
@@ -725,7 +806,7 @@ def test_scope_igo(raw, expected_key, expected_scope):
 @pytest.mark.parametrize(
     "raw,expected_key,expected_jurisdiction",
     [
-        ("http://creativecommons.org/licenses/by-nc/2.0/uk", "cc-by-nc-2.0", "uk"),
+        ("http://creativecommons.org/licenses/by-nc/2.0/uk", "cc-by-nc-2.0-uk", "uk"),
     ],
 )
 def test_jurisdiction_uk(raw, expected_key, expected_jurisdiction):
