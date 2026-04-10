@@ -525,7 +525,26 @@ class LicenceNormaliser:
             for pattern, vkey in self._prose_patterns:
                 if pattern.search(cleaned):
                     v = self._make(vkey)
+                    # For URL patterns in prose, also extract jurisdiction/scope
+                    # from the matched URL
                     jurisdiction, scope = self._extract_jurisdiction_and_scope(vkey)
+                    if jurisdiction is None and scope is None:
+                        # Try to find and extract from URL in prose
+                        # (capture full path including jurisdiction/scope)
+                        url_match = re.search(
+                            r"(https?://[^/]+/licenses/[^/]+/\d+\.\d+/[^/\s]*)",
+                            cleaned,
+                        )
+                        if not url_match:
+                            # Try without version (e.g., /by-nc/igo)
+                            url_match = re.search(
+                                r"(https?://[^/]+/licenses/[^/]+/[^/\s]*)",
+                                cleaned,
+                            )
+                        if url_match:
+                            jurisdiction, scope = self._extract_jurisdiction_and_scope(
+                                url_match.group(1)
+                            )
                     return self._make_with_jurisdiction_scope(v, jurisdiction, scope)
 
         # 5. Fallback to unknown

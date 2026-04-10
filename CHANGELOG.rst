@@ -35,6 +35,7 @@ are used for versioning (schema follows below):
   in the resolved key.
 - Added prose patterns for CC URLs embedded in text (e.g., "Article under
   https://creativecommons.org/licenses/by-sa/3.0/").
+- Added 10 additional test cases for CC URLs in prose with jurisdiction/scope.
 
 
 0.5.2
