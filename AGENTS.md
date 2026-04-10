@@ -321,8 +321,9 @@ Run linting: `make ruff` or `make pre-commit`
    - Core pipeline change → `_normaliser.py` or `_cache.py`
 3. **Write tests** covering both success and error cases
 4. **Update README.rst** if the API changed
-5. **Suggest running**: `make test-env ENV=py312` then `make test`
-6. **Suggest running**: `make pre-commit`
+5. **MUST run**: `uv run pytest` or `make test-env ENV=py312` then `make test`
+6. **MUST run**: `make pre-commit`. If fixes have not been applied
+   automatically, fix them.
 
 ---
 
