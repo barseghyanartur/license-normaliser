@@ -69,6 +69,9 @@ The library uses a three-level hierarchy:
    ``"wiley-tdm"``
 3. **LicenceVersion** - fully resolved: ``"cc-by-3.0"``, ``"cc-by-nc-nd-4.0"``
 
+``LicenceVersion`` also has optional ``jurisdiction`` (e.g., ``"uk"``,
+``"au"``) and ``scope`` (e.g., ``"igo"``) fields for CC licences.
+
 Installation
 ============
 
@@ -96,6 +99,15 @@ Quick start
     assert str(v) == "cc-by-nc-nd-4.0"      #     ← LicenceVersion
     assert str(v.licence) == "cc-by-nc-nd"  #     ← LicenceName
     assert str(v.licence.family) == "cc"    #     ← LicenceFamily
+
+    # With jurisdiction and scope
+    v = normalise_licence("http://creativecommons.org/licenses/by-nc/2.0/uk")
+    assert v.jurisdiction == "uk"
+    assert v.scope is None
+
+    v = normalise_licence("http://creativecommons.org/licenses/by-nc/3.0/igo")
+    assert v.jurisdiction is None
+    assert v.scope == "igo"
 
 
 Strict mode

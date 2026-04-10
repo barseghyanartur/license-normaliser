@@ -37,6 +37,8 @@ first.
 | **Name** | `LicenceName` | `"cc-by"`, `"mit"`, `"gpl-3.0-only"` |
 | **Version** | `LicenceVersion` | `"cc-by-4.0"`, `"mit"`, `"gpl-3.0-only"` |
 
+`LicenceVersion` also has optional `jurisdiction` (e.g., `"uk"`, `"au"`) and `scope` (e.g., `"igo"`) fields for CC licences.
+
 ### Resolution pipeline
 
 1. **Alias table** - cleaned lowercase key matches `ALIASES` (loaded from `data/aliases/aliases.json`)
@@ -84,6 +86,26 @@ v = normalise_licence("CC BY-NC-ND 4.0")
 print(v.key)           # "cc-by-nc-nd-4.0"
 print(v.licence.key)   # "cc-by-nc-nd"
 print(v.family.key)    # "cc"
+```
+
+### With jurisdiction and scope
+
+CC URLs can include jurisdiction codes (e.g., `"uk"`, `"au"`) or scope (e.g., `"igo"`):
+
+```python name=test_jurisdiction_scope
+from licence_normaliser import normalise_licence
+
+# UK jurisdiction
+v = normalise_licence("http://creativecommons.org/licenses/by-nc/2.0/uk")
+print(v.key)           # "cc-by-nc-2.0"
+print(v.jurisdiction)  # "uk"
+print(v.scope)         # None
+
+# IGO scope (International Governmental Organization)
+v = normalise_licence("http://creativecommons.org/licenses/by-nc/3.0/igo")
+print(v.key)           # "cc-by-nc-3.0-igo"
+print(v.jurisdiction)  # None
+print(v.scope)         # "igo"
 ```
 
 ### Strict mode
