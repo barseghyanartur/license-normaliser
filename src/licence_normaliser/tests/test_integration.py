@@ -19,196 +19,115 @@ __license__ = "MIT"
 
 
 LICENCE_MATRIX = [
-    # raw,expected_key,expected_licence,expected_family,
-    # expected_jurisdiction,expected_scope
+    # raw,expected_key,expected_licence,expected_family
     # === OSI-approved licences ===
-    ("mit", "mit", "mit", "osi", None, None),
-    ("MIT", "mit", "mit", "osi", None, None),
-    ("  mit  ", "mit", "mit", "osi", None, None),
-    ("apache-2.0", "apache-2.0", "apache", "osi", None, None),
-    ("Apache-2.0", "apache-2.0", "apache", "osi", None, None),
-    ("Apache 2.0", "apache-2.0", "apache", "osi", None, None),
-    ("Apache License 2.0", "apache-2.0", "apache", "osi", None, None),
+    ("mit", "mit", "mit", "osi"),
+    ("MIT", "mit", "mit", "osi"),
+    ("  mit  ", "mit", "mit", "osi"),
+    ("apache-2.0", "apache-2.0", "apache", "osi"),
+    ("Apache-2.0", "apache-2.0", "apache", "osi"),
+    ("Apache 2.0", "apache-2.0", "apache", "osi"),
+    ("Apache License 2.0", "apache-2.0", "apache", "osi"),
     (
         "BSD 3-Clause",
         "bsd-3-clause",
         "bsd-3-clause",
         "osi",
-        None,
-        None,
     ),  # Resolves to bsd-3-clause/osi, matches SPDX and alias entries
-    ("bsd-3-clause", "bsd-3-clause", "bsd-3-clause", "osi", None, None),
-    ("BSD License", "bsd-3-clause", "bsd-3-clause", "osi", None, None),
-    ("MPL-2.0", "mpl-2.0", "mpl", "osi", None, None),
-    ("mpl-2.0", "mpl-2.0", "mpl", "osi", None, None),
+    ("bsd-3-clause", "bsd-3-clause", "bsd-3-clause", "osi"),
+    ("BSD License", "bsd-3-clause", "bsd-3-clause", "osi"),
+    ("MPL-2.0", "mpl-2.0", "mpl", "osi"),
+    ("mpl-2.0", "mpl-2.0", "mpl", "osi"),
     (
         "Mozilla Public License 2.0",
         "mpl-2.0",
         "mpl",
         "osi",
-        None,
-        None,
     ),  # Canonical full name of MPL-2.0, matches alias entry
-    ("ISC", "isc", "isc", "osi", None, None),
-    ("isc", "isc", "isc", "osi", None, None),
-    ("ISC License", "isc", "isc", "osi", None, None),
-    ("Unlicense", "unlicense", "unlicense", "public-domain", None, None),
-    ("unlicense", "unlicense", "unlicense", "public-domain", None, None),
-    ("WTFPL", "wtfpl", "wtfpl", "public-domain", None, None),
-    ("wtfpl", "wtfpl", "wtfpl", "public-domain", None, None),
-    ("Zlib", "zlib", "zlib", "osi", None, None),
-    ("zlib", "zlib", "zlib", "osi", None, None),
+    ("ISC", "isc", "isc", "osi"),
+    ("isc", "isc", "isc", "osi"),
+    ("ISC License", "isc", "isc", "osi"),
+    ("Unlicense", "unlicense", "unlicense", "public-domain"),
+    ("unlicense", "unlicense", "unlicense", "public-domain"),
+    ("WTFPL", "wtfpl", "wtfpl", "public-domain"),
+    ("wtfpl", "wtfpl", "wtfpl", "public-domain"),
+    ("Zlib", "zlib", "zlib", "osi"),
+    ("zlib", "zlib", "zlib", "osi"),
     # === GPL / AGPL / LGPL (copyleft) ===
-    ("gpl-3.0", "gpl-3.0", "gpl-3", "copyleft", None, None),
-    ("GPL-3.0", "gpl-3.0", "gpl-3", "copyleft", None, None),
-    ("gpl-3.0+", "gpl-3.0", "gpl-3", "copyleft", None, None),
-    ("gpl-3-0", "gpl-3-0", "gpl-3-0", "copyleft", None, None),
-    # NOTE: hyphen instead of dot; resolver recognises gpl but doesn't normalise
-    ("GNU GPL v3", "gpl-3.0", "gpl-3", "copyleft", None, None),
-    ("GPL v3", "gpl-3.0", "gpl-3", "copyleft", None, None),
-    ("gpl-2.0", "gpl-2.0", "gpl-2", "copyleft", None, None),
-    ("GPL v2", "gpl-2.0", "gpl-2", "copyleft", None, None),
-    ("lgpl-3.0", "lgpl-3.0", "lgpl-3", "copyleft", None, None),
-    ("LGPL-3.0", "lgpl-3.0", "lgpl-3", "copyleft", None, None),
-    ("lgpl-2.1", "lgpl-2.1", "lgpl-2.1", "copyleft", None, None),
-    ("LGPL v2.1", "lgpl-2.1", "lgpl-2.1", "copyleft", None, None),
-    ("lgpl v2.1", "lgpl-2.1", "lgpl-2.1", "copyleft", None, None),
-    ("agpl-3.0", "agpl-3.0", "agpl-3", "copyleft", None, None),
-    ("AGPL v3", "agpl-3.0", "agpl-3", "copyleft", None, None),
-    # === Creative Commons ===
-    ("CC BY 4.0", "cc-by-4.0", "cc-by", "cc", None, None),
-    ("cc by 4.0", "cc-by-4.0", "cc-by", "cc", None, None),
-    ("cc-by-4.0", "cc-by-4.0", "cc-by", "cc", None, None),
-    ("CC BY 3.0", "cc-by-3.0", "cc-by", "cc", None, None),
-    ("cc by 3.0", "cc-by-3.0", "cc-by", "cc", None, None),
-    ("cc-by-3.0", "cc-by-3.0", "cc-by", "cc", None, None),
-    ("CC BY 2.5", "cc-by-2.5", "cc-by", "cc", None, None),
-    ("CC BY 2.0", "cc-by-2.0", "cc-by", "cc", None, None),
-    ("CC BY 1.0", "cc-by-1.0", "cc-by", "cc", None, None),
-    ("cc by", "cc-by", "cc-by", "cc", None, None),
-    ("CC-BY", "cc-by", "cc-by", "cc", None, None),
-    # SPDX form, resolves to cc-by/cc
-    ("CC BY-NC 4.0", "cc-by-nc-4.0", "cc-by-nc", "cc", None, None),
-    ("cc by-nc 4.0", "cc-by-nc-4.0", "cc-by-nc", "cc", None, None),
-    ("cc-by-nc-4.0", "cc-by-nc-4.0", "cc-by-nc", "cc", None, None),
-    ("CC BY-NC 3.0", "cc-by-nc-3.0", "cc-by-nc", "cc", None, None),
-    ("CC BY-NC-SA 4.0", "cc-by-nc-sa-4.0", "cc-by-nc-sa", "cc", None, None),
-    ("cc by-nc-sa 4.0", "cc-by-nc-sa-4.0", "cc-by-nc-sa", "cc", None, None),
-    ("cc-by-nc-sa-4.0", "cc-by-nc-sa-4.0", "cc-by-nc-sa", "cc", None, None),
-    ("CC BY-NC-SA 3.0", "cc-by-nc-sa-3.0", "cc-by-nc-sa", "cc", None, None),
-    ("CC BY-NC-ND 4.0", "cc-by-nc-nd-4.0", "cc-by-nc-nd", "cc", None, None),
-    ("cc by-nc-nd 4.0", "cc-by-nc-nd-4.0", "cc-by-nc-nd", "cc", None, None),
-    ("cc-by-nc-nd-4.0", "cc-by-nc-nd-4.0", "cc-by-nc-nd", "cc", None, None),
-    ("CC BY-NC-ND 3.0", "cc-by-nc-nd-3.0", "cc-by-nc-nd", "cc", None, None),
-    ("cc by-nc-nd 3.0", "cc-by-nc-nd-3.0", "cc-by-nc-nd", "cc", None, None),
-    ("CC BY-ND 4.0", "cc-by-nd-4.0", "cc-by-nd", "cc", None, None),
-    ("cc by-nd 4.0", "cc-by-nd-4.0", "cc-by-nd", "cc", None, None),
-    ("cc-by-nd-4.0", "cc-by-nd-4.0", "cc-by-nd", "cc", None, None),
-    ("CC BY-SA 4.0", "cc-by-sa-4.0", "cc-by-sa", "cc", None, None),
-    ("cc by-sa 4.0", "cc-by-sa-4.0", "cc-by-sa", "cc", None, None),
-    ("cc-by-sa-4.0", "cc-by-sa-4.0", "cc-by-sa", "cc", None, None),
-    ("CC BY-SA 3.0", "cc-by-sa-3.0", "cc-by-sa", "cc", None, None),
-    ("cc-by-3.0-igo", "cc-by-3.0-igo", "cc-by", "cc", None, None),
+    ("gpl-3.0", "gpl-3.0", "gpl-3", "copyleft"),
+    ("GPL-3.0", "gpl-3.0", "gpl-3", "copyleft"),
+    ("gpl-3.0+", "gpl-3.0", "gpl-3", "copyleft"),
     (
-        "cc-by-nc-nd-3.0-igo",
-        "cc-by-nc-nd-3.0-igo",
-        "cc-by-nc-nd",
+        "gpl-3-0",
+        "gpl-3-0",
+        "gpl-3-0",
+        "copyleft",
+    ),  # NOTE: hyphen instead of dot; resolver recognises gpl but doesn't normalise
+    ("GNU GPL v3", "gpl-3.0", "gpl-3", "copyleft"),
+    ("GPL v3", "gpl-3.0", "gpl-3", "copyleft"),
+    ("gpl-2.0", "gpl-2.0", "gpl-2", "copyleft"),
+    ("GPL v2", "gpl-2.0", "gpl-2", "copyleft"),
+    ("lgpl-3.0", "lgpl-3.0", "lgpl-3", "copyleft"),
+    ("LGPL-3.0", "lgpl-3.0", "lgpl-3", "copyleft"),
+    ("lgpl-2.1", "lgpl-2.1", "lgpl-2.1", "copyleft"),
+    ("LGPL v2.1", "lgpl-2.1", "lgpl-2.1", "copyleft"),
+    ("lgpl v2.1", "lgpl-2.1", "lgpl-2.1", "copyleft"),
+    ("agpl-3.0", "agpl-3.0", "agpl-3", "copyleft"),
+    ("AGPL v3", "agpl-3.0", "agpl-3", "copyleft"),
+    # === Creative Commons ===
+    ("CC BY 4.0", "cc-by-4.0", "cc-by", "cc"),
+    ("cc by 4.0", "cc-by-4.0", "cc-by", "cc"),
+    ("cc-by-4.0", "cc-by-4.0", "cc-by", "cc"),
+    ("CC BY 3.0", "cc-by-3.0", "cc-by", "cc"),
+    ("cc by 3.0", "cc-by-3.0", "cc-by", "cc"),
+    ("cc-by-3.0", "cc-by-3.0", "cc-by", "cc"),
+    ("CC BY 2.5", "cc-by-2.5", "cc-by", "cc"),
+    ("CC BY 2.0", "cc-by-2.0", "cc-by", "cc"),
+    ("CC BY 1.0", "cc-by-1.0", "cc-by", "cc"),
+    ("cc by", "cc-by", "cc-by", "cc"),
+    (
+        "CC-BY",
+        "cc-by",
+        "cc-by",
         "cc",
-        None,
-        "igo",
-    ),
+    ),  # SPDX form, resolves to cc-by/cc
+    ("CC BY-NC 4.0", "cc-by-nc-4.0", "cc-by-nc", "cc"),
+    ("cc by-nc 4.0", "cc-by-nc-4.0", "cc-by-nc", "cc"),
+    ("cc-by-nc-4.0", "cc-by-nc-4.0", "cc-by-nc", "cc"),
+    ("CC BY-NC 3.0", "cc-by-nc-3.0", "cc-by-nc", "cc"),
+    ("CC BY-NC-SA 4.0", "cc-by-nc-sa-4.0", "cc-by-nc-sa", "cc"),
+    ("cc by-nc-sa 4.0", "cc-by-nc-sa-4.0", "cc-by-nc-sa", "cc"),
+    ("cc-by-nc-sa-4.0", "cc-by-nc-sa-4.0", "cc-by-nc-sa", "cc"),
+    ("CC BY-NC-SA 3.0", "cc-by-nc-sa-3.0", "cc-by-nc-sa", "cc"),
+    ("CC BY-NC-ND 4.0", "cc-by-nc-nd-4.0", "cc-by-nc-nd", "cc"),
+    ("cc by-nc-nd 4.0", "cc-by-nc-nd-4.0", "cc-by-nc-nd", "cc"),
+    ("cc-by-nc-nd-4.0", "cc-by-nc-nd-4.0", "cc-by-nc-nd", "cc"),
+    ("CC BY-NC-ND 3.0", "cc-by-nc-nd-3.0", "cc-by-nc-nd", "cc"),
+    ("cc by-nc-nd 3.0", "cc-by-nc-nd-3.0", "cc-by-nc-nd", "cc"),
+    ("CC BY-ND 4.0", "cc-by-nd-4.0", "cc-by-nd", "cc"),
+    ("cc by-nd 4.0", "cc-by-nd-4.0", "cc-by-nd", "cc"),
+    ("cc-by-nd-4.0", "cc-by-nd-4.0", "cc-by-nd", "cc"),
+    ("CC BY-SA 4.0", "cc-by-sa-4.0", "cc-by-sa", "cc"),
+    ("cc by-sa 4.0", "cc-by-sa-4.0", "cc-by-sa", "cc"),
+    ("cc-by-sa-4.0", "cc-by-sa-4.0", "cc-by-sa", "cc"),
+    ("CC BY-SA 3.0", "cc-by-sa-3.0", "cc-by-sa", "cc"),
+    ("cc-by-3.0-igo", "cc-by-3.0-igo", "cc-by", "cc"),
+    ("cc-by-nc-nd-3.0-igo", "cc-by-nc-nd-3.0-igo", "cc-by-nc-nd", "cc"),
     # === NEW: CC licence prose patterns (2025-04-02) ===
     # cc by variants
-    ("Article published under CC by license.", "cc-by", "cc-by", "cc", None, None),
-    (
-        "Article published under CC by 1.0 license.",
-        "cc-by-1.0",
-        "cc-by",
-        "cc",
-        None,
-        None,
-    ),
-    (
-        "Article published under CC by 2.0 license.",
-        "cc-by-2.0",
-        "cc-by",
-        "cc",
-        None,
-        None,
-    ),
-    (
-        "Article published under CC by 2.5 license.",
-        "cc-by-2.5",
-        "cc-by",
-        "cc",
-        None,
-        None,
-    ),
-    (
-        "Article published under CC by 3.0 license.",
-        "cc-by-3.0",
-        "cc-by",
-        "cc",
-        None,
-        None,
-    ),
-    (
-        "Article published under CC by 3.0-igo license.",
-        "cc-by-3.0-igo",
-        "cc-by",
-        "cc",
-        None,
-        "igo",
-    ),
-    (
-        "Paper licensed cc-by 3.0 igo.",
-        "cc-by-3.0-igo",
-        "cc-by",
-        "cc",
-        None,
-        "igo",
-    ),
-    (
-        "Article published under CC by 4.0-igo license.",
-        "cc-by-4.0-igo",
-        "cc-by",
-        "cc",
-        None,
-        "igo",
-    ),
-    (
-        "Article published under CC by 4.0 license.",
-        "cc-by-4.0",
-        "cc-by",
-        "cc",
-        None,
-        None,
-    ),
+    ("Article published under CC by license.", "cc-by", "cc-by", "cc"),
+    ("Article published under CC by 1.0 license.", "cc-by-1.0", "cc-by", "cc"),
+    ("Article published under CC by 2.0 license.", "cc-by-2.0", "cc-by", "cc"),
+    ("Article published under CC by 2.5 license.", "cc-by-2.5", "cc-by", "cc"),
+    ("Article published under CC by 3.0 license.", "cc-by-3.0", "cc-by", "cc"),
+    ("Article published under CC by 3.0-igo license.", "cc-by-3.0-igo", "cc-by", "cc"),
+    ("Paper licensed cc-by 3.0 igo.", "cc-by-3.0-igo", "cc-by", "cc"),
+    ("Article published under CC by 4.0-igo license.", "cc-by-4.0-igo", "cc-by", "cc"),
+    ("Article published under CC by 4.0 license.", "cc-by-4.0", "cc-by", "cc"),
     # cc by-nc variants
-    (
-        "Article published under CC by-nc license.",
-        "cc-by-nc",
-        "cc-by-nc",
-        "cc",
-        None,
-        None,
-    ),
-    (
-        "Article published under CC by-nc 2.0 license.",
-        "cc-by-nc-2.0",
-        "cc-by-nc",
-        "cc",
-        None,
-        None,
-    ),
-    (
-        "Article published under CC by-nc 2.5 license.",
-        "cc-by-nc-2.5",
-        "cc-by-nc",
-        "cc",
-        None,
-        None,
-    ),
+    ("Article published under CC by-nc license.", "cc-by-nc", "cc-by-nc", "cc"),
+    ("Article published under CC by-nc 2.0 license.", "cc-by-nc-2.0", "cc-by-nc", "cc"),
+    ("Article published under CC by-nc 2.5 license.", "cc-by-nc-2.5", "cc-by-nc", "cc"),
     ("Article published under CC by-nc 3.0 license.", "cc-by-nc-3.0", "cc-by-nc", "cc"),
     ("Article published under CC by-nc 4.0 license.", "cc-by-nc-4.0", "cc-by-nc", "cc"),
     (
@@ -627,31 +546,6 @@ def test_licence_matrix(raw, expected_key, expected_licence, expected_family):
     )
 
 
-@pytest.mark.parametrize(
-    "raw,expected_key,expected_scope",
-    [
-        ("CC BY-NC-ND 3.0 IGO", "cc-by-nc-nd-3.0-igo", "igo"),
-        ("cc-by-nc-nd-3.0-igo", "cc-by-nc-nd-3.0-igo", "igo"),
-    ],
-)
-def test_scope_igo(raw, expected_key, expected_scope):
-    v = normalise_licence(raw)
-    assert v.key == expected_key
-    assert v.scope == expected_scope
-
-
-@pytest.mark.parametrize(
-    "raw,expected_key,expected_jurisdiction",
-    [
-        ("http://creativecommons.org/licenses/by-nc/2.0/uk", "cc-by-nc-2.0", "uk"),
-    ],
-)
-def test_jurisdiction_uk(raw, expected_key, expected_jurisdiction):
-    v = normalise_licence(raw)
-    assert v.key == expected_key
-    assert v.jurisdiction == expected_jurisdiction
-
-
 def test_strict_mode_unknown_raises():
     with pytest.raises(LicenceNotFoundError):
         normalise_licence("xyzzy unknown license 123", strict=True)
@@ -748,3 +642,44 @@ def test_real_world_licence_strings():
         assert v.key == expected_key, (
             f"input: {raw!r} -> got {v.key!r}, want {expected_key!r}"
         )
+
+
+@pytest.mark.parametrize(
+    "raw,expected_key,expected_scope",
+    [
+        ("CC BY-NC-ND 3.0 IGO", "cc-by-nc-nd-3.0-igo", "igo"),
+        ("cc-by-nc-nd-3.0-igo", "cc-by-nc-nd-3.0-igo", "igo"),
+        (
+            "http://creativecommons.org/licenses/by-nc-nd/3.0/igo/",
+            "cc-by-nc-nd-3.0-igo",
+            "igo",
+        ),
+        ("cc-by-3.0-igo", "cc-by-3.0-igo", "igo"),
+        ("https://creativecommons.org/licenses/by/3.0/igo/", "cc-by-3.0-igo", "igo"),
+        ("Article published under CC by 3.0-igo license.", "cc-by-3.0-igo", "igo"),
+        ("Paper licensed cc-by 3.0 igo.", "cc-by-3.0-igo", "igo"),
+        ("Article published under CC by 4.0-igo license.", "cc-by-4.0-igo", "igo"),
+        ("Article published under CC by-nc-igo license.", "cc-by-nc-igo", "igo"),
+        (
+            "Article published under CC by-nc-nd 3.0 igo license.",
+            "cc-by-nc-nd-3.0-igo",
+            "igo",
+        ),
+    ],
+)
+def test_scope_igo(raw, expected_key, expected_scope):
+    v = normalise_licence(raw)
+    assert v.key == expected_key
+    assert v.scope == expected_scope
+
+
+@pytest.mark.parametrize(
+    "raw,expected_key,expected_jurisdiction",
+    [
+        ("http://creativecommons.org/licenses/by-nc/2.0/uk", "cc-by-nc-2.0", "uk"),
+    ],
+)
+def test_jurisdiction_uk(raw, expected_key, expected_jurisdiction):
+    v = normalise_licence(raw)
+    assert v.key == expected_key
+    assert v.jurisdiction == expected_jurisdiction
