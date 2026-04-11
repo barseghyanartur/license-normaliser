@@ -742,14 +742,14 @@ LICENCE_MATRIX = [
     [(*row, *([None] * (6 - len(row)))) for row in LICENCE_MATRIX],
 )
 def test_licence_matrix(
-    raw,
-    expected_key,
-    expected_licence,
-    expected_family,
-    expected_jurisdiction,
-    expected_scope,
-    trace,
-):
+    raw: str,
+    expected_key: str,
+    expected_licence: str,
+    expected_family: str,
+    expected_jurisdiction: str,
+    expected_scope: str,
+    trace: bool,
+) -> None:
     v = normalise_licence(raw, trace=trace)
     assert v.key == expected_key, (
         f"input: {raw!r}  trace: {trace}  key: {v.key!r} != {expected_key!r}"
@@ -776,28 +776,28 @@ def test_licence_matrix(
     )
 
 
-def test_strict_mode_unknown_raises():
+def test_strict_mode_unknown_raises() -> None:
     with pytest.raises(LicenceNotFoundError):
         normalise_licence("xyzzy unknown license 123", strict=True)
 
 
-def test_strict_mode_known_does_not_raise():
+def test_strict_mode_known_does_not_raise() -> None:
     v = normalise_licence("mit", strict=False)
     assert v.key == "mit"
 
 
-def test_empty_string_returns_unknown():
+def test_empty_string_returns_unknown() -> None:
     v = normalise_licence("")
     assert v.key == "unknown"
     assert v.family.key == "unknown"
 
 
-def test_whitespace_only_returns_unknown():
+def test_whitespace_only_returns_unknown() -> None:
     v = normalise_licence("   \n\t  ")
     assert v.key == "unknown"
 
 
-def test_batch_normalise_preserves_order():
+def test_batch_normalise_preserves_order() -> None:
     inputs = ["MIT", "Apache-2.0", "CC BY 4.0", "unknown garbage"]
     results = normalise_licences(inputs)
     assert [r.key for r in results] == [
@@ -808,7 +808,7 @@ def test_batch_normalise_preserves_order():
     ]
 
 
-def test_normalise_mit():
+def test_normalise_mit() -> None:
     v = normalise_licence("MIT")
     assert isinstance(v, LicenceVersion)
     assert v.key == "mit"
@@ -816,38 +816,38 @@ def test_normalise_mit():
     assert str(v.licence) == "mit"
 
 
-def test_normalise_cc():
+def test_normalise_cc() -> None:
     v = normalise_licence("CC BY 4.0")
     assert v.key == "cc-by-4.0"
     assert str(v.licence) == "cc-by"
     assert str(v.family) == "cc"
 
 
-def test_batch():
+def test_batch() -> None:
     results = normalise_licences(["MIT", "Apache-2.0"])
     assert len(results) == 2
     assert results[0].key == "mit"
     assert results[1].key == "apache-2.0"
 
 
-def test_strict_mode_raises():
+def test_strict_mode_raises() -> None:
     with pytest.raises(LicenceNotFoundError):
         normalise_licence("Totally Fake License XYZ999", strict=True)
 
 
-def test_strict_batch_raises():
+def test_strict_batch_raises() -> None:
     with pytest.raises(LicenceNotFoundError):
         normalise_licences(["MIT", "Fake License XYZ999"], strict=True)
 
 
-def test_empty_input():
+def test_empty_input() -> None:
     v = normalise_licence("")
     assert v.key == "unknown"
     v = normalise_licence("   ")
     assert v.key == "unknown"
 
 
-def test_real_world_licence_strings():
+def test_real_world_licence_strings() -> None:
     """Test against real-world licence strings collected from the wild."""
     cases = [
         ("http://creativecommons.org/licenses/by-nc-nd/4.0/", "cc-by-nc-nd-4.0"),
@@ -897,7 +897,7 @@ def test_real_world_licence_strings():
         ),
     ],
 )
-def test_scope(raw, expected_key, expected_scope):
+def test_scope(raw: str, expected_key: str, expected_scope: str) -> None:
     v = normalise_licence(raw)
     assert v.key == expected_key
     assert v.scope == expected_scope
@@ -909,7 +909,7 @@ def test_scope(raw, expected_key, expected_scope):
         ("http://creativecommons.org/licenses/by-nc/2.0/uk", "cc-by-nc-2.0-uk", "uk"),
     ],
 )
-def test_jurisdiction(raw, expected_key, expected_jurisdiction):
+def test_jurisdiction(raw: str, expected_key: str, expected_jurisdiction: str) -> None:
     v = normalise_licence(raw)
     assert v.key == expected_key
     assert v.jurisdiction == expected_jurisdiction
