@@ -380,6 +380,7 @@ class LicenceNormaliser:
                 )
             )
             v = self._make(resolved)
+            jurisdiction, scope = self._extract_jurisdiction_and_scope(cleaned)
             v = self._make_with_jurisdiction_scope(v, jurisdiction, scope)
             trace = LicenceTrace(
                 raw,
@@ -407,6 +408,7 @@ class LicenceNormaliser:
                     )
                 )
                 v = self._make(resolved)
+                jurisdiction, scope = self._extract_jurisdiction_and_scope(cleaned)
                 v = self._make_with_jurisdiction_scope(v, jurisdiction, scope)
                 trace = LicenceTrace(
                     raw,
@@ -434,6 +436,21 @@ class LicenceNormaliser:
                         )
                     )
                     v = self._make(vkey)
+                    jurisdiction, scope = self._extract_jurisdiction_and_scope(vkey)
+                    if jurisdiction is None and scope is None:
+                        url_match = re.search(
+                            r"(https?://[^/]+/licenses/[^/]+/\d+\.\d+/[^/\s]*)",
+                            cleaned,
+                        )
+                        if not url_match:
+                            url_match = re.search(
+                                r"(https?://[^/]+/licenses/[^/]+/[^/\s]*)",
+                                cleaned,
+                            )
+                        if url_match:
+                            jurisdiction, scope = self._extract_jurisdiction_and_scope(
+                                url_match.group(1)
+                            )
                     v = self._make_with_jurisdiction_scope(v, jurisdiction, scope)
                     trace = LicenceTrace(
                         raw,
