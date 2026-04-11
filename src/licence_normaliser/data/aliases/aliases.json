@@ -220,7 +220,8 @@
       "cc-by 1.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by/1.0"
+      "https://creativecommons.org/licenses/by/1.0",
+      "https://www.creativecommons.org/licenses/by/1.0"
     ]
   },
   "cc by 2.0": {
@@ -231,7 +232,8 @@
       "cc-by 2.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by/2.0"
+      "https://creativecommons.org/licenses/by/2.0",
+      "https://www.creativecommons.org/licenses/by/2.0"
     ]
   },
   "cc by 2.5": {
@@ -242,7 +244,8 @@
       "cc-by 2.5"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by/2.5"
+      "https://creativecommons.org/licenses/by/2.5",
+      "https://www.creativecommons.org/licenses/by/2.5"
     ]
   },
   "cc by 3.0": {
@@ -260,7 +263,9 @@
     "urls": [
       "https://creativecommons.org/licenses/by/3.0",
       "http://www.creativecommons.org/licenses/by/3.0/",
-      "https://creativecommons.org/licenses/by/3.0/deed.en_us"
+      "https://creativecommons.org/licenses/by/3.0/deed.en_us",
+      "https://www.creativecommons.org/licenses/by/3.0",
+      "https://www.creativecommons.org/licenses/by/3.0/deed.en_us"
     ]
   },
   "cc by igo": {
@@ -290,7 +295,8 @@
       "cc-by-3.0 igo"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by/3.0/igo"
+      "https://creativecommons.org/licenses/by/3.0/igo",
+      "https://www.creativecommons.org/licenses/by/3.0/igo"
     ]
   },
   "cc by 4.0": {
@@ -309,7 +315,8 @@
       "creative commons by 4.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by/4.0"
+      "https://creativecommons.org/licenses/by/4.0",
+      "https://www.creativecommons.org/licenses/by/4.0"
     ]
   },
   "cc by 4.0-igo": {
@@ -329,7 +336,8 @@
       "cc-by-4.0 igo"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by/4.0/igo"
+      "https://creativecommons.org/licenses/by/4.0/igo",
+      "https://www.creativecommons.org/licenses/by/4.0/igo"
     ]
   },
   "cc by nc 1.0": {
@@ -342,7 +350,8 @@
       "cc-by-nc 1.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-nc/1.0/"
+      "https://creativecommons.org/licenses/by-nc/1.0/",
+      "https://www.creativecommons.org/licenses/by-nc/1.0/"
     ]
   },
   "cc by nc sa 1.0": {
@@ -360,7 +369,8 @@
       "cc-by-nc-sa 1.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-nc-sa/1.0/"
+      "https://creativecommons.org/licenses/by-nc-sa/1.0/",
+      "https://www.creativecommons.org/licenses/by-nc-sa/1.0/"
     ]
   },
   "cc by nd 1.0": {
@@ -374,7 +384,8 @@
       "cc-by-nd 1.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-nd/1.0/"
+      "https://creativecommons.org/licenses/by-nd/1.0/",
+      "https://www.creativecommons.org/licenses/by-nd/1.0/"
     ]
   },
   "cc by nd 2.5": {
@@ -388,7 +399,8 @@
       "cc-by-nd 2.5"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-nd/2.5/"
+      "https://creativecommons.org/licenses/by-nd/2.5/",
+      "https://www.creativecommons.org/licenses/by-nd/2.5/"
     ]
   },
   "cc by sa 1.0": {
@@ -402,7 +414,8 @@
       "cc-by-sa 1.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-sa/1.0/"
+      "https://creativecommons.org/licenses/by-sa/1.0/",
+      "https://www.creativecommons.org/licenses/by-sa/1.0/"
     ]
   },
   "cc by-nc": {
@@ -437,7 +450,8 @@
       "cc-by-nc 2.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-nc/2.0"
+      "https://creativecommons.org/licenses/by-nc/2.0",
+      "https://www.creativecommons.org/licenses/by-nc/2.0"
     ]
   },
   "cc by-nc 2.5": {
@@ -457,7 +471,8 @@
       "creative commons by-nc 2.5"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-nc/2.5"
+      "https://creativecommons.org/licenses/by-nc/2.5",
+      "https://www.creativecommons.org/licenses/by-nc/2.5"
     ]
   },
   "cc by-nc 3.0": {
@@ -470,7 +485,8 @@
       "cc-by-nc 3.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-nc/3.0"
+      "https://creativecommons.org/licenses/by-nc/3.0",
+      "https://www.creativecommons.org/licenses/by-nc/3.0"
     ]
   },
   "cc by-nc 3.0-igo": {
@@ -492,7 +508,8 @@
       "cc-by-nc-3.0 igo"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-nc/3.0/igo"
+      "https://creativecommons.org/licenses/by-nc/3.0/igo",
+      "https://www.creativecommons.org/licenses/by-nc/3.0/igo"
     ]
   },
   "cc by-nc 4.0": {
@@ -515,7 +532,8 @@
       "cc-by-nc 4.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-nc/4.0"
+      "https://creativecommons.org/licenses/by-nc/4.0",
+      "https://www.creativecommons.org/licenses/by-nc/4.0"
     ]
   },
   "cc by-nc-igo": {
@@ -575,7 +593,8 @@
       "cc-by-nc-nd 2.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-nc-nd/2.0"
+      "https://creativecommons.org/licenses/by-nc-nd/2.0",
+      "https://www.creativecommons.org/licenses/by-nc-nd/2.0"
     ]
   },
   "cc by-nc-nd 2.5": {
@@ -599,7 +618,8 @@
       "cc-by-nc nd 2.5"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-nc-nd/2.5"
+      "https://creativecommons.org/licenses/by-nc-nd/2.5",
+      "https://www.creativecommons.org/licenses/by-nc-nd/2.5"
     ]
   },
   "cc by-nc-nd 3.0": {
@@ -626,7 +646,8 @@
       "cc-by-nc-nd 3.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-nc-nd/3.0"
+      "https://creativecommons.org/licenses/by-nc-nd/3.0",
+      "https://www.creativecommons.org/licenses/by-nc-nd/3.0"
     ]
   },
   "cc by-nc-nd 3.0 igo": {
@@ -658,7 +679,8 @@
       "cc-by-nc-nd-3.0 igo"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-nc-nd/3.0/igo"
+      "https://creativecommons.org/licenses/by-nc-nd/3.0/igo",
+      "https://www.creativecommons.org/licenses/by-nc-nd/3.0/igo"
     ],
     "justification": "IGO is a jurisdiction tag not a rights modifier. Rights profile (Attribution + NonCommercial + NoDerivatives) is identical to base instrument. Enforcement differs (international arbitration vs domestic courts) but does not affect license type."
   },
@@ -711,7 +733,8 @@
       "cc-by-nc-nd 4.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-nc-nd/4.0"
+      "https://creativecommons.org/licenses/by-nc-nd/4.0",
+      "https://www.creativecommons.org/licenses/by-nc-nd/4.0"
     ]
   },
   "cc by-nc-sa": {
@@ -753,7 +776,8 @@
       "cc-by-nc-sa 2.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-nc-sa/2.0"
+      "https://creativecommons.org/licenses/by-nc-sa/2.0",
+      "https://www.creativecommons.org/licenses/by-nc-sa/2.0"
     ]
   },
   "cc by-nc-sa 2.5": {
@@ -777,7 +801,8 @@
       "cc-by-nc sa 2.5"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-nc-sa/2.5"
+      "https://creativecommons.org/licenses/by-nc-sa/2.5",
+      "https://www.creativecommons.org/licenses/by-nc-sa/2.5"
     ]
   },
   "cc by-nc-sa 3.0": {
@@ -794,7 +819,8 @@
       "cc-by-nc-sa 3.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-nc-sa/3.0"
+      "https://creativecommons.org/licenses/by-nc-sa/3.0",
+      "https://www.creativecommons.org/licenses/by-nc-sa/3.0"
     ]
   },
   "cc by-nc-sa 3.0 igo": {
@@ -826,7 +852,8 @@
       "cc-by-nc-sa-3.0 igo"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-nc-sa/3.0/igo"
+      "https://creativecommons.org/licenses/by-nc-sa/3.0/igo",
+      "https://www.creativecommons.org/licenses/by-nc-sa/3.0/igo"
     ]
   },
   "cc by-nc-sa 4.0": {
@@ -853,7 +880,8 @@
       "cc-by-nc-sa 4.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-nc-sa/4.0"
+      "https://creativecommons.org/licenses/by-nc-sa/4.0",
+      "https://www.creativecommons.org/licenses/by-nc-sa/4.0"
     ]
   },
   "cc by-nd": {
@@ -888,7 +916,8 @@
       "cc-by-nd 2.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-nd/2.0"
+      "https://creativecommons.org/licenses/by-nd/2.0",
+      "https://www.creativecommons.org/licenses/by-nd/2.0"
     ]
   },
   "cc by-nd 3.0": {
@@ -911,7 +940,8 @@
       "cc-by-nd 3.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-nd/3.0"
+      "https://creativecommons.org/licenses/by-nd/3.0",
+      "https://www.creativecommons.org/licenses/by-nd/3.0"
     ]
   },
   "cc by-nd 3.0-igo": {
@@ -933,7 +963,8 @@
       "cc-by-nd-3.0 igo"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-nd/3.0/igo"
+      "https://creativecommons.org/licenses/by-nd/3.0/igo",
+      "https://www.creativecommons.org/licenses/by-nd/3.0/igo"
     ]
   },
   "cc by-nd 4.0": {
@@ -956,7 +987,8 @@
       "cc-by-nd 4.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-nd/4.0"
+      "https://creativecommons.org/licenses/by-nd/4.0",
+      "https://www.creativecommons.org/licenses/by-nd/4.0"
     ]
   },
   "cc by-sa": {
@@ -991,7 +1023,8 @@
       "cc-by-sa 2.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-sa/2.0"
+      "https://creativecommons.org/licenses/by-sa/2.0",
+      "https://www.creativecommons.org/licenses/by-sa/2.0"
     ]
   },
   "cc by-sa 2.5": {
@@ -1011,7 +1044,8 @@
       "creative commons by-sa 2.5"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-sa/2.5"
+      "https://creativecommons.org/licenses/by-sa/2.5",
+      "https://www.creativecommons.org/licenses/by-sa/2.5"
     ]
   },
   "cc by-sa 3.0": {
@@ -1024,7 +1058,8 @@
       "cc-by-sa 3.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-sa/3.0"
+      "https://creativecommons.org/licenses/by-sa/3.0",
+      "https://www.creativecommons.org/licenses/by-sa/3.0"
     ]
   },
   "cc by-sa 3.0-igo": {
@@ -1046,7 +1081,8 @@
       "cc-by-sa-3.0 igo"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-sa/3.0/igo"
+      "https://creativecommons.org/licenses/by-sa/3.0/igo",
+      "https://www.creativecommons.org/licenses/by-sa/3.0/igo"
     ]
   },
   "cc by-sa 4.0": {
@@ -1069,7 +1105,8 @@
       "cc-by-sa 4.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/by-sa/4.0"
+      "https://creativecommons.org/licenses/by-sa/4.0",
+      "https://www.creativecommons.org/licenses/by-sa/4.0"
     ]
   },
   "cc devnations 2.0": {
@@ -1081,7 +1118,8 @@
       "cc-devnations 2.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/devnations/2.0/"
+      "https://creativecommons.org/licenses/devnations/2.0/",
+      "https://www.creativecommons.org/licenses/devnations/2.0/"
     ]
   },
   "cc nc 1.0": {
@@ -1093,7 +1131,8 @@
       "cc-nc 1.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/nc/1.0/"
+      "https://creativecommons.org/licenses/nc/1.0/",
+      "https://www.creativecommons.org/licenses/nc/1.0/"
     ]
   },
   "cc nc sa 1.0": {
@@ -1107,7 +1146,8 @@
       "cc-nc-sa 1.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/nc-sa/1.0/"
+      "https://creativecommons.org/licenses/nc-sa/1.0/",
+      "https://www.creativecommons.org/licenses/nc-sa/1.0/"
     ]
   },
   "cc nc sampling plus 1.0": {
@@ -1125,7 +1165,8 @@
       "cc-nc-sampling-plus 1.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/nc-sampling+/1.0/"
+      "https://creativecommons.org/licenses/nc-sampling+/1.0/",
+      "https://www.creativecommons.org/licenses/nc-sampling+/1.0/"
     ]
   },
   "cc nd 1.0": {
@@ -1137,7 +1178,8 @@
       "cc-nd 1.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/nd/1.0/"
+      "https://creativecommons.org/licenses/nd/1.0/",
+      "https://www.creativecommons.org/licenses/nd/1.0/"
     ]
   },
   "cc nd nc 1.0": {
@@ -1151,7 +1193,8 @@
       "cc-nd-nc 1.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/nd-nc/1.0/"
+      "https://creativecommons.org/licenses/nd-nc/1.0/",
+      "https://www.creativecommons.org/licenses/nd-nc/1.0/"
     ]
   },
   "cc sa 1.0": {
@@ -1163,7 +1206,8 @@
       "cc-sa 1.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/sa/1.0/"
+      "https://creativecommons.org/licenses/sa/1.0/",
+      "https://www.creativecommons.org/licenses/sa/1.0/"
     ]
   },
   "cc sampling 1.0": {
@@ -1175,7 +1219,8 @@
       "cc-sampling 1.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/sampling/1.0/"
+      "https://creativecommons.org/licenses/sampling/1.0/",
+      "https://www.creativecommons.org/licenses/sampling/1.0/"
     ]
   },
   "cc sampling plus 1.0": {
@@ -1189,7 +1234,8 @@
       "cc-sampling-plus 1.0"
     ],
     "urls": [
-      "https://creativecommons.org/licenses/sampling+/1.0/"
+      "https://creativecommons.org/licenses/sampling+/1.0/",
+      "https://www.creativecommons.org/licenses/sampling+/1.0/"
     ]
   },
   "cc-pdm 1.0": {

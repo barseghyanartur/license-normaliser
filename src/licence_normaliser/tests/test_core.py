@@ -41,7 +41,7 @@ class TestDirectLookup:
         assert v.key == expected_key
         assert v.family.key == expected_family
 
-    def test_case_insensitive(self):
+    def test_case_insensitive(self) -> None:
         v = normalise_licence("MIT")
         assert v.key == "mit"
         v = normalise_licence("Apache-2.0")
@@ -116,14 +116,14 @@ class TestNameInference:
 
 
 class TestHierarchyNavigation:
-    def test_version_licence_family_chain(self):
+    def test_version_licence_family_chain(self) -> None:
         v = normalise_licence("CC BY-NC-ND 4.0")
         assert v.key == "cc-by-nc-nd-4.0"
         assert v.licence.key == "cc-by-nc-nd"
         assert v.licence.family.key == "cc"
         assert v.family.key == "cc"
 
-    def test_str_representations(self):
+    def test_str_representations(self) -> None:
         v = normalise_licence("CC BY-NC-ND 4.0")
         assert str(v) == "cc-by-nc-nd-4.0"
         assert str(v.licence) == "cc-by-nc-nd"
@@ -131,33 +131,33 @@ class TestHierarchyNavigation:
 
 
 class TestFallback:
-    def test_unknown_string(self):
+    def test_unknown_string(self) -> None:
         v = normalise_licence("some-totally-unknown-licence-xyz")
         assert v.key == "some-totally-unknown-licence-xyz"
         assert v.family.key == "unknown"
 
-    def test_empty_string(self):
+    def test_empty_string(self) -> None:
         v = normalise_licence("")
         assert v.key == "unknown"
 
-    def test_whitespace_only(self):
+    def test_whitespace_only(self) -> None:
         v = normalise_licence("   ")
         assert v.key == "unknown"
 
 
 class TestBatchNormalisation:
-    def test_basic_batch(self):
+    def test_basic_batch(self) -> None:
         results = normalise_licences(["MIT", "Apache-2.0", "CC BY 4.0"])
         assert [r.key for r in results] == ["mit", "apache-2.0", "cc-by-4.0"]
 
-    def test_batch_preserves_order(self):
+    def test_batch_preserves_order(self) -> None:
         raw = ["GPL-3.0", "MIT", "CC BY 4.0", "Apache-2.0"]
         expected = ["gpl-3.0", "mit", "cc-by-4.0", "apache-2.0"]
         assert [r.key for r in normalise_licences(raw)] == expected
 
-    def test_batch_accepts_generator(self):
+    def test_batch_accepts_generator(self) -> None:
         results = normalise_licences((x for x in ["MIT", "ISC"]))  # noqa: C416
         assert results[0].key == "mit"
 
-    def test_batch_empty(self):
+    def test_batch_empty(self) -> None:
         assert normalise_licences([]) == []

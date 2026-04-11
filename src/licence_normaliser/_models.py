@@ -65,6 +65,8 @@ class LicenceVersion:
     key: str
     url: Optional[str]
     licence: LicenceName
+    jurisdiction: Optional[str] = None
+    scope: Optional[str] = None
     _trace: Optional[object] = field(default=None, repr=False)
 
     def __init__(
@@ -72,11 +74,15 @@ class LicenceVersion:
         key: str,
         url: Optional[str],
         licence: LicenceName,
+        jurisdiction: Optional[str] = None,
+        scope: Optional[str] = None,
         _trace: Optional[object] = None,
-    ):
+    ) -> None:
         object.__setattr__(self, "key", key)
         object.__setattr__(self, "url", url)
         object.__setattr__(self, "licence", licence)
+        object.__setattr__(self, "jurisdiction", jurisdiction)
+        object.__setattr__(self, "scope", scope)
         object.__setattr__(self, "_trace", _trace)
 
     @property
@@ -90,7 +96,9 @@ class LicenceVersion:
         return (
             f"LicenceVersion(key={self.key!r}, "
             f"licence={self.licence.key!r}, "
-            f"family={self.licence.family.key!r})"
+            f"family={self.licence.family.key!r}, "
+            f"jurisdiction={self.jurisdiction!r}, "
+            f"scope={self.scope!r})"
         )
 
     def __eq__(self, other: object) -> bool:

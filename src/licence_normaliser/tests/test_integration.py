@@ -111,8 +111,89 @@ LICENCE_MATRIX = [
     ("cc by-sa 4.0", "cc-by-sa-4.0", "cc-by-sa", "cc"),
     ("cc-by-sa-4.0", "cc-by-sa-4.0", "cc-by-sa", "cc"),
     ("CC BY-SA 3.0", "cc-by-sa-3.0", "cc-by-sa", "cc"),
-    ("cc-by-3.0-igo", "cc-by-3.0-igo", "cc-by", "cc"),
-    ("cc-by-nc-nd-3.0-igo", "cc-by-nc-nd-3.0-igo", "cc-by-nc-nd", "cc"),
+    ("cc-by-3.0-igo", "cc-by-3.0-igo", "cc-by", "cc", None, "igo"),
+    ("cc-by-nc-nd-3.0-igo", "cc-by-nc-nd-3.0-igo", "cc-by-nc-nd", "cc", None, "igo"),
+    # === CC jurisdiction codes ===
+    (
+        "https://creativecommons.org/licenses/by/2.0/au/",
+        "cc-by-2.0-au",
+        "cc-by",
+        "cc",
+        "au",
+        None,
+    ),
+    (
+        "https://creativecommons.org/licenses/by/2.0/ca/",
+        "cc-by-2.0-ca",
+        "cc-by",
+        "cc",
+        "ca",
+        None,
+    ),
+    (
+        "https://creativecommons.org/licenses/by/3.0/nz/",
+        "cc-by-3.0-nz",
+        "cc-by",
+        "cc",
+        "nz",
+        None,
+    ),
+    (
+        "https://creativecommons.org/licenses/by-nc/2.0/au/",
+        "cc-by-nc-2.0-au",
+        "cc-by-nc",
+        "cc",
+        "au",
+        None,
+    ),
+    (
+        "https://creativecommons.org/licenses/by-nc/3.0/us/",
+        "cc-by-nc-3.0-us",
+        "cc-by-nc",
+        "cc",
+        "us",
+        None,
+    ),
+    (
+        "https://creativecommons.org/licenses/by-nc-sa/3.0/nz/",
+        "cc-by-nc-sa-3.0-nz",
+        "cc-by-nc-sa",
+        "cc",
+        "nz",
+        None,
+    ),
+    (
+        "https://creativecommons.org/licenses/by-nc-nd/3.0/ph/",
+        "cc-by-nc-nd-3.0-ph",
+        "cc-by-nc-nd",
+        "cc",
+        "ph",
+        None,
+    ),
+    (
+        "https://creativecommons.org/licenses/by-sa/3.0/ug/",
+        "cc-by-sa-3.0-ug",
+        "cc-by-sa",
+        "cc",
+        "ug",
+        None,
+    ),
+    (
+        "https://creativecommons.org/licenses/by-nd/2.5/mt/",
+        "cc-by-nd-2.5-mt",
+        "cc-by-nd",
+        "cc",
+        "mt",
+        None,
+    ),
+    (
+        "https://creativecommons.org/licenses/by-nc-nd/2.5/uk/",
+        "cc-by-nc-nd-2.5-uk",
+        "cc-by-nc-nd",
+        "cc",
+        "uk",
+        None,
+    ),
     # === NEW: CC licence prose patterns (2025-04-02) ===
     # cc by variants
     ("Article published under CC by license.", "cc-by", "cc-by", "cc"),
@@ -120,9 +201,23 @@ LICENCE_MATRIX = [
     ("Article published under CC by 2.0 license.", "cc-by-2.0", "cc-by", "cc"),
     ("Article published under CC by 2.5 license.", "cc-by-2.5", "cc-by", "cc"),
     ("Article published under CC by 3.0 license.", "cc-by-3.0", "cc-by", "cc"),
-    ("Article published under CC by 3.0-igo license.", "cc-by-3.0-igo", "cc-by", "cc"),
-    ("Paper licensed cc-by 3.0 igo.", "cc-by-3.0-igo", "cc-by", "cc"),
-    ("Article published under CC by 4.0-igo license.", "cc-by-4.0-igo", "cc-by", "cc"),
+    (
+        "Article published under CC by 3.0-igo license.",
+        "cc-by-3.0-igo",
+        "cc-by",
+        "cc",
+        None,
+        "igo",
+    ),
+    ("Paper licensed cc-by 3.0 igo.", "cc-by-3.0-igo", "cc-by", "cc", None, "igo"),
+    (
+        "Article published under CC by 4.0-igo license.",
+        "cc-by-4.0-igo",
+        "cc-by",
+        "cc",
+        None,
+        "igo",
+    ),
     ("Article published under CC by 4.0 license.", "cc-by-4.0", "cc-by", "cc"),
     # cc by-nc variants
     ("Article published under CC by-nc license.", "cc-by-nc", "cc-by-nc", "cc"),
@@ -135,6 +230,8 @@ LICENCE_MATRIX = [
         "cc-by-nc-igo",
         "cc-by-nc",
         "cc",
+        None,
+        "igo",
     ),
     # cc by-nc-nd variants
     (
@@ -166,6 +263,8 @@ LICENCE_MATRIX = [
         "cc-by-nc-nd-3.0-igo",
         "cc-by-nc-nd",
         "cc",
+        None,
+        "igo",
     ),
     (
         "Article published under CC by-nc-nd 4.0 license.",
@@ -203,6 +302,8 @@ LICENCE_MATRIX = [
         "cc-by-nc-sa-3.0-igo",
         "cc-by-nc-sa",
         "cc",
+        None,
+        "igo",
     ),
     (
         "Article published under CC by-nc-sa 4.0 license.",
@@ -234,12 +335,16 @@ LICENCE_MATRIX = [
         "cc-by-igo",
         "cc-by",
         "cc",
+        None,
+        "igo",
     ),
     (
         "This is an open access article under the CC BY-NC-ND IGO license.",
         "cc-by-nc-nd-igo",
         "cc-by-nc-nd",
         "cc",
+        None,
+        "igo",
     ),
     (
         "This is an open access article under the CC BY-NC license.",
@@ -259,12 +364,16 @@ LICENCE_MATRIX = [
         "cc-by-nc-nd-igo",
         "cc-by-nc-nd",
         "cc",
+        None,
+        "igo",
     ),
     (
         "This is an open access article CC-BY-NC-ND-IGO",
         "cc-by-nc-nd-igo",
         "cc-by-nc-nd",
         "cc",
+        None,
+        "igo",
     ),
     (
         "This is an open access article CC-BY-NC-ND",
@@ -283,6 +392,81 @@ LICENCE_MATRIX = [
         "cc-by",
         "cc-by",
         "cc",
+    ),
+    # Prose patterns with URLs
+    (
+        "This is an article https://creativecommons.org/licenses/by-sa/3.0/ license.",
+        "cc-by-sa-3.0",
+        "cc-by-sa",
+        "cc",
+    ),
+    (
+        "Paper published under https://creativecommons.org/licenses/by/4.0/",
+        "cc-by-4.0",
+        "cc-by",
+        "cc",
+    ),
+    (
+        "Content licensed via https://creativecommons.org/licenses/by-nc/3.0/",
+        "cc-by-nc-3.0",
+        "cc-by-nc",
+        "cc",
+    ),
+    (
+        "Article at https://creativecommons.org/licenses/by-nc-nd/4.0/",
+        "cc-by-nc-nd-4.0",
+        "cc-by-nc-nd",
+        "cc",
+    ),
+    (
+        "Research under https://creativecommons.org/licenses/by-nc-sa/2.5/",
+        "cc-by-nc-sa-2.5",
+        "cc-by-nc-sa",
+        "cc",
+    ),
+    (
+        "Doc at https://creativecommons.org/licenses/by-nd/2.0/",
+        "cc-by-nd-2.0",
+        "cc-by-nd",
+        "cc",
+    ),
+    (
+        "See https://creativecommons.org/licenses/by-nc/2.0/au/",
+        "cc-by-nc-2.0-au",
+        "cc-by-nc",
+        "cc",
+        "au",
+        None,
+    ),
+    (
+        "Link to https://creativecommons.org/licenses/by-nc/3.0/igo/",
+        "cc-by-nc-3.0-igo",
+        "cc-by-nc",
+        "cc",
+        None,
+        "igo",
+    ),
+    (
+        "From https://creativecommons.org/licenses/by-sa/3.0/au/",
+        "cc-by-sa-3.0-au",
+        "cc-by-sa",
+        "cc",
+        "au",
+        None,
+    ),
+    (
+        "License: https://creativecommons.org/licenses/by/2.5/",
+        "cc-by-2.5",
+        "cc-by",
+        "cc",
+    ),
+    (
+        "Shared under https://creativecommons.org/licenses/by-nc-nd/3.0/nz/",
+        "cc-by-nc-nd-3.0-nz",
+        "cc-by-nc-nd",
+        "cc",
+        "nz",
+        None,
     ),
     # CC0
     ("CC0 1.0", "cc0-1.0", "cc0", "cc0"),
@@ -373,15 +557,35 @@ LICENCE_MATRIX = [
         "cc-by-nc-nd-3.0-igo",
         "cc-by-nc-nd",
         "cc",
+        None,
+        "igo",
     ),
     (
         "https://creativecommons.org/licenses/by/3.0/igo/",
         "cc-by-3.0-igo",
         "cc-by",
         "cc",
+        None,
+        "igo",
     ),
     ("https://creativecommons.org/publicdomain/zero/1.0/", "cc0-1.0", "cc0", "cc0"),
     ("http://creativecommons.org/publicdomain/zero/1.0/", "cc0-1.0", "cc0", "cc0"),
+    (
+        "https://www.creativecommons.org/licenses/by-sa/3.0/igo/",
+        "cc-by-sa-3.0-igo",
+        "cc-by-sa",
+        "cc",
+        None,
+        "igo",
+    ),
+    (
+        "https://www.creativecommons.org/licenses/by-nc-nd/3.0/au/",
+        "cc-by-nc-nd-3.0-au",
+        "cc-by-nc-nd",
+        "cc",
+        "au",
+        None,
+    ),
     # CC prose
     ("licensed under cc by-nc-nd 4.0 terms", "cc-by-nc-nd-4.0", "cc-by-nc-nd", "cc"),
     (
@@ -532,42 +736,68 @@ LICENCE_MATRIX = [
 ]
 
 
+@pytest.mark.parametrize("trace", [False, True])
 @pytest.mark.parametrize(
-    "raw,expected_key,expected_licence,expected_family", LICENCE_MATRIX
+    "raw,expected_key,expected_licence,expected_family,expected_jurisdiction,expected_scope",
+    [(*row, *([None] * (6 - len(row)))) for row in LICENCE_MATRIX],
 )
-def test_licence_matrix(raw, expected_key, expected_licence, expected_family):
-    v = normalise_licence(raw)
-    assert v.key == expected_key, f"input: {raw!r}  key: {v.key!r} != {expected_key!r}"
+def test_licence_matrix(
+    raw: str,
+    expected_key: str,
+    expected_licence: str,
+    expected_family: str,
+    expected_jurisdiction: str,
+    expected_scope: str,
+    trace: bool,
+) -> None:
+    v = normalise_licence(raw, trace=trace)
+    assert v.key == expected_key, (
+        f"input: {raw!r}  trace: {trace}  key: {v.key!r} != {expected_key!r}"
+    )
     assert v.licence.key == expected_licence, (
-        f"input: {raw!r}  licence: {v.licence.key!r} != {expected_licence!r}"
+        f"input: {raw!r}  "
+        f"trace: {trace}  "
+        f"licence: {v.licence.key!r} != {expected_licence!r}"
     )
     assert v.family.key == expected_family, (
-        f"input: {raw!r}  family: {v.family.key!r} != {expected_family!r}"
+        f"input: {raw!r}  "
+        f"trace: {trace}  "
+        f"family: {v.family.key!r} != {expected_family!r}"
+    )
+
+    assert v.jurisdiction == expected_jurisdiction, (
+        f"input: {raw!r}  "
+        f"trace: {trace}  "
+        f"jurisdiction: {v.jurisdiction!r} != {expected_jurisdiction!r}"
+    )
+
+    assert v.scope == expected_scope, (
+        f"input: {raw!r}  trace: {trace}  scope: {v.scope!r} != {expected_scope!r}"
     )
 
 
-def test_strict_mode_unknown_raises():
+def test_strict_mode_unknown_raises() -> None:
     with pytest.raises(LicenceNotFoundError):
         normalise_licence("xyzzy unknown license 123", strict=True)
 
 
-def test_strict_mode_known_does_not_raise():
+def test_strict_mode_known_does_not_raise() -> None:
     v = normalise_licence("mit", strict=False)
     assert v.key == "mit"
 
 
-def test_empty_string_returns_unknown():
+def test_empty_string_returns_unknown() -> None:
     v = normalise_licence("")
     assert v.key == "unknown"
     assert v.family.key == "unknown"
 
 
-def test_whitespace_only_returns_unknown():
+def test_whitespace_only_returns_unknown() -> None:
     v = normalise_licence("   \n\t  ")
     assert v.key == "unknown"
 
 
-def test_batch_normalise_preserves_order():
+def test_batch_normalise_preserves_order() -> None:
     inputs = ["MIT", "Apache-2.0", "CC BY 4.0", "unknown garbage"]
     results = normalise_licences(inputs)
     assert [r.key for r in results] == [
@@ -578,7 +808,7 @@ def test_batch_normalise_preserves_order():
     ]
 
 
-def test_normalise_mit():
+def test_normalise_mit() -> None:
     v = normalise_licence("MIT")
     assert isinstance(v, LicenceVersion)
     assert v.key == "mit"
@@ -586,38 +816,38 @@ def test_normalise_mit():
     assert str(v.licence) == "mit"
 
 
-def test_normalise_cc():
+def test_normalise_cc() -> None:
     v = normalise_licence("CC BY 4.0")
     assert v.key == "cc-by-4.0"
     assert str(v.licence) == "cc-by"
     assert str(v.family) == "cc"
 
 
-def test_batch():
+def test_batch() -> None:
     results = normalise_licences(["MIT", "Apache-2.0"])
     assert len(results) == 2
     assert results[0].key == "mit"
     assert results[1].key == "apache-2.0"
 
 
-def test_strict_mode_raises():
+def test_strict_mode_raises() -> None:
     with pytest.raises(LicenceNotFoundError):
         normalise_licence("Totally Fake License XYZ999", strict=True)
 
 
-def test_strict_batch_raises():
+def test_strict_batch_raises() -> None:
     with pytest.raises(LicenceNotFoundError):
         normalise_licences(["MIT", "Fake License XYZ999"], strict=True)
 
 
-def test_empty_input():
+def test_empty_input() -> None:
     v = normalise_licence("")
     assert v.key == "unknown"
     v = normalise_licence("   ")
     assert v.key == "unknown"
 
 
-def test_real_world_licence_strings():
+def test_real_world_licence_strings() -> None:
     """Test against real-world licence strings collected from the wild."""
     cases = [
         ("http://creativecommons.org/licenses/by-nc-nd/4.0/", "cc-by-nc-nd-4.0"),
@@ -642,3 +872,44 @@ def test_real_world_licence_strings():
         assert v.key == expected_key, (
             f"input: {raw!r} -> got {v.key!r}, want {expected_key!r}"
         )
+
+
+@pytest.mark.parametrize(
+    "raw,expected_key,expected_scope",
+    [
+        ("CC BY-NC-ND 3.0 IGO", "cc-by-nc-nd-3.0-igo", "igo"),
+        ("cc-by-nc-nd-3.0-igo", "cc-by-nc-nd-3.0-igo", "igo"),
+        (
+            "http://creativecommons.org/licenses/by-nc-nd/3.0/igo/",
+            "cc-by-nc-nd-3.0-igo",
+            "igo",
+        ),
+        ("cc-by-3.0-igo", "cc-by-3.0-igo", "igo"),
+        ("https://creativecommons.org/licenses/by/3.0/igo/", "cc-by-3.0-igo", "igo"),
+        ("Article published under CC by 3.0-igo license.", "cc-by-3.0-igo", "igo"),
+        ("Paper licensed cc-by 3.0 igo.", "cc-by-3.0-igo", "igo"),
+        ("Article published under CC by 4.0-igo license.", "cc-by-4.0-igo", "igo"),
+        ("Article published under CC by-nc-igo license.", "cc-by-nc-igo", "igo"),
+        (
+            "Article published under CC by-nc-nd 3.0 igo license.",
+            "cc-by-nc-nd-3.0-igo",
+            "igo",
+        ),
+    ],
+)
+def test_scope(raw: str, expected_key: str, expected_scope: str) -> None:
+    v = normalise_licence(raw)
+    assert v.key == expected_key
+    assert v.scope == expected_scope
+
+
+@pytest.mark.parametrize(
+    "raw,expected_key,expected_jurisdiction",
+    [
+        ("http://creativecommons.org/licenses/by-nc/2.0/uk", "cc-by-nc-2.0-uk", "uk"),
+    ],
+)
+def test_jurisdiction(raw: str, expected_key: str, expected_jurisdiction: str) -> None:
+    v = normalise_licence(raw)
+    assert v.key == expected_key
+    assert v.jurisdiction == expected_jurisdiction

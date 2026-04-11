@@ -204,6 +204,19 @@ Update when:
 1. **README.rst**: Add to "CLI usage" section
 2. **AGENTS.md**: Update CLI examples if relevant to agent workflow
 
+### Adding Data Model Fields
+
+When adding new fields to dataclasses (e.g., `jurisdiction`, `scope` in `LicenceVersion`):
+
+1. **AGENTS.md**:
+   - Add to "Three-level hierarchy" table
+   - Add example section showing new fields
+2. **README.rst**:
+   - Update "Hierarchy" section with new fields
+   - Add example in "Quick start"
+3. **ARCHITECTURE.rst**:
+   - Update "Three-level hierarchy" details section
+
 ## Code Block Naming Convention
 
 AGENTS.md uses executable code blocks with `name=<test_name>` attributes:
@@ -274,6 +287,7 @@ Before finishing documentation updates:
 - [ ] README.rst examples match actual API
 - [ ] AGENTS.md code blocks have proper `name=` attributes
 - [ ] ARCHITECTURE.rst tables include all current parsers
+- [ ] ARCHITECTURE.rst reflects data model changes (new fields)
 - [ ] CONTRIBUTING.rst reflects current contribution process
 - [ ] All RST files pass `make doc8`
 - [ ] Cross-references between docs are valid

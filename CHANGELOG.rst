@@ -19,6 +19,20 @@ are used for versioning (schema follows below):
   0.3.4 to 0.4).
 - All backwards incompatible changes are mentioned in this document.
 
+0.6
+---
+2026-04-11
+
+- Added jurisdiction and scope detection for Creative Commons license URLs
+  (e.g., ``http://creativecommons.org/licenses/by-nc/2.0/uk`` →
+  jurisdiction "uk", ``http://creativecommons.org/licenses/by-nc/3.0/igo`` →
+  scope "igo").
+- Added ``jurisdiction`` and ``scope`` optional fields to ``LicenceVersion``
+  model.
+- Added prose patterns for CC URLs embedded in text (e.g., "Article under
+  https://creativecommons.org/licenses/by-sa/3.0/").
+
+
 0.5.2
 -----
 2026-04-10

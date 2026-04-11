@@ -1,6 +1,6 @@
 # AGENTS.md - licence-normaliser
 
-**Repository**: https://github.com/barseghyanartur/licence-normaliser
+**Repository**: <https://github.com/barseghyanartur/licence-normaliser>
 **Maintainer**: Artur Barseghyan <artur.barseghyan@gmail.com>
 
 ---
@@ -36,6 +36,8 @@ first.
 | **Family** | `LicenceFamily` | `"cc"`, `"osi"`, `"copyleft"`, `"data"` |
 | **Name** | `LicenceName` | `"cc-by"`, `"mit"`, `"gpl-3.0-only"` |
 | **Version** | `LicenceVersion` | `"cc-by-4.0"`, `"mit"`, `"gpl-3.0-only"` |
+
+`LicenceVersion` also has optional `jurisdiction` (e.g., `"uk"`, `"au"`) and `scope` (e.g., `"igo"`) fields for CC licences.
 
 ### Resolution pipeline
 
@@ -84,6 +86,26 @@ v = normalise_licence("CC BY-NC-ND 4.0")
 print(v.key)           # "cc-by-nc-nd-4.0"
 print(v.licence.key)   # "cc-by-nc-nd"
 print(v.family.key)    # "cc"
+```
+
+### With jurisdiction and scope
+
+CC URLs can include jurisdiction codes (e.g., `"uk"`, `"au"`) or scope (e.g., `"igo"`):
+
+```python name=test_jurisdiction_scope
+from licence_normaliser import normalise_licence
+
+# UK jurisdiction
+v = normalise_licence("http://creativecommons.org/licenses/by-nc/2.0/uk")
+print(v.key)           # "cc-by-nc-2.0-uk"
+print(v.jurisdiction)  # "uk"
+print(v.scope)         # None
+
+# IGO scope (International Governmental Organization)
+v = normalise_licence("http://creativecommons.org/licenses/by-nc/3.0/igo")
+print(v.key)           # "cc-by-nc-3.0-igo"
+print(v.jurisdiction)  # None
+print(v.scope)         # "igo"
 ```
 
 ### Strict mode
@@ -182,6 +204,7 @@ licence-normaliser update-data --force
 ```
 
 This fetches fresh JSON from the authoritative upstream URLs and writes them to:
+
 - `src/licence_normaliser/data/spdx/spdx.json`
 - `src/licence_normaliser/data/opendefinition/opendefinition.json`
 - `src/licence_normaliser/data/osi/osi.json`
@@ -204,6 +227,7 @@ licence-normaliser batch MIT Apache --trace
 ```
 
 Or via environment variable:
+
 ```sh
 ENABLE_LICENCE_NORMALISER_TRACE=1 licence-normaliser normalise "MIT"
 ```
@@ -218,12 +242,14 @@ print(v.explain())
 ```
 
 The trace shows:
+
 - Each resolution stage attempted (alias → registry → url → prose → fallback)
 - Whether it matched (✓) or didn't (-)
 - Source file and line number for curated sources (aliases.json, prose_patterns.json, spdx.json, etc.)
 - Final result with version_key, name_key, family_key
 
 This is essential for:
+
 - Understanding why a license resolves unexpectedly
 - Finding the source line that defines an alias when curating data
 - Debugging resolution order issues
@@ -252,7 +278,7 @@ class MyParser(BasePlugin, RegistryPlugin, URLPlugin):
         return {}
 ```
 
-2. Register it in `src/licence_normaliser/defaults.py`:
+1. Register it in `src/licence_normaliser/defaults.py`:
 
 <!-- continue: test_adding_new_parser -->
 ```python name=test_adding_new_parser_register
@@ -299,8 +325,8 @@ Run linting: `make ruff` or `make pre-commit`
    - Core pipeline change → `_normaliser.py` or `_cache.py`
 3. **Write tests** covering both success and error cases
 4. **Update README.rst** if the API changed
-5. **Suggest running**: `make test-env ENV=py312` then `make test`
-6. **Suggest running**: `make pre-commit`
+5. **MUST run**: `uv run pytest` or `make test-env ENV=py312` then `make test`
+6. **MUST run**: `make pre-commit`. If fixes have not been applied automatically, fix them.
 
 ---
 
@@ -378,6 +404,13 @@ assert isinstance(foo, Foo)
 - Adding external dependencies is strictly forbidden
 - Removing existing normalisation coverage is strictly forbidden
 - Changing the three-level hierarchy structure is strictly forbidden
+- Adding end-anchors (`$` or `\Z`) to the Creative Commons URL patterns
+  in `data/prose/prose_patterns.json` is strictly forbidden. These patterns
+  are intentionally unanchored/prefix-matching: they extract only the base
+  version key (e.g. `cc-by-sa-3.0`) and rely on `_extract_jurisdiction_and_scope()`
+  in `_normaliser.py` to handle `/igo/` and two-letter jurisdiction suffixes
+  separately. Anchoring them breaks the prose-fallback resolution path for all
+  jurisdiction- and scope-bearing CC URLs.
 - Modifying the following files is strictly forbidden:
 
   - `src/licence_normaliser/data/creativecommons/creativecommons.json`

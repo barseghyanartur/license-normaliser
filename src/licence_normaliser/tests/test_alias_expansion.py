@@ -26,7 +26,7 @@ __license__ = "MIT"
 
 
 class TestIterEntries:
-    def test_primary_key_always_emitted(self):
+    def test_primary_key_always_emitted(self) -> None:
         data = {
             "foo bar": {
                 "version_key": "foo-bar",
@@ -37,7 +37,7 @@ class TestIterEntries:
         results = dict(_iter_entries(data))
         assert "foo bar" in results
 
-    def test_aliases_expanded(self):
+    def test_aliases_expanded(self) -> None:
         data = {
             "foo bar": {
                 "version_key": "foo-bar",
@@ -54,7 +54,7 @@ class TestIterEntries:
         for key in ("foo bar", "foo-bar", "foo_bar"):
             assert results[key]["version_key"] == "foo-bar"
 
-    def test_duplicate_primary_not_re_emitted(self):
+    def test_duplicate_primary_not_re_emitted(self) -> None:
         data = {
             "foo bar": {
                 "version_key": "foo-bar",
@@ -67,7 +67,7 @@ class TestIterEntries:
         keys = [k for k, _ in results]
         assert keys.count("foo bar") == 1  # not duplicated
 
-    def test_underscore_comments_skipped(self):
+    def test_underscore_comments_skipped(self) -> None:
         data = {
             "_comment": "ignored",
             "real-key": {"version_key": "real", "name_key": "real", "family_key": "x"},
@@ -76,12 +76,12 @@ class TestIterEntries:
         assert "_comment" not in results
         assert "real-key" in results
 
-    def test_entry_without_version_key_skipped(self):
+    def test_entry_without_version_key_skipped(self) -> None:
         data = {"bad": {"name_key": "bad", "family_key": "x"}}
         results = _iter_entries(data)
         assert results == []
 
-    def test_slim_meta_has_no_aliases_key(self):
+    def test_slim_meta_has_no_aliases_key(self) -> None:
         """Extra-key meta dicts should not carry the aliases list."""
         data = {
             "a b": {
@@ -114,18 +114,22 @@ class TestCCHyphenForms:
         ],
     )
     def test_hyphen_form_resolves(
-        self, raw, expected_key, expected_name, expected_family
-    ):
+        self,
+        raw: str,
+        expected_key: str,
+        expected_name: str,
+        expected_family: str,
+    ) -> None:
         v = normalise_licence(raw, strict=True)
         assert v.key == expected_key, f"{raw!r}: key {v.key!r} != {expected_key!r}"
         assert v.licence.key == expected_name
         assert v.family.key == expected_family
 
-    def test_cc_by_nc_strict_does_not_raise(self):
+    def test_cc_by_nc_strict_does_not_raise(self) -> None:
         v = normalise_licence("cc-by-nc", strict=True)
         assert v.key == "cc-by-nc"
 
-    def test_cc_by_nc_nd_strict_does_not_raise(self):
+    def test_cc_by_nc_nd_strict_does_not_raise(self) -> None:
         v = normalise_licence("cc-by-nc-nd", strict=True)
         assert v.key == "cc-by-nc-nd"
 
@@ -153,7 +157,7 @@ class TestCCSpaceVariants:
             ("cc-by sa", "cc-by-sa"),
         ],
     )
-    def test_space_variant_resolves(self, raw, expected_key):
+    def test_space_variant_resolves(self, raw: str, expected_key: str) -> None:
         v = normalise_licence(raw, strict=True)
         assert v.key == expected_key, f"{raw!r}: got {v.key!r}, want {expected_key!r}"
 
@@ -179,22 +183,26 @@ class TestGPLShorthands:
         ],
     )
     def test_gpl_shorthand_resolves(
-        self, raw, expected_key, expected_name, expected_family
-    ):
+        self,
+        raw: str,
+        expected_key: str,
+        expected_name: str,
+        expected_family: str,
+    ) -> None:
         v = normalise_licence(raw, strict=True)
         assert v.key == expected_key, f"{raw!r}: key {v.key!r} != {expected_key!r}"
         assert v.licence.key == expected_name
         assert v.family.key == expected_family
 
-    def test_gpl_2_strict_no_raise(self):
+    def test_gpl_2_strict_no_raise(self) -> None:
         v = normalise_licence("gpl-2", strict=True)
         assert v.key == "gpl-2.0"
 
-    def test_gpl_3_strict_no_raise(self):
+    def test_gpl_3_strict_no_raise(self) -> None:
         v = normalise_licence("gpl-3", strict=True)
         assert v.key == "gpl-3.0"
 
-    def test_gpl_v3_strict_no_raise(self):
+    def test_gpl_v3_strict_no_raise(self) -> None:
         v = normalise_licence("gpl-v3", strict=True)
         assert v.key == "gpl-3.0"
 
@@ -231,7 +239,12 @@ SCRIPT_INPUTS = [
 @pytest.mark.parametrize(
     "raw,expected_key,expected_name,expected_family", SCRIPT_INPUTS
 )
-def test_script_inputs_all_resolve(raw, expected_key, expected_name, expected_family):
+def test_script_inputs_all_resolve(
+    raw: str,
+    expected_key: str,
+    expected_name: str,
+    expected_family: str,
+) -> None:
     """Every input from the bug-report script should now resolve in strict mode."""
     v = normalise_licence(raw, strict=True)
     assert v.key == expected_key, f"{raw!r}: key {v.key!r} != {expected_key!r}"
@@ -243,7 +256,7 @@ def test_script_inputs_all_resolve(raw, expected_key, expected_name, expected_fa
     )
 
 
-def test_false_still_fails():
+def test_false_still_fails() -> None:
     """'false' is not a licence and must remain unresolvable in strict mode."""
     with pytest.raises(LicenceNotFoundError):
         normalise_licence("false", strict=True)

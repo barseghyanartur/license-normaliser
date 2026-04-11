@@ -16,7 +16,7 @@ from .exceptions import (
 )
 
 __title__ = "licence-normaliser"
-__version__ = "0.5.2"
+__version__ = "0.6"
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
 __copyright__ = "2026 Artur Barseghyan"
 __license__ = "MIT"

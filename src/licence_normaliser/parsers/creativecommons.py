@@ -14,20 +14,25 @@ from licence_normaliser.plugins import BasePlugin, RegistryPlugin, URLPlugin
 
 CC_LICENCE_RE = re.compile(
     r"^(by|by-nc|by-nc-nd|by-nc-sa|by-nd|by-sa|"
-    r"zero|pdmark|devnations|"
-    r"nc|nd|sa|sampling|nc-sa|sampling\+|nc-sampling\+|nd-nc)"
+    r"zero|pdmark|devnations)"
     r"/([\d.]+)"
-    r"(/igo)?"
+    r"(?:/([a-z]{2}))?"  # jurisdiction code like "uk"
+    r"(/igo)?"  # scope (igo)
     r"(/deed\.\w+)?$",
 )
 VERSION_RE = re.compile(r"^[\d.]+$")
 
 
-def _path_to_licence_key(path: str) -> str | None:
+def _path_to_licence_key(path: str) -> tuple[str, str | None, str | None] | None:
     m = CC_LICENCE_RE.match(path)
     if not m:
         return None
-    lic_type, version, igo = m.group(1), m.group(2), m.group(3)
+    lic_type, version, jurisdiction, igo = (
+        m.group(1),
+        m.group(2),
+        m.group(3),
+        m.group(4),
+    )
 
     prefix_map = {
         "by": "cc-by",
@@ -51,11 +56,13 @@ def _path_to_licence_key(path: str) -> str | None:
     prefix = prefix_map.get(lic_type)
     if not prefix:
         return None
-    suffix = "igo" if igo else ""
+    scope = "igo" if igo else None
     key = f"{prefix}-{version}" if VERSION_RE.match(version) else prefix
-    if suffix:
-        key = f"{key}-{suffix}"
-    return key.lower()
+    if jurisdiction:
+        key = f"{key}-{jurisdiction}"
+    if scope:
+        key = f"{key}-{scope}"
+    return key.lower(), jurisdiction, scope
 
 
 class CCLinkParser(HTMLParser):
@@ -160,12 +167,12 @@ JURISDICTION_CODES = {
     "us",
     "za",
     "vn",
+    "uk",
 }
 
 
-def _is_international(href: str) -> bool:
-    parts = href.split("/")
-    return not any(p in JURISDICTION_CODES for p in parts[1:])
+def _is_international(_href: str) -> bool:
+    return True
 
 
 def _extract_deeds(html: str) -> set[str]:
@@ -209,15 +216,21 @@ def _scrape() -> list[dict[str, str]]:
     entries: list[dict[str, str]] = []
     seen_keys: set[str] = set()
     for href in sorted(all_deeds):
-        lic_key = _path_to_licence_key(href)
-        if not lic_key:
+        result = _path_to_licence_key(href)
+        if not result:
             continue
+        lic_key, jurisdiction, scope = result
         url_path = href.rsplit("/deed.", 1)[0]
         url = f"https://creativecommons.org/licenses/{url_path}/"
         if lic_key in seen_keys:
             continue
         seen_keys.add(lic_key)
-        entries.append({"license_key": lic_key, "url": url, "path": url_path})
+        entry: dict[str, str] = {"license_key": lic_key, "url": url, "path": url_path}
+        if jurisdiction:
+            entry["jurisdiction"] = jurisdiction
+        if scope:
+            entry["scope"] = scope
+        entries.append(entry)
 
     return entries
 

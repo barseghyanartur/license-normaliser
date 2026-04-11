@@ -2,7 +2,7 @@
  Architecture guide
 ===================
 
-:Version: 0.5.2
+:Version: 0.6
 :Author: Artur Barseghyan <artur.barseghyan@gmail.com>
 :Repository: https://github.com/barseghyanartur/licence-normaliser
 
@@ -56,6 +56,10 @@ three objects that form a chain.
    * - Version
      - ``LicenceVersion``
      - ``"cc-by-4.0"``, ``"mit"``, ``"wiley-tdm-1.1"``
+
+``LicenceVersion`` also has optional ``jurisdiction`` attributes
+(e.g., ``"uk"``, ``"au"``) and ``scope`` (e.g., ``"igo"``) for
+Creative Commons licences.
 
 Class relationships
 -------------------
@@ -169,6 +173,22 @@ tuples loaded from ``data/prose/prose_patterns.json`` by the
 ``ProseParser``.  Patterns are evaluated in order, and the **first
 match** wins.  Only inputs of 20 characters or longer are tested
 against prose patterns.  Patterns are compiled once at import time.
+
+.. important::
+
+   **CC URL patterns are intentionally unanchored (prefix-matching).**
+
+   The Creative Commons URL entries at the top of ``prose_patterns.json``
+   (e.g. ``https?://(www\\.)?creativecommons\\.org/licenses/by-sa/3\\.0/?``)
+   do **not** end-anchor after the trailing slash.  This is by design:
+   the prose pattern extracts only the *base version key* (e.g.
+   ``cc-by-sa-3.0``).  Any jurisdiction code (``/au/``, ``/uk/``, …) or
+   scope segment (``/igo/``) that follows the version is extracted
+   separately by ``_extract_jurisdiction_and_scope()`` in
+   ``_normaliser.py`` and merged onto the final ``LicenceVersion`` via
+   ``_make_with_jurisdiction_scope()``.  Adding end-anchors to these
+   patterns would silently break the fallback resolution path for all
+   jurisdiction- and scope-bearing CC URLs.
 
 Step 5 -- Fallback
 ------------------
@@ -431,6 +451,17 @@ patterns before general ones):
 
 Note: prose patterns are only tested against inputs of 20 characters or
 longer to avoid false positives on short strings.
+
+.. caution::
+
+   Do **not** add end-anchors (``$`` or ``\Z``) to the CC URL patterns
+   that appear at the top of ``prose_patterns.json``.  Those patterns
+   are deliberately prefix-matching so that downstream
+   ``_extract_jurisdiction_and_scope()`` can extract jurisdiction and
+   scope from the remainder of the URL.  End-anchoring them will cause
+   jurisdiction/scope-bearing CC URLs (e.g.
+   ``https://creativecommons.org/licenses/by/3.0/au/``) to fall all
+   the way through to the ``"unknown"`` fallback.
 
 Caching
 =======

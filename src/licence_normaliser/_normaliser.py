@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 from functools import lru_cache
-from typing import TYPE_CHECKING, Iterable, Sequence
+from typing import TYPE_CHECKING, Iterable, Optional, Sequence
 
 from licence_normaliser.defaults import (
     get_default_alias,
@@ -14,6 +14,7 @@ from licence_normaliser.defaults import (
     get_default_registry,
     get_default_url,
 )
+from licence_normaliser.parsers.creativecommons import JURISDICTION_CODES
 
 if TYPE_CHECKING:
     from licence_normaliser._models import LicenceVersion
@@ -281,6 +282,7 @@ class LicenceNormaliser:
         # 1. Alias lookup
         if cleaned in self._aliases:
             output = self._aliases[cleaned]
+            jurisdiction, scope = self._extract_jurisdiction_and_scope(output)
             source_line = None
             source_file = None
             if cleaned in self._alias_lines:
@@ -292,6 +294,7 @@ class LicenceNormaliser:
                 )
             )
             v = self._make(output)
+            v = self._make_with_jurisdiction_scope(v, jurisdiction, scope)
             trace = LicenceTrace(
                 raw,
                 cleaned,
@@ -305,8 +308,10 @@ class LicenceNormaliser:
         stages.append(LicenceTraceStage("alias", cleaned, "", False))
 
         # 2. Registry lookup
+        jurisdiction, scope = None, None
         if cleaned in self._registry:
             canonical = self._registry[cleaned]
+            jurisdiction, scope = self._extract_jurisdiction_and_scope(canonical)
             source_line = None
             source_file = None
             if cleaned in self._registry_lines:
@@ -317,6 +322,7 @@ class LicenceNormaliser:
                 )
             )
             v = self._make(canonical)
+            v = self._make_with_jurisdiction_scope(v, jurisdiction, scope)
             trace = LicenceTrace(
                 raw,
                 cleaned,
@@ -330,6 +336,37 @@ class LicenceNormaliser:
         stages.append(LicenceTraceStage("registry", cleaned, "", False))
 
         # 3. URL lookup
+        is_url = cleaned.startswith(("http://", "https://"))
+        jurisdiction, scope = self._extract_jurisdiction_and_scope(cleaned)
+        if (jurisdiction or scope) and is_url:
+            raw_key = cleaned.rstrip("/").lower()
+            if raw_key.startswith("http://"):
+                raw_key = "https://" + raw_key[7:]
+            if raw_key in self._url_map:
+                resolved = self._url_map[raw_key]
+                source_line = None
+                source_file = None
+                if raw_key in self._url_plugin_url_lines:
+                    _, source_line = self._url_plugin_url_lines[raw_key]
+                    source_file = "aliases.json"
+                stages.append(
+                    LicenceTraceStage(
+                        "url", raw_key, resolved, True, source_line, source_file
+                    )
+                )
+                v = self._make(resolved)
+                v = self._make_with_jurisdiction_scope(v, jurisdiction, scope)
+                trace = LicenceTrace(
+                    raw,
+                    cleaned,
+                    stages,
+                    version_key=v.key,
+                    name_key=v.licence.key,
+                    family_key=v.family.key,
+                )
+                return self._make_with_trace(v, trace)
+
+        # Try normalized URL
         url_key = self._normalise_url(cleaned)
         if url_key in self._url_map:
             resolved = self._url_map[url_key]
@@ -344,6 +381,8 @@ class LicenceNormaliser:
                 )
             )
             v = self._make(resolved)
+            jurisdiction, scope = self._extract_jurisdiction_and_scope(cleaned)
+            v = self._make_with_jurisdiction_scope(v, jurisdiction, scope)
             trace = LicenceTrace(
                 raw,
                 cleaned,
@@ -353,6 +392,34 @@ class LicenceNormaliser:
                 family_key=v.family.key,
             )
             return self._make_with_trace(v, trace)
+
+        # Try raw URL if normalized didn't match
+        if cleaned.startswith(("http://", "https://")):
+            raw_key = cleaned.rstrip("/").lower()
+            if raw_key in self._url_map:
+                resolved = self._url_map[raw_key]
+                source_line = None
+                source_file = None
+                if raw_key in self._url_plugin_url_lines:
+                    _, source_line = self._url_plugin_url_lines[raw_key]
+                    source_file = "aliases.json"
+                stages.append(
+                    LicenceTraceStage(
+                        "url", raw_key, resolved, True, source_line, source_file
+                    )
+                )
+                v = self._make(resolved)
+                jurisdiction, scope = self._extract_jurisdiction_and_scope(cleaned)
+                v = self._make_with_jurisdiction_scope(v, jurisdiction, scope)
+                trace = LicenceTrace(
+                    raw,
+                    cleaned,
+                    stages,
+                    version_key=v.key,
+                    name_key=v.licence.key,
+                    family_key=v.family.key,
+                )
+                return self._make_with_trace(v, trace)
 
         stages.append(LicenceTraceStage("url", cleaned, "", False))
 
@@ -370,6 +437,22 @@ class LicenceNormaliser:
                         )
                     )
                     v = self._make(vkey)
+                    jurisdiction, scope = self._extract_jurisdiction_and_scope(vkey)
+                    if jurisdiction is None and scope is None:
+                        url_match = re.search(
+                            r"(https?://[^/]+/licenses/[^/]+/\d+\.\d+/[^/\s]*)",
+                            cleaned,
+                        )
+                        if not url_match:
+                            url_match = re.search(
+                                r"(https?://[^/]+/licenses/[^/]+/[^/\s]*)",
+                                cleaned,
+                            )
+                        if url_match:
+                            jurisdiction, scope = self._extract_jurisdiction_and_scope(
+                                url_match.group(1)
+                            )
+                    v = self._make_with_jurisdiction_scope(v, jurisdiction, scope)
                     trace = LicenceTrace(
                         raw,
                         cleaned,
@@ -404,32 +487,108 @@ class LicenceNormaliser:
             key=v.key,
             url=v.url,
             licence=v.licence,
+            jurisdiction=v.jurisdiction,
+            scope=v.scope,
             _trace=trace,
         )
 
     def _resolve_impl(self, cleaned: str) -> LicenceVersion:
         # 1. Alias lookup
         if cleaned in self._aliases:
-            return self._make(self._aliases[cleaned])
+            v = self._make(self._aliases[cleaned])
+            jurisdiction, scope = self._extract_jurisdiction_and_scope(
+                self._aliases[cleaned]
+            )
+            return self._make_with_jurisdiction_scope(v, jurisdiction, scope)
 
         # 2. Registry lookup
         if cleaned in self._registry:
             canonical = self._registry[cleaned]
-            return self._make(canonical)
+            v = self._make(canonical)
+            jurisdiction, scope = self._extract_jurisdiction_and_scope(canonical)
+            return self._make_with_jurisdiction_scope(v, jurisdiction, scope)
 
         # 3. URL lookup
+        is_url = cleaned.startswith(("http://", "https://"))
+        extracted_jur, extracted_scope = self._extract_jurisdiction_and_scope(cleaned)
+        if (extracted_jur or extracted_scope) and is_url:
+            raw_key = cleaned.rstrip("/").lower()
+            if raw_key.startswith("http://"):
+                raw_key = "https://" + raw_key[7:]
+            if raw_key in self._url_map:
+                v = self._make(self._url_map[raw_key])
+                return self._make_with_jurisdiction_scope(
+                    v, extracted_jur, extracted_scope
+                )
+
+        # Try normalized URL
         url_key = self._normalise_url(cleaned)
         if url_key in self._url_map:
-            return self._make(self._url_map[url_key])
+            v = self._make(self._url_map[url_key])
+            # For URL, extract jurisdiction/scope from URL path
+            jurisdiction, scope = self._extract_jurisdiction_and_scope(cleaned)
+            return self._make_with_jurisdiction_scope(v, jurisdiction, scope)
+
+        # Try raw URL if normalized didn't match
+        if cleaned.startswith(("http://", "https://")):
+            raw_key = cleaned.rstrip("/").lower()
+            if raw_key.startswith("http://"):
+                raw_key = "https://" + raw_key[7:]
+            if raw_key in self._url_map:
+                v = self._make(self._url_map[raw_key])
+                jurisdiction, scope = self._extract_jurisdiction_and_scope(cleaned)
+                return self._make_with_jurisdiction_scope(v, jurisdiction, scope)
 
         # 4. Prose matching (only for longer strings)
         if len(cleaned) >= 20:
             for pattern, vkey in self._prose_patterns:
                 if pattern.search(cleaned):
-                    return self._make(vkey)
+                    v = self._make(vkey)
+                    # For URL patterns in prose, also extract jurisdiction/scope
+                    # from the matched URL
+                    jurisdiction, scope = self._extract_jurisdiction_and_scope(vkey)
+                    if jurisdiction is None and scope is None:
+                        # Try to find and extract from URL in prose
+                        # (capture full path including jurisdiction/scope)
+                        url_match = re.search(
+                            r"(https?://[^/]+/licenses/[^/]+/\d+\.\d+/[^/\s]*)",
+                            cleaned,
+                        )
+                        if not url_match:
+                            # Try without version (e.g., /by-nc/igo)
+                            url_match = re.search(
+                                r"(https?://[^/]+/licenses/[^/]+/[^/\s]*)",
+                                cleaned,
+                            )
+                        if url_match:
+                            jurisdiction, scope = self._extract_jurisdiction_and_scope(
+                                url_match.group(1)
+                            )
+                    return self._make_with_jurisdiction_scope(v, jurisdiction, scope)
 
         # 5. Fallback to unknown
         return self._make_unknown(cleaned)
+
+    def _make_with_jurisdiction_scope(
+        self,
+        v: LicenceVersion,
+        jurisdiction: Optional[str],
+        scope: Optional[str],
+    ) -> LicenceVersion:
+        """Create a new LicenceVersion with jurisdiction/scope override."""
+        key = v.key
+        if jurisdiction and jurisdiction not in v.key:
+            key = f"{key}-{jurisdiction}"
+        elif scope and scope not in v.key:
+            key = f"{key}-{scope}"
+        return LicenceVersion(
+            key=key,
+            url=v.url,
+            licence=v.licence,
+            jurisdiction=jurisdiction,
+            scope=scope,
+            _trace=v._trace,
+        )
 
     def normalise_licence(
         self, raw: str, *, strict: bool = False, trace: bool | None = None
@@ -513,7 +672,7 @@ class LicenceNormaliser:
         # - For CC licences, use override only if it's different from canonical
         # - For non-CC (GPL, AGPL, OSI, etc.), always return canonical (no stripping)
         override_name = self._name_overrides.get(canonical)
-        if canonical.startswith("cc-") or canonical.startswith("cc0"):
+        if canonical.startswith(("cc-", "cc0")):
             # CC licences: use override if present, otherwise fallback to _infer_name
             name_key = override_name if override_name else self._infer_name(canonical)
         else:
@@ -534,7 +693,14 @@ class LicenceNormaliser:
 
         family = LicenceFamily(key=family_key)
         name = LicenceName(key=name_key, family=family)
-        return LicenceVersion(key=canonical, url=url, licence=name)
+        jurisdiction, scope = self._extract_jurisdiction_and_scope(canonical)
+        return LicenceVersion(
+            key=canonical,
+            url=url,
+            licence=name,
+            jurisdiction=jurisdiction,
+            scope=scope,
+        )
 
     def _make_unknown(self, key: str) -> LicenceVersion:
         """Factory: build an unknown LicenceVersion for unresolved input."""
@@ -634,6 +800,75 @@ class LicenceNormaliser:
         # For all other licences (GPL, AGPL, OSI, etc.), keep the key as-is
         return k
 
+    def _extract_jurisdiction_and_scope(
+        self, key: str
+    ) -> tuple[Optional[str], Optional[str]]:
+        """Extract jurisdiction and scope from a license key.
+
+        For example:
+        - "cc-by-nc-2.0-uk" -> ("uk", None)
+        - "cc-by-nc-3.0-igo" -> (None, "igo")
+        - "cc-by-nc-2.0" -> (None, None)
+
+        Also recognizes jurisdiction/scope in URL paths:
+        - "http://creativecommons.org/licenses/by-nc/2.0/uk" -> ("uk", None)
+        - "http://creativecommons.org/licenses/by-nc/3.0/igo" -> (None, "igo")
+        """
+        if key.startswith(("http://", "https://")):
+            parts = key.split("/")
+            cc_types = {"by", "nc", "nd", "sa"}
+            for part in parts:
+                if part == "igo":
+                    return None, "igo"
+                if (
+                    len(part) == 2
+                    and part.isalpha()
+                    and part not in cc_types
+                    and part in JURISDICTION_CODES
+                ):
+                    return part, None
+
+            return None, None
+
+        if not key.startswith("cc-"):
+            return None, None
+        parts = key.split("-")
+        if len(parts) < 3:
+            return None, None
+
+        # CC licence type parts (NOT jurisdictions)
+        cc_types = {"by", "nc", "nd", "sa"}
+
+        # Check for scope (like 'igo') at end
+        if parts[-1] == "igo":
+            return None, "igo"
+
+        # Check if last part is version + jurisdiction
+        version_part = parts[-1]
+        if version_part.replace(".", "").isdigit():
+            # Version is last element, jurisdiction would be -2
+            if len(parts) >= 2 and len(parts[-2]) == 2 and parts[-2].isalpha():
+                potential_jur = parts[-2]
+                # Exclude known CC licence types from jurisdiction detection
+                # Only accept if in supported CC jurisdiction set
+                if (
+                    potential_jur not in cc_types
+                    and potential_jur in JURISDICTION_CODES
+                ):
+                    return potential_jur, None
+            return None, None
+
+        # Last part might be jurisdiction (2-letter code)
+        if (
+            len(parts[-1]) == 2
+            and parts[-1].isalpha()
+            and parts[-1] not in cc_types
+            and parts[-1] in JURISDICTION_CODES
+        ):
+            return parts[-1], None
+
+        return None, None
+
     @staticmethod
     def _clean(raw: str) -> str:
         s = _WHITESPACE_RE.sub(" ", raw.strip().rstrip("/")).lower()
@@ -651,4 +886,43 @@ class LicenceNormaliser:
         key = cleaned.lower()
         if key.startswith("http://"):
             key = "https://" + key[7:]
-        return key.rstrip("/")
+        key = key.rstrip("/")
+
+        if "creativecommons.org/licenses" in key:
+            parts = key.split("/")
+            result_parts: list[str] = []
+            seen_license = False
+            seen_version = False
+
+            for part in parts:
+                if part in (
+                    "by",
+                    "by-nc",
+                    "by-nc-nd",
+                    "by-nc-sa",
+                    "by-nd",
+                    "by-sa",
+                    "zero",
+                ):
+                    seen_license = True
+                    result_parts.append(part)
+                elif (
+                    seen_license
+                    and not seen_version
+                    and part.replace(".", "").isdigit()
+                ):
+                    seen_version = True
+                    result_parts.append(part)
+                is_jurisdiction = (
+                    len(part) == 2
+                    and part.isalpha()
+                    and seen_version
+                    and part in JURISDICTION_CODES
+                )
+                if part == "igo" or is_jurisdiction:
+                    continue
+                elif not seen_license:
+                    result_parts.append(part)
+            return "/".join(result_parts)
+
+        return key

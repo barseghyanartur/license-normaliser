@@ -13,14 +13,14 @@ __license__ = "MIT"
 
 
 class TestNormaliseCommand:
-    def test_normalise_mit(self, capsys):
+    def test_normalise_mit(self, capsys) -> None:
         with patch("sys.argv", ["licence-normaliser", "normalise", "MIT"]):
             with pytest.raises(SystemExit) as exc_info:
                 main()
             assert exc_info.value.code == 0
         assert capsys.readouterr().out.strip() == "mit"
 
-    def test_normalise_full(self, capsys):
+    def test_normalise_full(self, capsys) -> None:
         with patch(
             "sys.argv", ["licence-normaliser", "normalise", "--full", "CC BY 4.0"]
         ):
@@ -32,7 +32,7 @@ class TestNormaliseCommand:
         assert "Licence: cc-by" in out
         assert "Family: cc" in out
 
-    def test_normalise_cc_url(self, capsys):
+    def test_normalise_cc_url(self, capsys) -> None:
         with patch(
             "sys.argv",
             [
@@ -46,7 +46,7 @@ class TestNormaliseCommand:
             assert exc_info.value.code == 0
         assert capsys.readouterr().out.strip() == "cc-by-4.0"
 
-    def test_normalise_unknown(self, capsys):
+    def test_normalise_unknown(self, capsys) -> None:
         with patch(
             "sys.argv", ["licence-normaliser", "normalise", "totally-unknown-xyz"]
         ):
@@ -55,14 +55,14 @@ class TestNormaliseCommand:
             assert exc_info.value.code == 0
         assert "totally-unknown-xyz" in capsys.readouterr().out
 
-    def test_normalise_strict_known(self, capsys):
+    def test_normalise_strict_known(self, capsys) -> None:
         with patch("sys.argv", ["licence-normaliser", "normalise", "--strict", "MIT"]):
             with pytest.raises(SystemExit) as exc_info:
                 main()
             assert exc_info.value.code == 0
         assert capsys.readouterr().out.strip() == "mit"
 
-    def test_normalise_strict_unknown_exits_1(self, capsys):
+    def test_normalise_strict_unknown_exits_1(self, capsys) -> None:
         with patch(
             "sys.argv",
             ["licence-normaliser", "normalise", "--strict", "totally-unknown-xyz-9999"],
@@ -72,7 +72,7 @@ class TestNormaliseCommand:
             assert exc_info.value.code == 1
         assert capsys.readouterr().err  # error message on stderr
 
-    def test_normalise_with_trace_flag(self, capsys):
+    def test_normalise_with_trace_flag(self, capsys) -> None:
         with patch("sys.argv", ["licence-normaliser", "normalise", "--trace", "MIT"]):
             with pytest.raises(SystemExit) as exc_info:
                 main()
@@ -81,7 +81,7 @@ class TestNormaliseCommand:
         assert "Input:" in out
         assert "[✓]" in out
 
-    def test_normalise_env_var_trace(self, capsys, monkeypatch):
+    def test_normalise_env_var_trace(self, capsys, monkeypatch) -> None:
         monkeypatch.setenv("ENABLE_LICENCE_NORMALISER_TRACE", "1")
         with patch("sys.argv", ["licence-normaliser", "normalise", "MIT"]):
             with pytest.raises(SystemExit) as exc_info:
@@ -92,7 +92,7 @@ class TestNormaliseCommand:
 
 
 class TestBatchCommand:
-    def test_batch_basic(self, capsys):
+    def test_batch_basic(self, capsys) -> None:
         with patch(
             "sys.argv",
             ["licence-normaliser", "batch", "MIT", "Apache-2.0", "CC BY 4.0"],
@@ -105,7 +105,7 @@ class TestBatchCommand:
         assert "Apache-2.0: apache-2.0" in out
         assert "CC BY 4.0: cc-by-4.0" in out
 
-    def test_batch_strict_all_known(self, capsys):
+    def test_batch_strict_all_known(self, capsys) -> None:
         with patch(
             "sys.argv", ["licence-normaliser", "batch", "--strict", "MIT", "GPL-3.0"]
         ):
@@ -122,7 +122,7 @@ class TestBatchCommand:
                 main()
             assert exc_info.value.code == 1
 
-    def test_batch_with_trace_flag(self, capsys):
+    def test_batch_with_trace_flag(self, capsys) -> None:
         with patch(
             "sys.argv",
             ["licence-normaliser", "batch", "--trace", "MIT", "Apache-2.0"],
@@ -135,7 +135,7 @@ class TestBatchCommand:
         assert "Input:" in out or "[✓]" in out
         assert "Apache-2.0:" in out
 
-    def test_batch_env_var_trace(self, capsys, monkeypatch):
+    def test_batch_env_var_trace(self, capsys, monkeypatch) -> None:
         monkeypatch.setenv("ENABLE_LICENCE_NORMALISER_TRACE", "1")
         with patch(
             "sys.argv",
@@ -149,7 +149,7 @@ class TestBatchCommand:
 
 
 class TestVersionFlag:
-    def test_version_flag(self, capsys):
+    def test_version_flag(self, capsys) -> None:
         with patch("sys.argv", ["licence-normaliser", "--version"]):
             with pytest.raises(SystemExit) as exc_info:
                 main()
@@ -160,7 +160,7 @@ class TestVersionFlag:
 class TestUpdateDataCommand:
     @patch("licence_normaliser.cli._main.get_all_refreshable_plugins")
     @patch("licence_normaliser.cli._main.main")
-    def test_update_data_all_parsers(self, mock_main, mock_get_plugins, capsys):
+    def test_update_data_all_parsers(self, mock_main, mock_get_plugins, capsys) -> None:
         mock_get_plugins.return_value = []
         with patch("sys.argv", ["licence-normaliser", "update-data"]):
             with pytest.raises(SystemExit) as exc_info:
@@ -169,7 +169,12 @@ class TestUpdateDataCommand:
 
     @patch("licence_normaliser.parsers.spdx.SPDXParser.refresh")
     @patch("licence_normaliser.cli._main.get_all_refreshable_plugins")
-    def test_update_data_specific_parser(self, mock_get_plugins, mock_refresh, capsys):
+    def test_update_data_specific_parser(
+        self,
+        mock_get_plugins,
+        mock_refresh,
+        capsys,
+    ) -> None:
         mock_get_plugins.return_value = [SPDXParser]
         mock_refresh.return_value = True
         with patch(
@@ -192,7 +197,12 @@ class TestUpdateDataCommand:
 
     @patch("licence_normaliser.parsers.spdx.SPDXParser.refresh")
     @patch("licence_normaliser.cli._main.get_all_refreshable_plugins")
-    def test_update_data_failure_handling(self, mock_get_plugins, mock_refresh, capsys):
+    def test_update_data_failure_handling(
+        self,
+        mock_get_plugins,
+        mock_refresh,
+        capsys,
+    ) -> None:
         mock_get_plugins.return_value = [SPDXParser]
         mock_refresh.return_value = False
         with patch(
