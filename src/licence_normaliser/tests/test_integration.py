@@ -720,6 +720,7 @@ LICENCE_MATRIX = [
 ]
 
 
+@pytest.mark.parametrize("trace", [False, True])
 @pytest.mark.parametrize(
     "raw,expected_key,expected_licence,expected_family,expected_jurisdiction,expected_scope",
     [(*row, *([None] * (6 - len(row)))) for row in LICENCE_MATRIX],
@@ -731,22 +732,31 @@ def test_licence_matrix(
     expected_family,
     expected_jurisdiction,
     expected_scope,
+    trace,
 ):
-    v = normalise_licence(raw)
-    assert v.key == expected_key, f"input: {raw!r}  key: {v.key!r} != {expected_key!r}"
+    v = normalise_licence(raw, trace=trace)
+    assert v.key == expected_key, (
+        f"input: {raw!r}  trace: {trace}  key: {v.key!r} != {expected_key!r}"
+    )
     assert v.licence.key == expected_licence, (
-        f"input: {raw!r}  licence: {v.licence.key!r} != {expected_licence!r}"
+        f"input: {raw!r}  "
+        f"trace: {trace}  "
+        f"licence: {v.licence.key!r} != {expected_licence!r}"
     )
     assert v.family.key == expected_family, (
-        f"input: {raw!r}  family: {v.family.key!r} != {expected_family!r}"
+        f"input: {raw!r}  "
+        f"trace: {trace}  "
+        f"family: {v.family.key!r} != {expected_family!r}"
     )
 
     assert v.jurisdiction == expected_jurisdiction, (
-        f"input: {raw!r}  jurisdiction: {v.jurisdiction!r} != {expected_jurisdiction!r}"
+        f"input: {raw!r}  "
+        f"trace: {trace}  "
+        f"jurisdiction: {v.jurisdiction!r} != {expected_jurisdiction!r}"
     )
 
     assert v.scope == expected_scope, (
-        f"input: {raw!r}  scope: {v.scope!r} != {expected_scope!r}"
+        f"input: {raw!r}  trace: {trace}  scope: {v.scope!r} != {expected_scope!r}"
     )
 
 
