@@ -174,7 +174,7 @@ class TestBatchTrace:
         assert results[0]._trace is not None
         assert results[1]._trace is not None
 
-    def test_batch_mixed_known_unknown_with_trace(self):
+    def test_batch_mixed_known_unknown_with_trace(self) -> None:
         results = normalise_licences(["MIT", "unknown-xyz-123"], trace=True)
         assert len(results) == 2
         assert results[0]._trace is not None

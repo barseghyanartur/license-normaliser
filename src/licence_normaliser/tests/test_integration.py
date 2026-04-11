@@ -782,7 +782,7 @@ def test_strict_mode_unknown_raises() -> None:
 
 
 def test_strict_mode_known_does_not_raise() -> None:
-    v = normalise_licence("mit", strict=False)
+    v = normalise_licence("mit", strict=True)
     assert v.key == "mit"
 
 
