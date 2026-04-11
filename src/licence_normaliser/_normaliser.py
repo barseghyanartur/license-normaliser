@@ -14,6 +14,7 @@ from licence_normaliser.defaults import (
     get_default_registry,
     get_default_url,
 )
+from licence_normaliser.parsers.creativecommons import JURISDICTION_CODES
 
 if TYPE_CHECKING:
     from licence_normaliser._models import LicenceVersion
@@ -801,7 +802,12 @@ class LicenceNormaliser:
             for part in parts:
                 if part == "igo":
                     return None, "igo"
-                if len(part) == 2 and part.isalpha() and part not in cc_types:
+                if (
+                    len(part) == 2
+                    and part.isalpha()
+                    and part not in cc_types
+                    and part in JURISDICTION_CODES
+                ):
                     return part, None
 
             return None, None
@@ -826,12 +832,21 @@ class LicenceNormaliser:
             if len(parts) >= 2 and len(parts[-2]) == 2 and parts[-2].isalpha():
                 potential_jur = parts[-2]
                 # Exclude known CC licence types from jurisdiction detection
-                if potential_jur not in cc_types:
+                # Only accept if in supported CC jurisdiction set
+                if (
+                    potential_jur not in cc_types
+                    and potential_jur in JURISDICTION_CODES
+                ):
                     return potential_jur, None
             return None, None
 
         # Last part might be jurisdiction (2-letter code)
-        if len(parts[-1]) == 2 and parts[-1].isalpha() and parts[-1] not in cc_types:
+        if (
+            len(parts[-1]) == 2
+            and parts[-1].isalpha()
+            and parts[-1] not in cc_types
+            and parts[-1] in JURISDICTION_CODES
+        ):
             return parts[-1], None
 
         return None, None
@@ -880,7 +895,12 @@ class LicenceNormaliser:
                 ):
                     seen_version = True
                     result_parts.append(part)
-                is_jurisdiction = len(part) == 2 and part.isalpha() and seen_version
+                is_jurisdiction = (
+                    len(part) == 2
+                    and part.isalpha()
+                    and seen_version
+                    and part in JURISDICTION_CODES
+                )
                 if part == "igo" or is_jurisdiction:
                     continue
                 elif not seen_license:
