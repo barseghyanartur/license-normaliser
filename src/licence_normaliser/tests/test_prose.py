@@ -1,5 +1,7 @@
 """Tests for prose pattern matching via ProseParser."""
 
+import pytest
+
 from licence_normaliser import normalise_licence
 
 __author__ = "Artur Barseghyan <artur.barseghyan@gmail.com>"
@@ -8,165 +10,152 @@ __license__ = "MIT"
 
 
 class TestProsePatternMatching:
-    def test_cc_by_nc_nd_4_0_prose(self) -> None:
-        v = normalise_licence("this work is licensed under cc by-nc-nd 4.0 terms")
-        assert v.key == "cc-by-nc-nd-4.0"
-        assert v.licence.key == "cc-by-nc-nd"
-        assert v.family.key == "cc"
+    @pytest.mark.parametrize(
+        "input_str,expected_key,expected_name,expected_family",
+        [
+            (
+                "this work is licensed under cc by-nc-nd 4.0 terms",
+                "cc-by-nc-nd-4.0",
+                "cc-by-nc-nd",
+                "cc",
+            ),
+            (
+                "license: cc by-nc-nd 3.0",
+                "cc-by-nc-nd-3.0",
+                "cc-by-nc-nd",
+                "cc",
+            ),
+            (
+                "content licensed under creative commons by-nc-sa",
+                "cc-by-nc-sa",
+                "cc-by-nc-sa",
+                "cc",
+            ),
+            (
+                "this content is made available under creative commons by license",
+                "cc-by",
+                "cc-by",
+                "cc",
+            ),
+            (
+                "this article is licensed under attribution noncommercial terms",
+                "cc-by-nc",
+                "cc-by-nc",
+                "cc",
+            ),
+            (
+                "licensed under attribution share alike conditions",
+                "cc-by-sa",
+                "cc-by-sa",
+                "cc",
+            ),
+            (
+                "Article published under CC by-nc 3.0-igo license.",
+                "cc-by-nc-3.0-igo",
+                "cc-by-nc",
+                "cc",
+            ),
+            (
+                "Article published under CC by-nd 3.0-igo license.",
+                "cc-by-nd-3.0-igo",
+                "cc-by-nd",
+                "cc",
+            ),
+            (
+                "Article published under CC by-sa 3.0-igo license.",
+                "cc-by-sa-3.0-igo",
+                "cc-by-sa",
+                "cc",
+            ),
+            (
+                "all rights reserved except as permitted by law",
+                "all-rights-reserved",
+                "all-rights-reserved",
+                "publisher-proprietary",
+            ),
+            ("cc by-nc-nd", "cc-by-nc-nd", "cc-by-nc-nd", "cc"),
+        ],
+    )
+    def test_cc_prose(self, input_str, expected_key, expected_name, expected_family):
+        v = normalise_licence(input_str)
+        assert v.key == expected_key
+        assert v.licence.key == expected_name
+        assert v.family.key == expected_family
 
-    def test_cc_by_nc_nd_3_0_prose(self) -> None:
-        v = normalise_licence("license: cc by-nc-nd 3.0")
-        assert v.key == "cc-by-nc-nd-3.0"
-        assert v.licence.key == "cc-by-nc-nd"
-        assert v.family.key == "cc"
+    @pytest.mark.parametrize(
+        "input_str,expected_key,expected_name,expected_family",
+        [
+            (
+                "available under the Open Government License (OGL).",
+                "ogl-uk-3.0",
+                "ogl-uk",
+                "ogl",
+            ),
+            ("licensed under the OGL terms", "ogl-uk-3.0", "ogl-uk", "ogl"),
+            ("under the Open Government Licence", "ogl-uk-3.0", "ogl-uk", "ogl"),
+            ("Open Government Licence v3.0", "ogl-uk-3.0", "ogl-uk", "ogl"),
+            ("under Open Government License v2.0", "ogl-uk-2.0", "ogl-uk", "ogl"),
+            ("Open Government Licence 1.0", "ogl-uk-1.0", "ogl-uk", "ogl"),
+        ],
+    )
+    def test_ogl_prose(self, input_str, expected_key, expected_name, expected_family):
+        v = normalise_licence(input_str)
+        assert v.key == expected_key
+        assert v.licence.key == expected_name
+        assert v.family.key == expected_family
 
-    def test_cc_by_nc_sa_creative_commons_prose(self) -> None:
-        v = normalise_licence("content licensed under creative commons by-nc-sa")
-        assert v.key == "cc-by-nc-sa"
-        assert v.licence.key == "cc-by-nc-sa"
-        assert v.family.key == "cc"
-
-    def test_attribution_prose(self) -> None:
-        v = normalise_licence(
-            "this content is made available under creative commons by license"
-        )
-        assert v.key == "cc-by"
-        assert v.licence.key == "cc-by"
-        assert v.family.key == "cc"
-
-    def test_attribution_noncommercial_prose(self) -> None:
-        v = normalise_licence(
-            "this article is licensed under attribution noncommercial terms"
-        )
-        assert v.key == "cc-by-nc"
-        assert v.licence.key == "cc-by-nc"
-        assert v.family.key == "cc"
-
-    def test_attribution_sharealike_prose(self) -> None:
-        v = normalise_licence("licensed under attribution share alike conditions")
-        assert v.key == "cc-by-sa"
-        assert v.licence.key == "cc-by-sa"
-        assert v.family.key == "cc"
-
-    def test_elsevier_tdm_prose(self) -> None:
-        v = normalise_licence(
-            "this journal participates in text and data mining as "
-            "permitted by the elsevier tdm agreement"
-        )
-        assert v.key == "elsevier-tdm"
-        assert v.licence.key == "elsevier-tdm"
-        assert v.family.key == "publisher-tdm"
-
-    def test_elsevier_user_licence_prose(self) -> None:
-        v = normalise_licence(
-            "elsevier user license applies to this open access article"
-        )
-        assert v.key == "elsevier-oa"
-        assert v.licence.key == "elsevier-oa"
-        assert v.family.key == "publisher-oa"
-
-    def test_acs_authorchoice_prose(self) -> None:
-        v = normalise_licence("acs authorchoice option was selected by the authors")
-        assert v.key == "acs-authorchoice"
-        assert v.licence.key == "acs-authorchoice"
-        assert v.family.key == "publisher-oa"
-
-    def test_acs_authorchoice_cc_by_prose(self) -> None:
-        v = normalise_licence("This is an ACS AuthorChoice CC BY article.")
-        assert v.key == "acs-authorchoice-ccby"
-        assert v.licence.key == "acs-authorchoice-ccby"
-        assert v.family.key == "publisher-oa"
-
-    def test_acs_authorchoice_cc_by_variant_prose(self) -> None:
-        v = normalise_licence("ACS AuthorChoice with CC BY license")
-        assert v.key == "acs-authorchoice-ccby"
-        assert v.licence.key == "acs-authorchoice-ccby"
-        assert v.family.key == "publisher-oa"
-
-    def test_acs_authorchoice_cc_by_4_0_prose(self) -> None:
-        v = normalise_licence("ACS AuthorChoice CC BY 4.0 article")
-        assert v.key == "acs-authorchoice-ccby"
-        assert v.licence.key == "acs-authorchoice-ccby"
-        assert v.family.key == "publisher-oa"
-
-    def test_cc_by_nc_3_0_igo_prose(self) -> None:
-        v = normalise_licence("Article published under CC by-nc 3.0-igo license.")
-        assert v.key == "cc-by-nc-3.0-igo"
-        assert v.licence.key == "cc-by-nc"
-        assert v.family.key == "cc"
-
-    def test_cc_by_nd_3_0_igo_prose(self) -> None:
-        v = normalise_licence("Article published under CC by-nd 3.0-igo license.")
-        assert v.key == "cc-by-nd-3.0-igo"
-        assert v.licence.key == "cc-by-nd"
-        assert v.family.key == "cc"
-
-    def test_cc_by_sa_3_0_igo_prose(self) -> None:
-        v = normalise_licence("Article published under CC by-sa 3.0-igo license.")
-        assert v.key == "cc-by-sa-3.0-igo"
-        assert v.licence.key == "cc-by-sa"
-        assert v.family.key == "cc"
-
-    def test_all_rights_reserved_prose(self) -> None:
-        v = normalise_licence("all rights reserved except as permitted by law")
-        assert v.key == "all-rights-reserved"
-        assert v.licence.key == "all-rights-reserved"
-        assert v.family.key == "publisher-proprietary"
-
-    def test_short_string_via_registry(self) -> None:
-        v = normalise_licence("cc by-nc-nd")
-        assert v.key == "cc-by-nc-nd"
-        assert v.licence.key == "cc-by-nc-nd"
-        assert v.family.key == "cc"
-
-    def test_open_access_prose_matched(self) -> None:
-        v = normalise_licence("open access article available now")
-        assert v.key == "other-oa"
-        assert v.licence.key == "other-oa"
-        assert v.family.key == "other-oa"
-
-    def test_ogl_prose_matched(self) -> None:
-        v = normalise_licence(
-            "This article is made available under the Open Government License (OGL)."
-        )
-        assert v.key == "ogl-uk-3.0"
-        assert v.licence.key == "ogl-uk"
-        assert v.family.key == "ogl"
-
-    def test_ogl_abbreviation_matched(self) -> None:
-        v = normalise_licence("licensed under the OGL terms")
-        assert v.key == "ogl-uk-3.0"
-        assert v.licence.key == "ogl-uk"
-        assert v.family.key == "ogl"
-
-    def test_open_government_licence_matched(self) -> None:
-        v = normalise_licence("under the Open Government Licence")
-        assert v.key == "ogl-uk-3.0"
-        assert v.licence.key == "ogl-uk"
-        assert v.family.key == "ogl"
-
-    def test_ogl_prose_already_working(self) -> None:
-        v = normalise_licence(
-            "This is an open access article under the Open Government License (OGL)."
-        )
-        assert v.key == "other-oa"
-        assert v.licence.key == "other-oa"
-        assert v.family.key == "other-oa"
-
-    def test_ogl_v3_prose_matched(self) -> None:
-        v = normalise_licence("Open Government Licence v3.0")
-        assert v.key == "ogl-uk-3.0"
-        assert v.licence.key == "ogl-uk"
-        assert v.family.key == "ogl"
-
-    def test_ogl_v2_prose_matched(self) -> None:
-        v = normalise_licence("under Open Government License v2.0")
-        assert v.key == "ogl-uk-2.0"
-        assert v.licence.key == "ogl-uk"
-        assert v.family.key == "ogl"
-
-    def test_ogl_v1_prose_matched(self) -> None:
-        v = normalise_licence("Open Government Licence 1.0")
-        assert v.key == "ogl-uk-1.0"
-        assert v.licence.key == "ogl-uk"
-        assert v.family.key == "ogl"
+    @pytest.mark.parametrize(
+        "input_str,expected_key,expected_name,expected_family",
+        [
+            (
+                "elsevier tdm agreement applies to this article",
+                "elsevier-tdm",
+                "elsevier-tdm",
+                "publisher-tdm",
+            ),
+            (
+                "elsevier user license applies to this open access article",
+                "elsevier-oa",
+                "elsevier-oa",
+                "publisher-oa",
+            ),
+            (
+                "acs authorchoice option was selected by the authors",
+                "acs-authorchoice",
+                "acs-authorchoice",
+                "publisher-oa",
+            ),
+            (
+                "This is an ACS AuthorChoice CC BY article.",
+                "acs-authorchoice-ccby",
+                "acs-authorchoice-ccby",
+                "publisher-oa",
+            ),
+            (
+                "ACS AuthorChoice with CC BY license",
+                "acs-authorchoice-ccby",
+                "acs-authorchoice-ccby",
+                "publisher-oa",
+            ),
+            (
+                "ACS AuthorChoice CC BY 4.0 article",
+                "acs-authorchoice-ccby",
+                "acs-authorchoice-ccby",
+                "publisher-oa",
+            ),
+            ("open access article available now", "other-oa", "other-oa", "other-oa"),
+            (
+                "open access article under the Open Government License (OGL).",
+                "other-oa",
+                "other-oa",
+                "other-oa",
+            ),
+        ],
+    )
+    def test_publisher_prose(
+        self, input_str, expected_key, expected_name, expected_family
+    ):
+        v = normalise_licence(input_str)
+        assert v.key == expected_key
+        assert v.licence.key == expected_name
+        assert v.family.key == expected_family

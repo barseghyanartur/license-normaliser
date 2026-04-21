@@ -1,7 +1,7 @@
 .PHONY: build test test-env shell shell-env quick-test ipython \
         doc8 ruff mypy clean-dev clean-test clean pre-commit
 
-VERSION := 0.6
+VERSION := 0.6.1
 SHELL := /bin/bash
 # Makefile for project
 VENV := .venv/bin/activate
