@@ -159,5 +159,6 @@
   {"pattern": "author\\s*manuscript", "version_key": "author-manuscript", "name_key": "author-manuscript", "family_key": "publisher-oa"},
   {"pattern": "public\\s*domain", "version_key": "public-domain", "name_key": "public-domain", "family_key": "public-domain"},
 
-  {"pattern": "open\\s*access", "version_key": "other-oa", "name_key": "other-oa", "family_key": "other-oa"}
+  {"pattern": "open\\s*access", "version_key": "other-oa", "name_key": "other-oa", "family_key": "other-oa"},
+  {"pattern": "open\\s*government\\s*licen(se|ce)|\\bogl\\b", "version_key": "other-oa", "name_key": "other-oa", "family_key": "other-oa"}
 ]

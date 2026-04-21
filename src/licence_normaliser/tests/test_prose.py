@@ -109,3 +109,27 @@ class TestProsePatternMatching:
         v = normalise_licence("open access article available now")
         assert v.key == "other-oa"
         assert v.family.key == "other-oa"
+
+    def test_ogl_prose_matched(self) -> None:
+        v = normalise_licence(
+            "This article is made available under the Open Government License (OGL)."
+        )
+        assert v.key == "other-oa"
+        assert v.family.key == "other-oa"
+
+    def test_ogl_abbreviation_matched(self) -> None:
+        v = normalise_licence("licensed under the OGL terms")
+        assert v.key == "other-oa"
+        assert v.family.key == "other-oa"
+
+    def test_open_government_licence_matched(self) -> None:
+        v = normalise_licence("under the Open Government Licence")
+        assert v.key == "other-oa"
+        assert v.family.key == "other-oa"
+
+    def test_ogl_prose_already_working(self) -> None:
+        v = normalise_licence(
+            "This is an open access article under the Open Government License (OGL)."
+        )
+        assert v.key == "other-oa"
+        assert v.family.key == "other-oa"
